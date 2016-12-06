@@ -32,6 +32,7 @@ var sources = {
     ]
 };
 
+var outName = "csadsplugin.js";
 var outDir = './dist';
 
 var browserifyArgs = {
@@ -159,16 +160,31 @@ gulp.task('watch', function () {
     });
 
     bundler.on('update', function () {
-        bundle_js(bundler, pkg.name, false);
+        bundle_js(bundler, outName, false);
     });
 
-    bundle_js(bundler, pkg.name, false);
+    bundle_js(bundler, outName, false);
 });
 
 gulp.task('build', ['clean', 'package-info', 'lint'], function() {
 
-    return bundle_js(browserify(browserifyArgs), pkg.name, true);
+    return bundle_js(browserify(browserifyArgs), outName, true);
 });
+
+// Copyright (C) 2016 VIACCESS S.A and/or ORCA Interactive **/
+// sample build
+gulp.task('build-samples', ['build-adsTestsPlayer']);
+
+var replaceSourcesByBuild = function() {
+    return replace(/<!-- sources -->([\s\S]*?)<!-- endsources -->/, '<script src="../../' + outName + '"></script>');
+};
+
+gulp.task('build-adsTestsPlayer', function() {
+    return gulp.src(['samples/adsTestsPlayer/**'])
+        .pipe(replaceSourcesByBuild())
+        .pipe(gulp.dest(outDir + '/samples/adsTestsPlayer/'));
+});
+// end
 
 gulp.task('releases-notes', function() {
     return gulp.src('./RELEASES NOTES.txt')
@@ -177,7 +193,7 @@ gulp.task('releases-notes', function() {
 
 gulp.task('zip', function() {
     return gulp.src(outDir + '/**/*')
-        .pipe(zip(pkg.name + '.zip'))
+        .pipe(zip(outName + '.zip'))
         .pipe(gulp.dest(outDir));
 });
 
@@ -187,11 +203,11 @@ gulp.task('doc', function () {
 });
 
 gulp.task('version', function() {
-    fs.writeFileSync(outDir + '/version.properties', 'VERSION=' + pkg.version);
+    fs.writeFileSync(outDir + '/version.properties', 'GITTAG=' + pkg.gitTag+'\nVERSION=' + pkg.version);
 });
 
 gulp.task('default', function(cb) {
-    runSequence('build', ['doc'],
+    runSequence('build', ['build-samples', 'doc'],
         'releases-notes',
         'zip',
         'version',

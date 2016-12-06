@@ -10,7 +10,7 @@
     "testWindows7firefox": "node node_modules/intern/runner.js config=test/functional/testsCommon.js browsers=firefox_windows7 selenium=local application=development",
     "testWindows7internetExplorer": "node node_modules/intern/runner.js config=test/functional/testsCommon.js browsers=ie11_windows7 selenium=local application=development",
     "testWindows10edge": "node node_modules/intern/runner.js config=test/functional/testsCommon.js browsers=edge_windows10 selenium=local application=development",
-    "t1": "node node_modules/intern/runner.js config=test/functional/testsCommon.js browsers=chrome_windows7 selenium=local application=local"
+    "test_local": "node node_modules/intern/runner.js config=test/functional/testsCommon.js browsers=chrome_windows7 selenium=local application=local"
   },
   "repository": {
     "type": "git",
