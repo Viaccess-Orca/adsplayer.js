@@ -112,9 +112,18 @@ gulp.task('copyright', function() {
     });
 });
 
-gulp.task('package-info', function() {
-    runSequence('gitRevision', 'gitDate', 'copyright');
+// Copyright (C) 2016 VIACCESS S.A and/or ORCA Interactive **/
+gulp.task('gitTag', function() {
+    //Get last tag information
+    git.exec({args: 'describe --tags --dirty', quiet: true}, function (err, stdout) {
+        pkg.gitTag = stdout.replace(/(\r\n|\n|\r)/gm,"");
+    });
 });
+
+gulp.task('package-info', function() {
+    runSequence('gitRevision','gitTag', 'gitDate', 'copyright');
+});
+//end
 
 gulp.task('lint', function() {
     return gulp.src(sources.all)
@@ -128,6 +137,7 @@ function bundle_js(bundler, name, build) {
         .pipe(source(name))
         .pipe(buffer())
         .pipe(gulpif(build, replace(/VERSION[\s*]=[\s*]['\\](.*)['\\]/g, 'VERSION = \'' + pkg.version + '\'')))
+        .pipe(gulpif(build, replace(/@@GITTAG/, pkg.gitTag)))
         .pipe(gulpif(build, replace(/@@TIMESTAMP/, pkg.gitDate + '_' + pkg.gitTime)))
         .pipe(gulpif(build, replace(/@@REVISION/, pkg.gitRevision)))
         .pipe(sourcemaps.init({loadMaps: true}))

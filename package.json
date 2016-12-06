@@ -5,13 +5,19 @@
   "scripts": {
     "build": "gulp",
     "watch": "gulp watch",
-    "doc": "gulp doc"
+    "doc": "gulp doc",
+    "testWindows7chrome": "node node_modules/intern/runner.js config=test/functional/testsCommon.js browsers=chrome_windows7 selenium=local application=development",
+    "testWindows7firefox": "node node_modules/intern/runner.js config=test/functional/testsCommon.js browsers=firefox_windows7 selenium=local application=development",
+    "testWindows7internetExplorer": "node node_modules/intern/runner.js config=test/functional/testsCommon.js browsers=ie11_windows7 selenium=local application=development",
+    "testWindows10edge": "node node_modules/intern/runner.js config=test/functional/testsCommon.js browsers=edge_windows10 selenium=local application=development",
+    "t1": "node node_modules/intern/runner.js config=test/functional/testsCommon.js browsers=chrome_windows7 selenium=local application=local"
   },
   "repository": {
     "type": "git",
     "url": "https://www.forge.orange-labs.fr/plugins/git/dash-js/adsplayer.js.git"
   },
   "author": "Orange",
+  "license": "BSD-3-Clause-Clear",
   "devDependencies": {
     "babel-preset-es2015": "^6.16.0",
     "babelify": "^7.3.0",
@@ -38,6 +44,7 @@
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0",
     "watchify": "^3.7.0",
-    "yargs": "^5.0.0"
+    "yargs": "^5.0.0",
+    "intern": "^3.3.1"
   }
 }
