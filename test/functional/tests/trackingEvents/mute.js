@@ -41,7 +41,7 @@ define([
 
                 setup: function() {
                     tests.log(NAME, 'Setup');
-                    command = this.remote.get(require.toUrl(config.testPage));
+                    command = this.remote.get(require.toUrl(config.tests.trackingEvents.testPageUrl));
                     command = tests.setup(command);
                     return command;
                 },

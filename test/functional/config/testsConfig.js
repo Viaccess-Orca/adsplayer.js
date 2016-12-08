@@ -1,13 +1,21 @@
 define(function(require) {
 
-    var streams = require('./masts.js');
+    var streams = require('./../tests/trackingEvents/masts.js');
 
     var _createInstance = function() {
         return {
-            asyncTimeout: 10,
-            adsDuration: 10,
+            // Common tests suite configuration fields
+            asyncTimeout: 10,                                                               // TODO: what it is for?
+            adsDuration : 10,                                                               // TODO: what it is for?
+            testPageUrl : "http://cswebplayer.viaccess.fr/functionnalTests/tobedefined",    //url of the html page under test
+                                                                                            // TODO: use a common html page
+            streamUrl   : "http://playready.directtaps.net/smoothstreaming/SSWSS720H264/SuperSpeedway_720.ism/Manifest",// url of the main stream
+                                                                                                                        // take care using one with video.currentTime = 0 at the beginning
+                                                                                                                        // for the pre-roll tests
             tests : {
+                // Test suite trackingEvents specific configuration fields
                 trackingEvents: {
+                    testPageUrl : "http://cswebplayer.viaccess.fr/functionnalTests/adsplugin/samples/adsTestsPlayer/",  //url of the html page under test
                     play: {
                         streams: [
                             streams.MAST_NONE,
@@ -48,35 +56,24 @@ define(function(require) {
                     }
                 },
 
-                error: {
-                    downloadErrorContent:{
-                        streams:[
-                            streams.MSS_LIVE_1
-                        ],
-                        warnCode:"DOWNLOAD_ERR_CONTENT",
-                        errorCode:"DOWNLOAD_ERR_CONTENT"
+                // Test suite multipleAds specific configuration fields
+                multipleAds: {
+                    testPageUrl : "http://localhost/csadsplugin/samples/adPodsTestsPlayer",
+                    //testPageUrl : "http://cswebplayer.viaccess.fr/functionnalTests/csadsplugin/samples/adPodsTestsPlayer",
+                    adPod: {
+                        mastUrl: "http://cswebplayer.viaccess.fr/adsserver/xml/mast/preroll-vast30AdPods.xml",
+                        ads: [  {media: "http://cswebplayer.viaccess.fr/adsserver/media/vo_ad_2.mp4", duration : 6000},
+                                {media: "http://cswebplayer.viaccess.fr/adsserver/media/vo_ad_4.mp4", duration : 4000}]
                     },
-                    errorManifest: {
-                        streams: [
-                            streams.MSS_LIVE_UNKNOWN_MANIFEST_TYPE_ERROR,
-                            streams.MSS_LIVE_MANIFEST_ERROR,
-                            streams.MSS_LIVE_MALFORMED_MANIFEST_ERROR,
-                            streams.MSS_LIVE_UNSUPPORTED_AUDIO_CODEC_ERROR,
-                            streams.MSS_VOD_WRONG_AUDIO_CODEC_ERROR,
-                            streams.MSS_LIVE_EMPTY_VIDEO_FOURCC_ERROR,
-                            streams.MSS_LIVE_VIDEO_FOURCC_UNSUPPORTED_ERROR,
-                            streams.HLS_LIVE_MANIFEST_MISSING_ERROR
-                        ],
-                        expectedErrorCodes: [
-                            ['MANIFEST_ERR_PARSE'],
-                            ['DOWNLOAD_ERR_MANIFEST'],
-                            ['MANIFEST_ERR_PARSE'],
-                            ['MEDIA_ERR_CODEC_UNSUPPORTED'],
-                            ['MEDIA_ERR_CODEC_UNSUPPORTED', 'MEDIA_ERR_SRC_NOT_SUPPORTED'],
-                            ['MEDIA_ERR_CODEC_UNSUPPORTED'],
-                            ['MEDIA_ERR_CODEC_UNSUPPORTED'],
-                            ['DOWNLOAD_ERR_MANIFEST']
-                        ]
+                    doubleAdsInVast: {
+                        mastUrl: "http://cswebplayer.viaccess.fr/adsserver/xml/mast/preroll-double-vast2.xml",
+                        ads: [  {media: "http://cswebplayer.viaccess.fr/adsserver/media/vo_ad_2.mp4", duration : 6000},
+                                {media: "http://cswebplayer.viaccess.fr/adsserver/media/vo_ad_4.mp4", duration : 4000}]
+                    },
+                    doubleTriggersInMast: {
+                        mastUrl: "http://cswebplayer.viaccess.fr/adsserver/xml/mast/preroll1-preroll2.xml",
+                        ads: [  {media: "http://cswebplayer.viaccess.fr/adsserver/media/vo_ad_2.mp4", duration : 6000},
+                                {media: "http://cswebplayer.viaccess.fr/adsserver/media/vo_ad_4.mp4", duration : 4000}]
                     }
                 }
             }

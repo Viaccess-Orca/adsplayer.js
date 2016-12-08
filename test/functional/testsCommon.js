@@ -4,7 +4,6 @@ define(function(require) {
 
     var seleniumConfigs = require('./config/selenium');
     var browsersConfig = require('./config/browsers');
-    var applications = require('./config/applications');
     var testsConfig = require('./config/testsConfig');
 
     ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -17,7 +16,7 @@ define(function(require) {
         // Browsers to run integration testing against. Note that version numbers must be strings if used with Sauce
         // OnDemand. Options that will be permutated are browserName, version; any other
         // capabilities options specified for an environment will be copied as-is
-        environments: browsersConfig.all,
+        environments: browsersConfig[intern.args.browsers],
 
         // Maximum number of simultaneous integration tests that should be executed on the remote WebDriver service
         maxConcurrency: 1,
@@ -41,35 +40,11 @@ define(function(require) {
     };
 
     // Selenium configuration from command line
-
     if (intern.args.selenium) {
         seleniumConfig = seleniumConfigs[intern.args.selenium];
     }
 
-    if (intern.args.browsers) {
-        conf.environments = browsersConfig[intern.args.browsers];
-    }
-	else{
-		try{
-			conf.environments = browsersConfig[process.env.npm_package_config_browser];
-		}
-		catch(error){
-			console.log("Error : "+error);
-		}
-	}
-
     conf = Object.assign(conf, seleniumConfig);
-
-    ///////////////////////////////////////////////////////////////////////////////////////////////
-    // Tests configuration parameters
-
-    // Tests configuration from command line
-
-    // application=<development|master>
-    testsConfig.testPage = intern.args.application ? [applications.TestAds[intern.args.application]] : [applications.TestAds.development];
-	
-    // drm=<true|false>
-    testsConfig.drm = intern.args.drm ? (intern.args.drm !== 'false') : true;
 
     return conf;
 });
