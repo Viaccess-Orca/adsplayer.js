@@ -15,7 +15,8 @@ define(function(require) {
             tests : {
                 // Test suite trackingEvents specific configuration fields
                 trackingEvents: {
-                    testPageUrl : "http://cswebplayer.viaccess.fr/functionnalTests/adsplugin/samples/adsTestsPlayer/",  //url of the html page under test
+                    testPageUrl : "http://cswebplayer.viaccess.fr/functionnalTests/CSAdsPlugin_NightyBuild/dist/samples/adsTestsPlayer", //url of the html page under test
+                    // testPageUrl : "http://localhost/CSAdsPlugin/samples/adsTestsPlayer/",
                     play: {
                         streams: [
                             streams.MAST_NONE,
