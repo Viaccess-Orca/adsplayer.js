@@ -44,43 +44,51 @@ define([
 
                 loadStream: function() {
                     tests.logLoadStream(NAME, stream);
-                    return command.execute(player.loadStream, [stream])
+                    return command.execute(player.loadStreamAndExitPopup, [stream])
                 }
             });
         };
 
-        var test = function (stream) {
-            var sleepTime = 2;
+    var test;
+    test = function (stream) {
+        var sleepTime = 4;
 
-            registerSuite({
-                name: NAME,
+        registerSuite({
+            name: NAME,
 
-                closeAds: function () {
-                    tests.log(NAME, 'Wait ' + sleepTime + ' sec. and call the player');
-                    return command.sleep(sleepTime * 1000).execute(player.adsStop);
-                },
+            teardown: function () {
+               // executes after suite ends;
+                tests.log(NAME, 'teardown ... ' );
+                // Cleanly exit the test : load another page and accept the Alert popup
+                this.remote.get(require.toUrl(config.tests.trackingEvents.testPageUrl));
+                return (command.acceptAlert());
+            },
 
-                checkTrackingEvents: function () {
-                    tests.log(NAME, 'wait end of ads - ' + ADS_DURATION);
-                    return command.sleep(ADS_DURATION * 1000)
-                     .then(function() {
+            "closeAds": function () {
+                tests.log(NAME, 'Wait ' + sleepTime + ' sec. and refresh');
+                return (command
+                    .sleep(sleepTime * 1000)
+                    //xecute(player.addBeforeExit())
+                    .refresh()
+                    .dismissAlert()
+                    .then(function () {
                         return command.execute(player.getReceivedTackingEvents);
                     })
                     .then(function (receivedTackingEvents) {
                         // Compare TackingEvents arrays
-                        var res = tests.checkTrackingEvents(stream.ExpectedtrackingEvents,receivedTackingEvents);
+                        var res = tests.checkTrackingEvents(stream.ExpectedtrackingEvents, receivedTackingEvents);
                         if (!res) {
                             tests.log(NAME, 'Received tracking events: ' + JSON.stringify(receivedTackingEvents));
                             tests.log(NAME, 'expected tracking events: ' + JSON.stringify(stream.ExpectedtrackingEvents));
                         }
                         assert.isTrue(res);
-                    });
-                }
-            });
-        };
+                    }))
+            }
+        });
+    };
 
 
-        for (var i = 0; i < streams.length; i++) {
+    for (var i = 0; i < streams.length; i++) {
             // setup: load test page and stream
             testSetup(streams[i]);
             // Performs pause tests

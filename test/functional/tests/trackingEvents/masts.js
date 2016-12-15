@@ -75,7 +75,7 @@ define({
         "video_fragment_pattern":"(video)",
         "audio_fragment_pattern":"(audio)",
         "adsUrl":"http://cswebplayer.viaccess.fr/adsserver/xml/mast/preroll-vast30.xml",
-        "ExpectedtrackingEvents":{"creativeView":1,"start":1,"closeLinear":1,"progress":'x', "firstQuartile":'x'}
+        "ExpectedtrackingEvents":{"creativeView":1,"start":1,"closeLinear":1,"progress":'x',"midpoint":'x', "firstQuartile":'x'}
     },
     MAST_PREROLL_VAST3_LINEAR_REWIND: {
         "name": "VAST3 Linear preroll",
