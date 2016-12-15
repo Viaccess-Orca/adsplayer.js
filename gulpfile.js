@@ -173,7 +173,10 @@ gulp.task('build', ['clean', 'package-info', 'lint'], function() {
 
 // Copyright (C) 2016 VIACCESS S.A and/or ORCA Interactive **/
 // sample build
-gulp.task('build-samples', ['build-adsTestsPlayer']);
+gulp.task('build-samples', ['build-adsTestsPlayer', 'build-demoPlayer'], function() {
+    return gulp.src(['samples/cswebplayer.js'])
+    .pipe(gulp.dest(outDir + '/samples/'));
+});
 
 var replaceSourcesByBuild = function() {
     return replace(/<!-- sources -->([\s\S]*?)<!-- endsources -->/, '<script src="../../' + outName + '"></script>');
@@ -183,6 +186,12 @@ gulp.task('build-adsTestsPlayer', function() {
     return gulp.src(['samples/adsTestsPlayer/**'])
         .pipe(replaceSourcesByBuild())
         .pipe(gulp.dest(outDir + '/samples/adsTestsPlayer/'));
+});
+
+gulp.task('build-demoPlayer', function() {
+    return gulp.src(['samples/demoPlayer/**'])
+        .pipe(replaceSourcesByBuild())
+        .pipe(gulp.dest(outDir + '/samples/demoPlayer/'));
 });
 // end
 
