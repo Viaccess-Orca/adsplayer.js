@@ -68,8 +68,9 @@ define([
                 tests.log(NAME, 'Wait ' + sleepTime + ' sec. and refresh');
                 return (command
                     .sleep(sleepTime * 1000)
-                    //xecute(player.addBeforeExit())
-                    .refresh()
+                    //.execute( document.location.reload(true))
+                    .get(require.toUrl(config.tests.trackingEvents.testPageUrl))
+                    //.refresh()
                     .dismissAlert()
                     .then(function () {
                         return command.execute(player.getReceivedTackingEvents);
