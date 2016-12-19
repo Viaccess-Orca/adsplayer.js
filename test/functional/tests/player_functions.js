@@ -15,6 +15,24 @@ define([], function () {
             mediaPlayer.load(stream);
         },
 
+        loadStreamAndExitPopup: function(stream) {
+
+            if(typeof(player) != 'undefined'){
+                window.mediaPlayer = player;
+            }
+            else{
+                window.mediaPlayer = webplayer.mediaPlayer;
+            }
+
+            /* manage exit popup */
+            var onExit = function() {
+                return "Are you sure you wish to leave the page?";
+            };
+            window.onbeforeunload = onExit ;
+
+            mediaPlayer.load(stream);
+        },
+
         getReceivedTackingEvents: function ()
         {
             return receivedTackingEvents;
