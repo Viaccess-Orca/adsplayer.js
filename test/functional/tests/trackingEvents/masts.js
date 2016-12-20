@@ -19,7 +19,7 @@ define({
         "videoBitrates": [230000, 331000, 477000, 688000, 991000, 1427000, 2100000],
         "video_fragment_pattern":"(video)",
         "audio_fragment_pattern":"(audio)",
-        "adsUrl":"http://cswebplayer.viaccess.fr/adsserver/xml/mast/preroll.xml",
+        "adsUrl":"../ads/xml/mast/preroll.xml",
         "ExpectedtrackingEvents":{"creativeView":1,"start":1,"firstQuartile":1,"midpoint":1,"thirdQuartile":1,"complete":1}
     },
     MAST_PREROLL_VAST2_LINEAR_IMAGE: {
@@ -30,7 +30,7 @@ define({
         "videoBitrates": [230000, 331000, 477000, 688000, 991000, 1427000, 2100000],
         "video_fragment_pattern":"(video)",
         "audio_fragment_pattern":"(audio)",
-        "adsUrl":"http://cswebplayer.viaccess.fr/adsserver/xml/mast/preroll-image.xml",
+        "adsUrl":"../ads/xml/mast/preroll-image.xml",
         "ExpectedtrackingEvents":{}
     },
     MAST_PREROLL_VAST3_LINEAR: {
@@ -41,7 +41,7 @@ define({
         "videoBitrates": [230000, 331000, 477000, 688000, 991000, 1427000, 2100000],
         "video_fragment_pattern":"(video)",
         "audio_fragment_pattern":"(audio)",
-        "adsUrl":"http://cswebplayer.viaccess.fr/adsserver/xml/mast/preroll-vast30.xml",
+        "adsUrl":"../ads/xml/mast/preroll-vast30.xml",
         "ExpectedtrackingEvents":{"creativeView":1,"start":1,"firstQuartile":1,"midpoint":1,"thirdQuartile":1,"complete":1,"progress":3}
     },
     MAST_PREROLL_VAST3_LINEAR_PAUSE: {
@@ -52,7 +52,7 @@ define({
         "videoBitrates": [230000, 331000, 477000, 688000, 991000, 1427000, 2100000],
         "video_fragment_pattern":"(video)",
         "audio_fragment_pattern":"(audio)",
-        "adsUrl":"http://cswebplayer.viaccess.fr/adsserver/xml/mast/preroll-vast30.xml",
+        "adsUrl":"../ads/xml/mast/preroll-vast30.xml",
         "ExpectedtrackingEvents":{"creativeView":1,"start":1,"firstQuartile":1,"midpoint":1,"thirdQuartile":1,"complete":1,"pause":1,"resume":1,"progress":3}
     },
     MAST_PREROLL_VAST3_LINEAR_MUTE: {
@@ -63,7 +63,7 @@ define({
         "videoBitrates": [230000, 331000, 477000, 688000, 991000, 1427000, 2100000],
         "video_fragment_pattern":"(video)",
         "audio_fragment_pattern":"(audio)",
-        "adsUrl":"http://cswebplayer.viaccess.fr/adsserver/xml/mast/preroll-vast30.xml",
+        "adsUrl":"../ads/xml/mast/preroll-vast30.xml",
         "ExpectedtrackingEvents":{"creativeView":1,"start":1,"firstQuartile":1,"midpoint":1,"thirdQuartile":1,"complete":1,"mute":1,"unmute":1,"progress":3}
     },
     MAST_PREROLL_VAST3_LINEAR_CLOSE: {
@@ -74,7 +74,7 @@ define({
         "videoBitrates": [230000, 331000, 477000, 688000, 991000, 1427000, 2100000],
         "video_fragment_pattern":"(video)",
         "audio_fragment_pattern":"(audio)",
-        "adsUrl":"http://cswebplayer.viaccess.fr/adsserver/xml/mast/preroll-vast30.xml",
+        "adsUrl":"../ads/xml/mast/preroll-vast30.xml",
         "ExpectedtrackingEvents":{"creativeView":1,"start":1,"closeLinear":1,"progress":'x',"midpoint":'x', "firstQuartile":'x'}
     },
     MAST_PREROLL_VAST3_LINEAR_REWIND: {
@@ -85,7 +85,7 @@ define({
         "videoBitrates": [230000, 331000, 477000, 688000, 991000, 1427000, 2100000],
         "video_fragment_pattern":"(video)",
         "audio_fragment_pattern":"(audio)",
-        "adsUrl":"http://cswebplayer.viaccess.fr/adsserver/xml/mast/preroll-vast30.xml",
+        "adsUrl":"../ads/xml/mast/preroll-vast30.xml",
         "ExpectedtrackingEvents":{"creativeView":1,"start":1,"firstQuartile":1,"midpoint":1,"thirdQuartile":1,"complete":1,"rewind":4,"progress":3}
     },
     MAST_PREROLL_VAST3_LINEAR_FULLSCREEN: {
@@ -96,7 +96,7 @@ define({
         "videoBitrates": [230000, 331000, 477000, 688000, 991000, 1427000, 2100000],
         "video_fragment_pattern":"(video)",
         "audio_fragment_pattern":"(audio)",
-        "adsUrl":"http://cswebplayer.viaccess.fr/adsserver/xml/mast/preroll-vast30.xml",
+        "adsUrl":"../ads/xml/mast/preroll-vast30.xml",
         "ExpectedtrackingEvents":{"creativeView":1,"start":1,"firstQuartile":1,"midpoint":1,"thirdQuartile":1,"complete":1,"progress":3,"exitFullscreen":1,"fullscreen":1}
     },
     MAST_PREROLL_VAST3_LINEAR_ACCEPTINVITATION: {
@@ -107,7 +107,7 @@ define({
         "videoBitrates": [230000, 331000, 477000, 688000, 991000, 1427000, 2100000],
         "video_fragment_pattern":"(video)",
         "audio_fragment_pattern":"(audio)",
-        "adsUrl":"http://cswebplayer.viaccess.fr/adsserver/xml/mast/preroll-vast30.xml",
+        "adsUrl":"../ads/xml/mast/preroll-vast30.xml",
         "ExpectedtrackingEvents":{"creativeView":1,"start":1,"firstQuartile":1,"midpoint":1,"thirdQuartile":1,"complete":1,"progress":3,"acceptInvitationLinear":1}
     }
 });
