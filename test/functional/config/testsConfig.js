@@ -15,7 +15,7 @@ define(function(require) {
             tests : {
                 // Test suite trackingEvents specific configuration fields
                 trackingEvents: {
-                    testPageUrl : "http://cswebplayer.viaccess.fr/functionnalTests/CSAdsPlugin_NightyBuild/dist/samples/adsTestsPlayer", //url of the html page under test
+                    testPageUrl : "http://cswebplayer.viaccess.fr/functionnalTests/CSAdsPlugin-Dev_NightlyBuild/dist/samples/adsTestsPlayer", //url of the html page under test
                     // testPageUrl : "http://localhost/CSAdsPlugin/samples/adsTestsPlayer/",
                     play: {
                         streams: [
@@ -60,7 +60,7 @@ define(function(require) {
                 // Test suite multipleAds specific configuration fields
                 multipleAds: {
                     //testPageUrl : "http://localhost/csadsplugin/samples/adPodsTestsPlayer",
-                    testPageUrl : "http://cswebplayer.viaccess.fr/functionnalTests/csadsplugin/samples/adPodsTestsPlayer",
+                    testPageUrl : "http://cswebplayer.viaccess.fr/functionnalTests/CSAdsPlugin-Dev_NightlyBuild/samples/adPodsTestsPlayer",
                     adPod: {
                         mastUrl: "http://cswebplayer.viaccess.fr/adsserver/xml/mast/preroll-vast30AdPods.xml",
                         ads: [  {media: "http://cswebplayer.viaccess.fr/adsserver/media/vo_ad_2.mp4", duration : 6000},
