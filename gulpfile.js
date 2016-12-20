@@ -173,7 +173,7 @@ gulp.task('build', ['clean', 'package-info', 'lint'], function() {
 
 // Copyright (C) 2016 VIACCESS S.A and/or ORCA Interactive **/
 // sample build
-gulp.task('build-samples', ['build-adsTestsPlayer', 'build-demoPlayer'], function() {
+gulp.task('build-samples', ['build-demoPlayer'], function() {
     return gulp.src(['samples/cswebplayer.js'])
     .pipe(gulp.dest(outDir + '/samples/'));
 });
@@ -183,9 +183,16 @@ var replaceSourcesByBuild = function() {
 };
 
 gulp.task('build-adsTestsPlayer', function() {
-    return gulp.src(['samples/adsTestsPlayer/**'])
+    /* copie le rep adsTestsPlayer dans dist/samples et modifie l'acces au fichier csadsplugin.js */
+    gulp.src(['samples/adsTestsPlayer/**'])
         .pipe(replaceSourcesByBuild())
         .pipe(gulp.dest(outDir + '/samples/adsTestsPlayer/'));
+    /* copie le rep ads dans dist/samples */
+    gulp.src(['samples/ads/**'])
+        .pipe(gulp.dest(outDir + '/samples/ads'));
+    /* copie le fichier cswebplayer.js dans dist/samples */
+    gulp.src(['samples/cswebplayer.js'])
+        .pipe(gulp.dest(outDir + '/samples/'));
 });
 
 gulp.task('build-demoPlayer', function() {
