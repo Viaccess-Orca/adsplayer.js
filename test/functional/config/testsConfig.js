@@ -60,7 +60,7 @@ define(function(require) {
                 // Test suite multipleAds specific configuration fields
                 multipleAds: {
                     //testPageUrl : "http://localhost/csadsplugin/samples/adPodsTestsPlayer",
-                    testPageUrl : "http://cswebplayer.viaccess.fr/functionnalTests/CSAdsPlugin-Dev_NightlyBuild/samples/adPodsTestsPlayer",
+                    testPageUrl : "http://cswebplayer.viaccess.fr/functionnalTests/csadsplugin/samples/adPodsTestsPlayer",
                     adPod: {
                         mastUrl: "http://cswebplayer.viaccess.fr/adsserver/xml/mast/preroll-vast30AdPods.xml",
                         ads: [  {media: "http://cswebplayer.viaccess.fr/adsserver/media/vo_ad_2.mp4", duration : 6000},
