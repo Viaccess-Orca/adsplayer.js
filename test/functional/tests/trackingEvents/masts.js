@@ -42,7 +42,7 @@ define({
         "video_fragment_pattern":"(video)",
         "audio_fragment_pattern":"(audio)",
         "adsUrl":"../ads/xml/mast/preroll-vast30.xml",
-        "ExpectedtrackingEvents":{"creativeView":1,"start":1,"firstQuartile":1,"midpoint":1,"thirdQuartile":1,"complete":1,"progress":3}
+        "ExpectedtrackingEvents":{"creativeView":1,"start":1,"firstQuartile":1,"midpoint":1,"thirdQuartile":1,"complete":1,"progress":3,"rewind":'x'}
     },
     MAST_PREROLL_VAST3_LINEAR_PAUSE: {
         "name": "VAST3 Linear preroll",
@@ -53,7 +53,7 @@ define({
         "video_fragment_pattern":"(video)",
         "audio_fragment_pattern":"(audio)",
         "adsUrl":"../ads/xml/mast/preroll-vast30.xml",
-        "ExpectedtrackingEvents":{"creativeView":1,"start":1,"firstQuartile":1,"midpoint":1,"thirdQuartile":1,"complete":1,"pause":1,"resume":1,"progress":3}
+        "ExpectedtrackingEvents":{"creativeView":1,"start":1,"firstQuartile":1,"midpoint":1,"thirdQuartile":1,"complete":1,"pause":1,"resume":1,"progress":3,"rewind":'x'}
     },
     MAST_PREROLL_VAST3_LINEAR_MUTE: {
         "name": "VAST3 Linear preroll",
@@ -64,7 +64,7 @@ define({
         "video_fragment_pattern":"(video)",
         "audio_fragment_pattern":"(audio)",
         "adsUrl":"../ads/xml/mast/preroll-vast30.xml",
-        "ExpectedtrackingEvents":{"creativeView":1,"start":1,"firstQuartile":1,"midpoint":1,"thirdQuartile":1,"complete":1,"mute":1,"unmute":1,"progress":3}
+        "ExpectedtrackingEvents":{"creativeView":1,"start":1,"firstQuartile":1,"midpoint":1,"thirdQuartile":1,"complete":1,"mute":1,"unmute":1,"progress":3,"rewind":'x'}
     },
     MAST_PREROLL_VAST3_LINEAR_CLOSE: {
         "name": "VAST3 Linear preroll",
@@ -75,7 +75,7 @@ define({
         "video_fragment_pattern":"(video)",
         "audio_fragment_pattern":"(audio)",
         "adsUrl":"../ads/xml/mast/preroll-vast30.xml",
-        "ExpectedtrackingEvents":{"creativeView":1,"start":1,"closeLinear":1,"progress":'x',"midpoint":'x', "firstQuartile":'x'}
+        "ExpectedtrackingEvents":{"creativeView":1,"start":1,"closeLinear":1,"progress":'x',"midpoint":'x', "firstQuartile":'x',"rewind":'x'}
     },
     MAST_PREROLL_VAST3_LINEAR_REWIND: {
         "name": "VAST3 Linear preroll",
@@ -97,7 +97,7 @@ define({
         "video_fragment_pattern":"(video)",
         "audio_fragment_pattern":"(audio)",
         "adsUrl":"../ads/xml/mast/preroll-vast30.xml",
-        "ExpectedtrackingEvents":{"creativeView":1,"start":1,"firstQuartile":1,"midpoint":1,"thirdQuartile":1,"complete":1,"progress":3,"exitFullscreen":1,"fullscreen":1}
+        "ExpectedtrackingEvents":{"creativeView":1,"start":1,"firstQuartile":1,"midpoint":1,"thirdQuartile":1,"complete":1,"progress":3,"exitFullscreen":1,"fullscreen":1,"rewind":'x'}
     },
     MAST_PREROLL_VAST3_LINEAR_ACCEPTINVITATION: {
         "name": "VAST3 Linear preroll",
@@ -108,6 +108,6 @@ define({
         "video_fragment_pattern":"(video)",
         "audio_fragment_pattern":"(audio)",
         "adsUrl":"../ads/xml/mast/preroll-vast30.xml",
-        "ExpectedtrackingEvents":{"creativeView":1,"start":1,"firstQuartile":1,"midpoint":1,"thirdQuartile":1,"complete":1,"progress":3,"acceptInvitationLinear":1}
+        "ExpectedtrackingEvents":{"creativeView":1,"start":1,"firstQuartile":1,"midpoint":1,"thirdQuartile":1,"complete":1,"progress":3,"acceptInvitationLinear":1,"rewind":'x'}
     }
 });
