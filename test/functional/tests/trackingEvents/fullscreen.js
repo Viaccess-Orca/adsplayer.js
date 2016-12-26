@@ -27,7 +27,7 @@ define([
             streams = testConfig.streams;
 
         // Test constants
-        var ADS_DURATION = config.adsDuration; // ads duration (in s)
+        var ADS_DURATION = config.tests.trackingEvents.adsDuration; // ads duration (in s)
 
         // Test variables
         var command = null;

@@ -6,7 +6,6 @@ define(function(require) {
         return {
             // Common tests suite configuration fields
             asyncTimeout: 10,                                                               // TODO: what it is for?
-            adsDuration : 10,                                                               // TODO: what it is for?
             testPageUrl : "http://cswebplayer.viaccess.fr/functionnalTests/tobedefined",    //url of the html page under test
                                                                                             // TODO: use a common html page
             streamUrl   : "http://playready.directtaps.net/smoothstreaming/SSWSS720H264/SuperSpeedway_720.ism/Manifest",// url of the main stream
@@ -15,8 +14,9 @@ define(function(require) {
             tests : {
                 // Test suite trackingEvents specific configuration fields
                 trackingEvents: {
-                    testPageUrl : "http://cswebplayer.viaccess.fr/functionnalTests/CSAdsPlugin-Dev_NightlyBuild/samples/adsTestsPlayer", //url of the html page under test
-                    //testPageUrl : "http://localhost/CSAdsPlugin/samples/adsTestsPlayer/",
+                    testPageUrl : "http://cswebplayer.viaccess.fr/functionnalTests/CSAdsPlugin-Master/dist/samples/adsTestsPlayer", //url of the html page under test
+                    // testPageUrl : "http://localhost/CSAdsPlugin/samples/adsTestsPlayer/",
+                    adsDuration : 10,
                     play: {
                         streams: [
                             streams.MAST_NONE,
