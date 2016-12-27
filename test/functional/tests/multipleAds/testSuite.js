@@ -11,9 +11,16 @@ define(function(require) {
     var pollUntil = require('intern/dojo/node!leadfoot/helpers/pollUntil');
     var config = require('test/functional/config/testsConfig');
 
+    // Extract the media filename from an url
+    // For example if url is http://localhost/csadsplugin/samples/ads/xml/vast-3/../../media/vo_ad_2.mp4
+    // it returns vo_ad_2.mp4
+    var getMediaFileName = function(url){
+        var array = url.split("/");
+        return array[array.length-1];
+    }
+
     registerSuite(function(){
         var command = null;
-        const adDurationDelta = 1000; /* the amount of time to wait after the end of the first ad */
         return {
             name: "TEST_MULTIPLE_ADS",
 
@@ -21,7 +28,7 @@ define(function(require) {
                 // executes before suite starts;
 
                 // load the web test page
-                command = this.remote.get(require.toUrl(config.tests.multipleAds.testPageUrl));
+                command = this.remote.get(require.toUrl(config.testPageUrl));
 
                 // set the stream to play
                 command.findById("stream_toplay").type(config.streamUrl);
@@ -29,12 +36,10 @@ define(function(require) {
                 return command;
             },
 
-            teardown: function () {
-                // executes after suite ends;
-            },
+
 
             beforeEach: function (test) {
-                // executes before each test
+
 
                 return (command
                     // type the ad url
@@ -85,12 +90,12 @@ define(function(require) {
                     .findById("adsplayer-container")
                         .findByTagName("video")
                             .getAttribute("src")
-                            .then(function (src){assert.strictEqual(src, config.tests.multipleAds.adPod.ads[0].media);})
+                            .then(function (src){assert.strictEqual(getMediaFileName(src), getMediaFileName(config.tests.multipleAds.adPod.ads[0].media));})
                         .end()
                         .sleep(config.tests.multipleAds.adPod.ads[0].duration + config.tests.multipleAds.adPod.ads[1].duration / 2)
                         .findByTagName("video")
                             .getAttribute("src")
-                            .then(function (src){assert.strictEqual(src, config.tests.multipleAds.adPod.ads[1].media);})
+                            .then(function (src){assert.strictEqual(getMediaFileName(src), getMediaFileName(config.tests.multipleAds.adPod.ads[1].media));})
                         .end()
                     .end()
 
@@ -104,12 +109,12 @@ define(function(require) {
                     .findById("adsplayer-container")
                     .findByTagName("video")
                         .getAttribute("src")
-                        .then(function (src){assert.strictEqual(src, config.tests.multipleAds.doubleAdsInVast.ads[0].media);})
+                        .then(function (src){assert.strictEqual(getMediaFileName(src), getMediaFileName(config.tests.multipleAds.doubleAdsInVast.ads[0].media));})
                     .end()
                     .sleep(config.tests.multipleAds.doubleAdsInVast.ads[0].duration + config.tests.multipleAds.doubleAdsInVast.ads[1].duration / 2)
                     .findByTagName("video")
                         .getAttribute("src")
-                        .then(function (src){assert.strictEqual(src, config.tests.multipleAds.doubleAdsInVast.ads[1].media);})
+                        .then(function (src){assert.strictEqual(getMediaFileName(src), getMediaFileName(config.tests.multipleAds.doubleAdsInVast.ads[1].media));})
                     .end()
                 );
             },
@@ -124,17 +129,29 @@ define(function(require) {
                 return (command
                         .findById("adsplayer-container")
                         .findByTagName("video")
-                        .getAttribute("src")
-                        .then(function (src) {
-                            assert.strictEqual(src, config.tests.multipleAds.doubleTriggersInMast.ads[0].media);
-                        })
+                            .getAttribute("src")
+                            .then(function (src) {assert.strictEqual(getMediaFileName(src), getMediaFileName(config.tests.multipleAds.doubleTriggersInMast.ads[0].media));})
                         .end()
                         .sleep(config.tests.multipleAds.doubleTriggersInMast.ads[0].duration + config.tests.multipleAds.doubleTriggersInMast.ads[1].duration / 2)
                         .findByTagName("video")
+                            .getAttribute("src")
+                            .then(function (src) {assert.strictEqual(getMediaFileName(src), getMediaFileName(config.tests.multipleAds.doubleTriggersInMast.ads[1].media));})
+                        .end()
+                );
+            },
+
+            // Test a mast xml file with 1 trigger with 2 Vasts xml files
+            "doubleVastsInTrigger": function () {
+                return (command
+                        .findById("adsplayer-container")
+                        .findByTagName("video")
                         .getAttribute("src")
-                        .then(function (src) {
-                            assert.strictEqual(src, config.tests.multipleAds.doubleTriggersInMast.ads[1].media);
-                        })
+                        .then(function (src) {assert.strictEqual(getMediaFileName(src), getMediaFileName(config.tests.multipleAds.doubleVastsInTrigger.ads[0].media));})
+                        .end()
+                        .sleep(config.tests.multipleAds.doubleVastsInTrigger.ads[0].duration + config.tests.multipleAds.doubleVastsInTrigger.ads[1].duration / 2)
+                        .findByTagName("img")
+                        .getAttribute("src")
+                        .then(function (src) {assert.strictEqual(getMediaFileName(src), getMediaFileName(config.tests.multipleAds.doubleVastsInTrigger.ads[1].media));})
                         .end()
                 );
             }
