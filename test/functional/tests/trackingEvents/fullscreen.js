@@ -2,48 +2,33 @@
  TEST_EVT_FULLSCREEN:
 
 - load test page
-- for each stream:
-    - load stream
-    - request full screen and exit full screen
-    - wait the end of the ads
-    - check received tracking events
+- load stream
+- request full screen and exit full screen
+- wait the end of the ads
+- check received tracking events
 **/
 
-define([
-    'intern!object',
-    'intern/chai!assert',
-    'require',
-    'test/functional/config/testsConfig',
-    'test/functional/tests/player_functions',
-    'test/functional/tests/tests_functions'
-    ], function(registerSuite, assert, require, config, player, tests) {
-
-        // Suite name
-        var NAME = 'TEST_EVT_FULLSCREEN';
+define(function(require) {
         var intern = require('intern');
+        var registerSuite = require('intern!object');
+        var assert = require('intern/chai!assert');
+        var player = require('test/functional/tests/trackingEvents/player_functions');
+        var tests = require('test/functional/tests/trackingEvents/tests_functions');
+        var config = require('test/functional/config/testsConfig');
 
-        // Test configuration (see config/testConfig.js)
-        var testConfig = config.tests.trackingEvents.fullscreen,
-            streams = testConfig.streams;
-
-        // Test constants
-        var ADS_DURATION = config.tests.trackingEvents.adsDuration; // ads duration (in s)
-
-        // Test variables
-        var command = null;
-
-        var testSetup = function (stream) {
+        registerSuite(function(){
+            var command = null;
             var sleepTime = 3;
+            var NAME = 'TEST_EVT_MUTE';
 
-            registerSuite({
+            return {
                 name: NAME,
 
-                setup: function() {
-                    tests.log(NAME, 'Setup');
+                setup: function () {
+                    // executes before suite starts;
 
-                    //tests.log(NAME, 'intern.args.browsers='+intern.args.browsers);
                     // Skip entire suite if running in a edge browser
-                    if (intern.args.browsers === 'edge_windows10'){
+                    if (this.remote.session.capabilities.browserName === 'MicrosoftEdge') {
                         this.skip('skipped on browser Edge');
                     }
 
@@ -52,55 +37,50 @@ define([
                     return command;
                 },
 
-                //beforeEach: function () {
-                //    console.log('outer beforeEach');
-                //},
-
-                loadStream: function() {
-                    tests.logLoadStream(NAME, stream);
-                    return command.execute(player.loadStream, [stream])
+                teardown: function () {
+                    // executes after suite ends;
                 },
 
-                requestFullscreen: function () {
-                    return command.sleep(sleepTime * 1000)
-                        .then(function() {
-                            tests.log(NAME, 'Wait ' + sleepTime + ' sec. and request Fullscreen');
-                            return command.findByCssSelector('.button-fullscreen').click();
+                beforeEach: function () {
+                    // executes before each test
+                },
+
+                afterEach: function (test) {
+                    // executes after each test
+                },
+
+                "loadStream": function () {
+                	tests.log(NAME, config.streamUrl);
+                    return command.execute(player.loadStream, [config.streamUrl, config.tests.trackingEvents.fullscreen.adsUrl])
+                },
+
+                "requestFullscreen": function () {
+                	tests.log(NAME, 'Wait ' + sleepTime + ' sec. and request Fullscreen');
+                    return command.sleep(sleepTime * 1000).findByCssSelector('.button-fullscreen').click();
+                },
+
+                "exitFullscreen": function () {
+                	tests.log(NAME, 'Wait ' + sleepTime + ' sec. and exit Fullscreen');
+                    return command.sleep(sleepTime * 1000).findByCssSelector('.button-fullscreen').click();
+                },
+
+                "checkTrackingEvents": function () {
+                	tests.log(NAME, 'wait end of ads - ' + config.tests.trackingEvents.adsDuration * 1000);
+                    return command.sleep(config.tests.trackingEvents.adsDuration * 1000)
+                        .then(function () {
+                            return command.execute(player.getReceivedTackingEvents);
                         })
-                    /*this.remote.setFindTimeout(5000).findByCssSelector('.button-fullscreen').click().end();*/
-                },
-
-                exitFullscreen: function () {
-                    return command.sleep(sleepTime * 1000)
-                        .then(function() {
-                            tests.log(NAME, 'Wait ' + sleepTime + ' sec. and exit Fullscreen');
-                            return command.findByCssSelector('.button-fullscreen').click();
-                        })
-                },
-
-                checkTrackingEvents: function () {
-                    tests.log(NAME, 'wait end of ads - ' + ADS_DURATION);
-                    return command.sleep(ADS_DURATION * 1000)
-                     .then(function() {
-                        return command.execute(player.getReceivedTackingEvents);
-                    })
-                    .then(function (receivedTackingEvents) {
-                        // Compare TackingEvents arrays
-                        var res = tests.checkTrackingEvents(stream.ExpectedtrackingEvents,receivedTackingEvents);
-                        if (!res) {
-                            tests.log(NAME, 'Received tracking events: ' + JSON.stringify(receivedTackingEvents));
-                            tests.log(NAME, 'expected tracking events: ' + JSON.stringify(stream.ExpectedtrackingEvents));
-                        }
-                        assert.isTrue(res);
-                    });
+                        .then(function (receivedTackingEvents) {
+                            // Compare TackingEvents arrays
+                            var res = tests.checkTrackingEvents(config.tests.trackingEvents.fullscreen.ExpectedtrackingEvents, receivedTackingEvents);
+                            if (!res) {
+                                tests.log(NAME, 'Received tracking events: ' + JSON.stringify(receivedTackingEvents));
+                                tests.log(NAME, 'expected tracking events: ' + JSON.stringify(config.tests.trackingEvents.fullscreen.ExpectedtrackingEvents));
+                            }
+                            assert.isTrue(res);
+                        });
                 }
-            });
-        };
-
-
-        for (var i = 0; i < streams.length; i++) {
-            // setup: load test page and stream
-            testSetup(streams[i]);
-        }
+            }
+    });
 
 });

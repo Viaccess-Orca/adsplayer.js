@@ -1,63 +1,57 @@
 define(function(require) {
 
-    var streams = require('./../tests/trackingEvents/masts.js');
-
     var _createInstance = function() {
         return {
             // Common tests suite configuration fields
-            asyncTimeout: 10,                                                               // TODO: what it is for?
-            testPageUrl : "http://cswebplayer.viaccess.fr/functionnalTests/tobedefined",    //url of the html page under test
-                                                                                            // TODO: use a common html page
+            testPageUrl : "http://cswebplayer.viaccess.fr/functionnalTests/CSAdsPlugin-Dev/samples/testsPlayer",        // url of the html page under test
             streamUrl   : "http://playready.directtaps.net/smoothstreaming/SSWSS720H264/SuperSpeedway_720.ism/Manifest",// url of the main stream
                                                                                                                         // take care using one with video.currentTime = 0 at the beginning
                                                                                                                         // for the pre-roll tests
             tests : {
-                // Test suite trackingEvents specific configuration fields
+                // trackingEvents test suite specific configuration fields
                 trackingEvents: {
-                    testPageUrl : "http://cswebplayer.viaccess.fr/functionnalTests/CSAdsPlugin-Master/dist/samples/adsTestsPlayer", //url of the html page under test
-                    // testPageUrl : "http://localhost/CSAdsPlugin/samples/adsTestsPlayer/",
+                    //testPageUrl : "http://cswebplayer.viaccess.fr/functionnalTests/CSAdsPlugin-Master/samples/adsTestsPlayer", //url of the html page under test
+                    testPageUrl : "http://localhost/csadsplugin/samples/adsTestsPlayer/",
                     adsDuration : 10,
                     play: {
-                        streams: [
-                            streams.MAST_NONE,
-                            streams.MAST_PREROLL_VAST2_LINEAR,
-                            streams.MAST_PREROLL_VAST2_LINEAR_IMAGE,
-                            streams.MAST_PREROLL_VAST3_LINEAR
+                        ads: [
+                            {"adsUrl":"",
+                             "ExpectedtrackingEvents":{} },
+                            {"adsUrl":"http://cswebplayer.viaccess.fr/adsserver/xml/mast/preroll.xml",
+                             "ExpectedtrackingEvents":{"creativeView":1,"start":1,"firstQuartile":1,"midpoint":1,"thirdQuartile":1,"complete":1} },
+                            {"adsUrl":"http://cswebplayer.viaccess.fr/adsserver/xml/mast/preroll-image.xml",
+                             "ExpectedtrackingEvents":{} },
+                            {"adsUrl":"http://cswebplayer.viaccess.fr/adsserver/xml/mast/preroll-vast30.xml",
+                             "ExpectedtrackingEvents":{"creativeView":1,"start":1,"firstQuartile":1,"midpoint":1,"thirdQuartile":1,"complete":1,"progress":3,"rewind":'x'} }
                         ]
                     },
                     pause: {
-                        streams: [
-                            streams.MAST_PREROLL_VAST3_LINEAR_PAUSE
-                        ]
+                        "adsUrl":"http://cswebplayer.viaccess.fr/adsserver/xml/mast/preroll-vast30.xml",
+                        "ExpectedtrackingEvents":{"creativeView":1,"start":1,"firstQuartile":1,"midpoint":1,"thirdQuartile":1,"complete":1,"pause":1,"resume":1,"progress":3,"rewind":'x'}
                     },
                     mute: {
-                        streams: [
-                            streams.MAST_PREROLL_VAST3_LINEAR_MUTE
-                        ]
+                        "adsUrl":"http://cswebplayer.viaccess.fr/adsserver/xml/mast/preroll-vast30.xml",
+                        "ExpectedtrackingEvents":{"creativeView":1,"start":1,"firstQuartile":1,"midpoint":1,"thirdQuartile":1,"complete":1,"mute":1,"unmute":1,"progress":3,"rewind":'x'}
                     },
                     closeLinear: {
-                        streams: [
-                            streams.MAST_PREROLL_VAST3_LINEAR_CLOSE
-                        ]
+                        "adsUrl":"http://cswebplayer.viaccess.fr/adsserver/xml/mast/preroll-vast30.xml",
+                        "ExpectedtrackingEvents":{"creativeView":1,"start":1,"closeLinear":1,"progress":'x',"midpoint":'x', "firstQuartile":'x',"rewind":'x'}
                     },
                     rewind: {
-                        streams: [
-                            streams.MAST_PREROLL_VAST3_LINEAR_REWIND
-                        ]
+                        "adsUrl":"http://cswebplayer.viaccess.fr/adsserver/xml/mast/preroll-vast30.xml",
+                        "ExpectedtrackingEvents":{"creativeView":1,"start":1,"firstQuartile":1,"midpoint":1,"thirdQuartile":1,"complete":1,"rewind":4,"progress":3}
                     },
                     fullscreen: {
-                        streams: [
-                            streams.MAST_PREROLL_VAST3_LINEAR_FULLSCREEN
-                        ]
+                        "adsUrl":"http://cswebplayer.viaccess.fr/adsserver/xml/mast/preroll-vast30.xml",
+                        "ExpectedtrackingEvents":{"creativeView":1,"start":1,"firstQuartile":1,"midpoint":1,"thirdQuartile":1,"complete":1,"progress":3,"exitFullscreen":1,"fullscreen":1,"rewind":'x'}
                     },
                     acceptInvitationLinear: {
-                        streams: [
-                            streams.MAST_PREROLL_VAST3_LINEAR_ACCEPTINVITATION
-                        ]
+                        "adsUrl":"http://cswebplayer.viaccess.fr/adsserver/xml/mast/preroll-vast30.xml",
+                        "ExpectedtrackingEvents":{"creativeView":1,"start":1,"firstQuartile":1,"midpoint":1,"thirdQuartile":1,"complete":1,"progress":3,"acceptInvitationLinear":1,"rewind":'x'}
                     }
                 },
 
-                // Test suite multipleAds specific configuration fields
+                // multipleAds test suite specific configuration fields
                 multipleAds: {
                     //testPageUrl : "http://localhost/csadsplugin/samples/adPodsTestsPlayer",
                     testPageUrl : "http://cswebplayer.viaccess.fr/functionnalTests/csadsplugin/samples/adPodsTestsPlayer",
