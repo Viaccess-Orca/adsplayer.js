@@ -19,7 +19,7 @@ define(function(require) {
     registerSuite(function() {
         var command = null;
         var sleepTime = 3;
-        var NAME = 'TEST_EVT_CLOSELINEAR';
+        var NAME = 'TEST_EVT_ACCEPTINVITATIONLINEAR';
 
         return {
             name: NAME,

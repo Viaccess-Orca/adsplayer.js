@@ -19,7 +19,7 @@ define(function(require) {
         registerSuite(function(){
             var command = null;
             var sleepTime = 3;
-            var NAME = 'TEST_EVT_MUTE';
+            var NAME = 'TEST_EVT_FULLSCREEN';
 
             return {
                 name: NAME,
