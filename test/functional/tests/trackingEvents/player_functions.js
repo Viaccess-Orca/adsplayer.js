@@ -2,7 +2,7 @@
 define([], function () {
     return {
 
-        loadStream: function(stream) {
+        loadStream: function(streamUrl,adUrl) {
             
 			if(typeof(player) != 'undefined'){
 				window.mediaPlayer = player;
@@ -10,12 +10,16 @@ define([], function () {
 			else{
 				window.mediaPlayer = webplayer.mediaPlayer;
 			}
-			
-			
+
+            var stream = {
+                url : streamUrl,
+                protData : null,
+                adsUrl : adUrl
+            };
             mediaPlayer.load(stream);
         },
 
-        loadStreamAndExitPopup: function(stream) {
+        loadStreamAndExitPopup: function(streamUrl,adUrl) {
 
             if(typeof(player) != 'undefined'){
                 window.mediaPlayer = player;
@@ -30,6 +34,11 @@ define([], function () {
             };
             window.onbeforeunload = onExit ;
 
+            var stream = {
+                url : streamUrl,
+                protData : null,
+                adsUrl : adUrl
+            };
             mediaPlayer.load(stream);
         },
 
