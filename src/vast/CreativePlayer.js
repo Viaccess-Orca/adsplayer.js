@@ -117,18 +117,17 @@ class CreativePlayer {
     }
 
     _onAdClick (creative) {
-        // this = creative player
         if (!creative.videoClicks) {
             return;
         }
         this._debug.log("Creative Click");
         // ClickThrough : send an event for the application to open the web page
         if (creative.videoClicks.clickThrough) {
-            this._debug.log("Ad click, uri = " + creative.videoClicks.clickThrough);
+            this._debug.log("Ad click, uri = " + creative.videoClicks.clickThrough.uri);
             this._eventBus.dispatchEvent({
                 type: 'click',
                 data: {
-                    uri: creative.videoClicks.clickThrough
+                    uri: creative.videoClicks.clickThrough.uri
                 }
             });
         }
