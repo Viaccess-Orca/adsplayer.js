@@ -1,4 +1,6 @@
 ### Release Notes CSAdsPlugin-vX.X.X (xx/xx/2016)
 * VAST 3.0: adPods
 * VAST 2.0: Multiple ads in a vast response
+* VAST 3.0: Add events progress, exitFullscreen, acceptInvitationLinear, closeLinear
+* VAST 2.0: Fix events rewind, pause
 * Orange AdsPlayer v1.0.0
