@@ -26,6 +26,13 @@ define(function(require) {
 
             setup: function () {
                 tests.log(NAME, 'Setup');
+
+                // Skip entire suite if running on windows10/firefox
+                // this.remote.session.capabilities.platform === 'XP' on windows10
+                if ((this.remote.session.capabilities.browserName === 'firefox') && (this.remote.session.capabilities.platform === 'XP'))  {
+                    this.skip('skipped on windows10/firefox');
+                }
+                
                 command = this.remote.get(require.toUrl(config.tests.trackingEvents.testPageUrl));
                 command = tests.setup(command);
                 return command;
