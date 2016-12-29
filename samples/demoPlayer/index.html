@@ -7,19 +7,19 @@
     rel="shortcut icon" type="image/vnd.microsoft.icon">
 <link rel="stylesheet" type="text/css" href="css/style.css" />
 <link rel="stylesheet" type="text/css" href="css/tables.css" />
-<!-- sources -->
-<script src="../../dist/csadsplugin.js"></script>
-<!-- endsources -->
-<!-- inject:js -->
-<script type="text/javascript" src="../cswebplayer.js"></script>
-<!-- endinject -->
+
+<script type="text/javascript" src="../hasplayer.min.js"></script>
+<script type="text/javascript" src="../../dist/csadsplugin.js"></script>
+
 <script type="text/javascript" src="json/config.json"></script>
 <script type="text/javascript" src="js/streamSelector.js"></script>
+<script type="text/javascript" src="js/drmSelector.js"></script>
 <script type="text/javascript" src="js/stream.js"></script>
 <script type="text/javascript" src="js/adSelector.js"></script>
 <script type="text/javascript" src="js/ad.js"></script>
 <script type="text/javascript" src="js/adsPlugin.js"></script>
 <script type="text/javascript" src="js/webPlayer.js"></script>
+
 </head>
 <body>
 <div class="clsHeader">
@@ -29,12 +29,10 @@
             <h1 class="clsLogo" onclick="fScrollTo('top')"><img src="images/logo_vo.png" alt="Viaccess.Orca" width="123px" height="67px"/></h1>
             <div class="clsMenu">
                 <ul>
-                    <li id="cswebplayer_version" class="active">
-                        CSWebPlayer
-                    </li>
+                    <li id="cswebplayer_version" class="active">HasPlayer</li>
                 </ul>
                 <ul>
-                    <li id="adsplayer_version" class="active"></li>
+                    <li id="adsplayer_version" class="active">CSAdsPlugin</li>
                 </ul>
             </div>
         </div>
@@ -51,6 +49,24 @@
                     </select>
                 </td>
         </tr>
+		
+		<tr id="licencer">
+            <td><label>Licencer</label></td>
+			<td>
+				<div><label>Url</label><input type="text" id="licencerUrl" name="licencerUrl"></div>
+				<div>
+					<label>Drm</label>
+					<select id="licencerDrm" name="licencerDrm">
+						<option value="com.microsoft.playready">com.microsoft.playready</option>
+						<option value="com.widevine.alpha">com.widevine.alpha</option>
+					</select>
+				</div>
+				<div id="customData">
+					<label>Custom Data</label><input type="text" id="licencerCustomData" name="licencerCustomData">
+				</div>
+			</td>
+        </tr>
+		
         <tr>
             <td><label>Stream url</label></td>
             <td><input type="text" id="stream" name="stream" size="100" value=""></input>
@@ -63,7 +79,7 @@
         </tr>
         <tr>
             <td><label>Ad url</label></td>
-            <td><input type="text" id="ad_url" name="ad_url" size="100" value=""></input>
+            <td><input type="text" id="ad_url" name="ad_url" size="100" value="" disabled="disabled"></input>
             </td>
         </tr>
         <tr>
@@ -93,14 +109,21 @@
 
     document.addEventListener("DOMContentLoaded", function(event) {
 
-        let streamSelector  = new StreamSelector(jsonStreamsDescription);
-        let adSelector      = new AdSelector(jsonAdsDescription);
-        let adsPlugin       = new AdsPlugin();
+        var streamSelector  = new StreamSelector(jsonStreamsDescription);
+        var adSelector      = new AdSelector(jsonAdsDescription);
+		var drmSelector     = new DrmSelector();
+        var adsPlugin       = new AdsPlugin();
         webplayer       	= new WebPlayer(adsPlugin.getPlugin());
+
+        function updateList(){
+            updateAudioTracksList();
+            updateSubtitleTracksList();
+            updateVideoBitratesList();
+        }
 
         // update audio tracks list
         function updateAudioTracksList(){
-            let at = document.getElementById("audio-tracks");
+            var at = document.getElementById("audio-tracks");
             
             // remove all audio tracks if any
             while (at.firstChild) { 
@@ -108,16 +131,17 @@
             }
             
             // get the current audio
-            let audio = webplayer.getAudio();
+            var audio = webplayer.getAudio();
             
             // add audio tracks
-            let audioTracks = webplayer.getAudios();
+            var audioTracks = webplayer.getAudios();
             if (audioTracks && audioTracks.length >= 1) {
-                for (let i = 0; i < audioTracks.length; i++) {
-                    let option = document.createElement("option");
+                for (var i = 0; i < audioTracks.length; i++) {
+                    var option = document.createElement("option");
                     option.text = audioTracks[i].lang;
+                    option.value = audioTracks[i].id;
                     // select the current
-                    if (audio.lang === audioTracks[i].lang) {
+                    if (audio.id === audioTracks[i].id) {
                         option.selected = true;
                     }
                     at.add(option);
@@ -131,7 +155,7 @@
         
         // update subtitle tracks list
         function updateSubtitleTracksList () {
-            let st = document.getElementById("sub-tracks");
+            var st = document.getElementById("sub-tracks");
             
             // remove all subtitle tracks if any
             while (st.firstChild) { 
@@ -139,16 +163,17 @@
             }
             
             // get the current audio
-            let subtitle = webplayer.getSubtitle();
+            var subtitle = webplayer.getSubtitle();
             
             // add subtitle tracks
-            let subtitleTracks = webplayer.getSubtitles();
+            var subtitleTracks = webplayer.getSubtitles();
             if (subtitleTracks && subtitleTracks.length >= 1) {
-                for (let i = 0; i < subtitleTracks.length; i++) {
-                        let option = document.createElement("option");
+                for (var i = 0; i < subtitleTracks.length; i++) {
+                        var option = document.createElement("option");
                         option.text = subtitleTracks[i].lang;
+                        option.value = subtitleTracks[i].id;
                         // select the current
-                        if (subtitle.lang === subtitleTracks[i].lang) {
+                        if (subtitle.id === subtitleTracks[i].id) {
                             option.selected = true;
                         }
                         st.add(option);
@@ -161,7 +186,7 @@
         
         // update video bitrates list
         function updateVideoBitratesList() {
-            let vbr = document.getElementById("video-bitrate");
+            var vbr = document.getElementById("video-bitrate");
             
              // remove all bitrates if any
             while (vbr.firstChild) { 
@@ -169,16 +194,16 @@
             }
             
             // get the current bitrate
-            let bitrate = webplayer.getVideoBitrate();
+            var bitrate = webplayer.getVideoBitrate();
             
             // add video bitrates
-            let bitrates = webplayer.getVideoBitrates();
+            var bitrates = webplayer.getVideoBitrates();
             
             if (!bitrates || bitrates.length == 0) {
                 vbr.style.display = "none";
             } else {
                 bitrates.forEach(function(element,index,array){
-                    let option = document.createElement("option");
+                    var option = document.createElement("option");
                     option.text = element;
                     // select the current
                     if (bitrate === index) {
@@ -190,6 +215,10 @@
                 vbr.style.display = "block";
             }
         }
+
+        // update audio, subtitle and bandwidth list
+        document.getElementById('videoplayer-container').removeEventListener("loadeddata", updateList);
+        document.getElementById('videoplayer-container').addEventListener("loadeddata", updateList);
 
         // select a stream
         document.querySelector('#stream_type').addEventListener("change",function(e) {
@@ -203,14 +232,14 @@
 
         // select an audio
         document.getElementById("audio-tracks").addEventListener("change",function(e) {
-            var lang = this.options[this.selectedIndex].value;
-            webplayer.selectAudio(lang);
+            var id = this.options[this.selectedIndex].value;
+            webplayer.selectAudio(id);
         });
         
         // select a subtitle
         document.getElementById("sub-tracks").addEventListener("change",function(e) {
-            var subtitle = this.options[this.selectedIndex].value;
-            webplayer.selectSubtitle(subtitle);
+            var id = this.options[this.selectedIndex].value;
+            webplayer.selectSubtitle(id);
         });
         
         // select a bitrates
@@ -222,11 +251,8 @@
         document.querySelector('#play_button').addEventListener("click",function(e) {
             var selectedStream = streamSelector.getSelected();
             var selectedAd  = adSelector.getSelected();
-            webplayer.play(selectedStream, selectedAd, function(){
-                updateAudioTracksList();
-                updateSubtitleTracksList();
-                updateVideoBitratesList();
-            });
+
+            webplayer.play(selectedStream, selectedAd);
         });
 
         // stop button

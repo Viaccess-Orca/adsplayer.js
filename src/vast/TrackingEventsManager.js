@@ -92,7 +92,6 @@ class TrackingEventsManager {
                     case 'pause':
                         trackingEvent.oneShot = false;
                         /** Copyright (C) 2016 VIACCESS S.A and/or ORCA Interactive **/
-                        //this._addEventListener(this._adMediaPlayer, 'paused', trackingEvent);
                         trackingEvent.condition = () => {
                                 // to avoid pause event at the end of stream
                                 return (this._adMediaPlayer.getElement().ended === false );

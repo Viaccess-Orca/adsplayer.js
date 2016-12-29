@@ -336,3 +336,26 @@ li.active, a.active
     zIndex: "4";
 }
 
+/**/
+
+#licencer > td > div > label{
+	display: inline-block;
+	width: 15%;
+}
+
+#licencer > td > div > input{
+	width: 84%;
+	margin: 0;
+	margin-left:3px;
+	padding: 0;
+}
+
+#licencer :first-child input{
+	margin-bottom: 5px;
+}
+
+#customData{
+	margin-top: 5px;
+}
+
+

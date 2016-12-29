@@ -1,6 +1,6 @@
 {
   "name": "adsplayer.js",
-  "version": "1.0.0",
+  "version": "1.1.0-dev",
   "description": "Plugin for hasplayer.js used to handle ad-insertion in MAST/VAST format",
   "scripts": {
     "build": "gulp",
@@ -38,6 +38,7 @@
     "gulp-sourcemaps": "^1.6.0",
     "gulp-uglify": "^1.5.3",
     "gulp-zip": "^3.2.0",
+    "intern": "^3.3.1",
     "jsdoc": "^3.4.0",
     "jshint": "^2.9.2",
     "jshint-stylish": "^2.1.0",
@@ -47,7 +48,6 @@
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0",
     "watchify": "^3.7.0",
-    "yargs": "^5.0.0",
-    "intern": "^3.3.1"
+    "yargs": "^5.0.0"
   }
 }

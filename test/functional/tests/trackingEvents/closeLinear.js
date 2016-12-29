@@ -2,39 +2,29 @@
  TEST_EVT_CLOSELINEAR:
 
 - load test page
-- for each stream:
-    - load stream
-    - stop the ads player
-    - wait the end of the ads
-    - check received tracking events
+- load stream
+- stop the ads player
+- wait the end of the ads
+- check received tracking events
 **/
 
-define([
-    'intern!object',
-    'intern/chai!assert',
-    'require',
-    'test/functional/config/testsConfig',
-    'test/functional/tests/player_functions',
-    'test/functional/tests/tests_functions'
-    ], function(registerSuite, assert, require, config, player, tests) {
+define(function(require) {
 
-        // Suite name
+    var intern = require('intern');
+    var registerSuite = require('intern!object');
+    var assert = require('intern/chai!assert');
+    var player = require('test/functional/tests/trackingEvents/player_functions');
+    var tests = require('test/functional/tests/trackingEvents/tests_functions');
+    var config = require('test/functional/config/testsConfig');
+
+    registerSuite(function() {
+
+        var command = null;
+        var sleepTime = 4;
         var NAME = 'TEST_EVT_CLOSELINEAR';
 
-        // Test configuration (see config/testConfig.js)
-        var testConfig = config.tests.trackingEvents.closeLinear,
-            streams = testConfig.streams;
+        return {
 
-        // Test constants
-        var ADS_DURATION = config.adsDuration; // ads duration (in s)
-
-        // Test variables
-        var command = null;
-
-    var testSetup = function (stream) {
-        var sleepTime = 4;
-
-        registerSuite({
             name: NAME,
 
             setup: function() {
@@ -63,9 +53,9 @@ define([
                 return (command.acceptAlert());
             },
 
-            loadStream: function() {
-                tests.logLoadStream(NAME, stream);
-                return command.execute(player.loadStreamAndExitPopup, [stream])
+            "loadStream": function() {
+                tests.log(NAME, config.streamUrl);
+                return command.execute(player.loadStreamAndExitPopup, [config.streamUrl, config.tests.trackingEvents.closeLinear.adsUrl])
             },
 
             "closeAds": function () {
@@ -80,19 +70,15 @@ define([
                     })
                     .then(function (receivedTackingEvents) {
                         // Compare TackingEvents arrays
-                        var res = tests.checkTrackingEvents(stream.ExpectedtrackingEvents, receivedTackingEvents);
+                        var res = tests.checkTrackingEvents(config.tests.trackingEvents.closeLinear.ExpectedtrackingEvents, receivedTackingEvents);
                         if (!res) {
                             tests.log(NAME, 'Received tracking events: ' + JSON.stringify(receivedTackingEvents));
-                            tests.log(NAME, 'expected tracking events: ' + JSON.stringify(stream.ExpectedtrackingEvents));
+                            tests.log(NAME, 'expected tracking events: ' + JSON.stringify(config.tests.trackingEvents.closeLinear.ExpectedtrackingEvents));
                         }
                         assert.isTrue(res);
                     }))
             }
-        });
-    };
+        };
+    });
 
-    for (var i = 0; i < streams.length; i++) {
-            // Performs load test page, stream and tests
-        testSetup(streams[i]);
-        }
 });

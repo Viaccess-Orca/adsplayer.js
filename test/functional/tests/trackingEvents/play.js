@@ -7,65 +7,52 @@
     - wait the end of the ads
     - check if tracking events have been received
 **/
-define([
-    'intern!object',
-    'intern/chai!assert',
-    'require',
-    'test/functional/config/testsConfig',
-    'test/functional/tests/player_functions',
-    'test/functional/tests/tests_functions'
-    ], function(registerSuite, assert, require, config, player, tests) {
-
-        // Suite name
-        var NAME = 'TEST_EVT_PLAY';
-
-        // Test configuration (see config/testConfig.js)
-        var testConfig = config.tests.trackingEvents.play,
-            streams = testConfig.streams;
-
-        // Test constants
-        var ADS_DURATION = config.adsDuration; // ads duration (in s)
-
-        // Test variables
+define(function(require) {
+    var intern = require('intern');
+    var registerSuite = require('intern!object');
+    var assert = require('intern/chai!assert');
+    var player = require('test/functional/tests/trackingEvents/player_functions');
+    var tests = require('test/functional/tests/trackingEvents/tests_functions');
+    var config = require('test/functional/config/testsConfig');
+    var NAME = 'TEST_EVT_PLAY';
+    var test = function(ad) {
         var command = null;
 
-        var test = function(stream) {
+        registerSuite({
+            name: NAME,
 
-            registerSuite({
-                name: NAME,
+            setup: function() {
+                tests.log(NAME, 'Setup');
+                command = this.remote.get(require.toUrl(config.tests.trackingEvents.testPageUrl));
+                command = tests.setup(command);
+                return command;
+            },
 
-                setup: function() {
-                    tests.log(NAME, 'Setup');
-                    command = this.remote.get(require.toUrl(config.tests.trackingEvents.testPageUrl));
-                    command = tests.setup(command);
-                    return command;
-                },
+            "loadStream": function() {
+                tests.log(NAME, config.streamUrl);
+                return command.execute(player.loadStream, [config.streamUrl,ad.adsUrl]);
+            },
 
-                loadStream: function() {
-                    tests.logLoadStream(NAME, stream);
-                    return command.execute(player.loadStream, [stream]);
-                },
+            "playing": function() {
+                tests.log(NAME, 'wait end of ads - ' + config.tests.trackingEvents.adsDuration);
+                return command.sleep(2 * config.tests.trackingEvents.adsDuration * 1000)
+                    .then(function() {
+                        return command.execute(player.getReceivedTackingEvents);
+                    })
+                    .then(function (receivedTackingEvents) {
+                        // Compare TackingEvents arrays
+                        var res = tests.checkTrackingEvents(ad.ExpectedtrackingEvents,receivedTackingEvents);
+                        if (!res) {
+                            tests.log(NAME, 'Received tracking events: ' + JSON.stringify(receivedTackingEvents));
+                            tests.log(NAME, 'expected tracking events: ' + JSON.stringify(ad.ExpectedtrackingEvents));
+                        }
+                        assert.isTrue(res);
+                    });
+           }
+        });
+    };
 
-                playing: function() {
-                    tests.log(NAME, 'wait end of ads - ' + ADS_DURATION);
-                    return command.sleep(2 * ADS_DURATION * 1000)
-                        .then(function() {
-                            return command.execute(player.getReceivedTackingEvents);
-                        })
-                        .then(function (receivedTackingEvents) {
-                            // Compare TackingEvents arrays
-                            var res = tests.checkTrackingEvents(stream.ExpectedtrackingEvents,receivedTackingEvents);
-                            if (!res) {
-                                tests.log(NAME, 'Received tracking events: ' + JSON.stringify(receivedTackingEvents));
-                                tests.log(NAME, 'expected tracking events: ' + JSON.stringify(stream.ExpectedtrackingEvents));
-                            }
-                            assert.isTrue(res);
-                        });
-               }
-            });
-        };
-
-        for (var i = 0; i < streams.length; i++) {
-            test(streams[i]);
-        }
+    for (var i = 0; i < config.tests.trackingEvents.play.ads.length; i++) {
+        test(config.tests.trackingEvents.play.ads[i]);
+    }
 });

@@ -1,14 +1,36 @@
-/**
- * Created by vobox on 9/28/16.
+/*
+ * The copyright in this software module is being made available under the BSD License, included
+ * below. This software module may be subject to other third party and/or contributor rights,
+ * including patent rights, and no such rights are granted under this license.
+ *
+ * Copyright (C) 2016 VIACCESS S.A and/or ORCA Interactive
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without modification, are permitted
+ * provided that the following conditions are met:
+ * - Redistributions of source code must retain the above copyright notice, this list of conditions
+ *   and the following disclaimer.
+ * - Redistributions in binary form must reproduce the above copyright notice, this list of
+ *   conditions and the following disclaimer in the documentation and/or other materials provided
+ *   with the distribution.
+ * - Neither the name of VIACCESS S.A and/or ORCA Interactive nor the names of its contributors may
+ *   be used to endorse or promote products derived from this software module without specific prior
+ *   written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS “AS IS” AND ANY EXPRESS OR
+ * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
+ * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
+ * WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
-"use strict";
 
 class WebPlayer {
 
     constructor(adsPlugin) {
 
-        //MediaPlayer is NOT an ES6 class, then can't use extends MediaPlayer
         this.mediaPlayer = new MediaPlayer();
 
         this.mediaPlayer.init(document.getElementById('videoplayer-container'));
@@ -27,8 +49,7 @@ class WebPlayer {
         this.mediaPlayer.setDefaultAudioLang('fra');
         this.mediaPlayer.setDefaultSubtitleLang('fre');
         this.mediaPlayer.enableSubtitles(false);
-        document.getElementById('cswebplayer_version').textContent+="  "+this.mediaPlayer.getVersion()+" (based on dash.js "+
-            this.mediaPlayer.getVersionDashJS()+")";
+        document.getElementById('cswebplayer_version').textContent +=" " + this.mediaPlayer.getVersion();
     }
 
     /**
@@ -38,15 +59,31 @@ class WebPlayer {
      * @memberof WebPlayer#
      * @param {Stream} stream - the stream to play
      * @param {Ad} ad - the ad to play
-     * @param {} onPlayCallback - the callback to call when the stream is loaded
      *
      */
-    play(stream,ad,onPlayCallback) {
+    play(stream,ad) {
         var protData = new Array();
-        for (var i = 0; i < stream.getNumberOfLicensers(); i++){
-            protData[stream.getLicenserDrmType(i)] = new Array();
-            protData[stream.getLicenserDrmType(i)].laURL = stream.getLicenserUrl(i);
-        }
+        
+		var licencerUrlValue = document.getElementById("licencerUrl").value;
+		var licencerDrmValue = document.getElementById("licencerDrm").value;
+		var streamIndex = document.getElementById("stream_type").selectedIndex;
+		var licencerCustomDataValue = document.getElementById("licencerCustomData").value;
+		
+		//If Licencer is manually set, it overrides the value setted in config.json
+		if(streamIndex === 0 && licencerUrlValue != "" && licencerUrlValue != null && typeof(licencerUrlValue) != "undefined"){
+			protData[licencerDrmValue] = new Array();
+			protData[licencerDrmValue].laURL = licencerUrlValue;
+			
+			if(licencerCustomDataValue != "" && licencerCustomDataValue != null && typeof(licencerCustomDataValue) != "undefined"){
+				protData[licencerDrmValue].cdmData = licencerCustomDataValue;
+			}
+		}
+		else{
+			for (var i = 0; i < stream.getNumberOfLicensers(); i++){
+				protData[stream.getLicenserDrmType(i)] = new Array();
+				protData[stream.getLicenserDrmType(i)].laURL = stream.getLicenserUrl(i);
+			}
+		}
 
         var stream = {
             url : stream.getUrl(),
@@ -55,7 +92,6 @@ class WebPlayer {
         };
 
         this.mediaPlayer.load(stream);
-        this.mediaPlayer.addEventListener("loadeddata", onPlayCallback);
     }
 
     /**
@@ -63,14 +99,14 @@ class WebPlayer {
      * @method selectAudio
      * @access public
      * @memberof WebPlayer#
-     * @param {Track} lang - the language of audio track to select
+     * @param {Track} id - the id of the language of audio track to select
      *
      */
-    selectAudio(lang){
+    selectAudio(id){
         var audios = this.getAudios();
         for (var i = 0; i < audios.length; i++) {
-            if (audios[i].lang == lang) {
-                this.mediaPlayer.setAudioTrack(audios[i]);
+            if (audios[i].id == id) {
+                this.mediaPlayer.selectTrack(MediaPlayer.TRACKS_TYPE.AUDIO,audios[i]);
             }
         }
     }
@@ -83,7 +119,7 @@ class WebPlayer {
      * @return {Array<Track>} the available audio tracks.
      */
     getAudios(){
-        return this.mediaPlayer.getAudioTracks();
+        return this.mediaPlayer.getTracks(MediaPlayer.TRACKS_TYPE.AUDIO);
     }
     
     /**
@@ -94,8 +130,8 @@ class WebPlayer {
      * @return {Array<Track>} the current audio track.
      */
     getAudio(){
-        if  (this.mediaPlayer.getSelectedAudioTrack())
-            return this.mediaPlayer.getSelectedAudioTrack();
+        if  (this.mediaPlayer.getSelectedTrack(MediaPlayer.TRACKS_TYPE.AUDIO))
+            return this.mediaPlayer.getSelectedTrack(MediaPlayer.TRACKS_TYPE.AUDIO);
         else
             return {id : 'none', lang : 'none'};
     }
@@ -105,23 +141,23 @@ class WebPlayer {
      * @method selectSubtitle
      * @access public
      * @memberof WebPlayer#
-     * @param {Track} lang - the language of subtitle track to select
+     * @param {Track} id - the id of the language of subtitle track to select
      *
      */
-    selectSubtitle(lang){
-    	if (lang === 'none'){
+    selectSubtitle(id){
+    	if (id === 'none'){
     		this.mediaPlayer.enableSubtitles(false);
             this.mediaPlayer.enableSubtitleExternDisplay(false);
     	}
     	else {
             let subtitles = this.getSubtitles();
 	        for (let i = 0; i < subtitles.length; i++) {
-	            if (subtitles[i].lang == lang) {
+	            if (subtitles[i].id == id) {
                     // Enable subtitle
 	                this.mediaPlayer.enableSubtitles(true);
                     
                     // Select subtitle track
-                    this.mediaPlayer.setSubtitleTrack(subtitles[i]);
+                    this.mediaPlayer.selectTrack(MediaPlayer.TRACKS_TYPE.TEXT,subtitles[i]);
                     break;
 	            }
 	        }
@@ -137,7 +173,7 @@ class WebPlayer {
      */
     getSubtitles(){
     	var noSub = {id : 'none', lang : 'none'};
-    	var tracks = this.mediaPlayer.getSubtitleTracks();
+    	var tracks = this.mediaPlayer.getTracks(MediaPlayer.TRACKS_TYPE.TEXT);
         tracks.splice(0,0,noSub); // Add a no subtitle track at index 0
         return tracks;
     }
@@ -150,8 +186,8 @@ class WebPlayer {
      * @return {Array<Track>} the current subtitle track.
      */
     getSubtitle(){
-        if  (this.mediaPlayer.getSelectedSubtitleTrack())
-            return this.mediaPlayer.getSelectedSubtitleTrack();
+        if  (this.mediaPlayer.getSelectedTrack(MediaPlayer.TRACKS_TYPE.TEXT))
+            return this.mediaPlayer.getSelectedTrack(MediaPlayer.TRACKS_TYPE.TEXT);
         else
             return {id : 'none', lang : 'none'};
     }
