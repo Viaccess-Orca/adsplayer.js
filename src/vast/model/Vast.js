@@ -42,7 +42,7 @@
 class Vast {
     constructor () {
         this.version = '';                  // [Required] Current version is 3.0
-        this.ads = [];                       // [Required] Top-level element,wraps each ad in the response
+        this.ads = [];                      // [Required] Top-level element,wraps each ad in the response
     }
 }
 
@@ -152,7 +152,8 @@ Creative.TYPE = {
 */
 class Linear {
     constructor () {
-        this.skipoffset = 0;                // [Required] Time value that identifies when skip controls are made available to the end user.
+        this.skipoffsetInSeconds = 0;       // [Optional] Time value that identifies when skip controls are made available to the end user.
+        this.skipoffsetPercent = 0;         // [Optional] Time value that identifies when skip controls are made available to the end user.
         this.adParameters = null;           // [Optional] Data to be passed into the video ad
         this.duration = 0;                  // [Required] Duration in standard time format, hh:mm:ss
         this.mediaFiles = [];               // [Required] Media file elements
@@ -219,34 +220,6 @@ class AdParameters {
 }
 
 /**
- * @class MediaFile
- * @ignore
- */
-class MediaFile {
-    constructor () {
-        this.id = '';                       // [Optional] Identifier
-        this.delivery = '';                 // [Required] Method of delivery of ad ('streaming' or 'progressive')
-        this.type = '';                     // [Required] MIME type
-        this.bitrate = 0;                   // [Optional] For progressive load video, specify the average bitrate
-        this.minBitrate = 0;                // [Optional] Otherwise, minimum bitrate
-        this.maxBitrate = 0;                // [Optional] Otherwise, maximum bitrate
-        this.width = 0;                     // [Required] Pixel dimensions of video
-        this.height = 0;                    // [Required] Pixel dimensions of video
-        this.codec = 0;                     // [Optional] The codec according to RFC4281
-        this.scalable = true;               // [Optional] Whether it is acceptable to scale the image.
-        this.maintainAspectRatio = true;    // [Optional] Whether the ad must have its aspect ratio maintained when scaled
-        this.apiFramework = '';             // [Optional] Defines the method to use for communication if the MediaFile is interactive.
-        this.uri = '';
-    }
-}
-
-// MediaFile delivery types
-MediaFile.DELIVERY = {
-    STREAMING: 'streaming',
-    PROGRESSIVE: 'progressive '
-};
-
-/**
 * @class TrackingEvent
 * @ignore
 */
@@ -254,10 +227,8 @@ class TrackingEvent {
     constructor () {
         this.uri = '';                      // [Optional] URI to track various events during playback
         this.event = '';                    // [Required] The name of the event to track for the Linear element
-        /** Copyright (C) 2016 VIACCESS S.A and/or ORCA Interactive **/
         this.offsetInSeconds = '';  		// [Optional] Required in "Progess" event, not use with other events
         this.offsetPercent = '';  	    	// [Optional] Required in "Progess" event, not use with other events
-        /** end **/
     }
 }
 
@@ -306,6 +277,34 @@ class Click {
         this.uri = '';                      // [Required] URI
     }
 }
+
+/**
+ * @class MediaFile
+ * @ignore
+ */
+class MediaFile {
+    constructor () {
+        this.id = '';                       // [Optional] Identifier
+        this.delivery = '';                 // [Required] Method of delivery of ad ('streaming' or 'progressive')
+        this.type = '';                     // [Required] MIME type
+        this.bitrate = 0;                   // [Optional] For progressive load video, specify the average bitrate
+        this.minBitrate = 0;                // [Optional] Otherwise, minimum bitrate
+        this.maxBitrate = 0;                // [Optional] Otherwise, maximum bitrate
+        this.width = 0;                     // [Required] Pixel dimensions of video
+        this.height = 0;                    // [Required] Pixel dimensions of video
+        this.codec = 0;                     // [Optional] The codec according to RFC4281
+        this.scalable = true;               // [Optional] Whether it is acceptable to scale the image.
+        this.maintainAspectRatio = true;    // [Optional] Whether the ad must have its aspect ratio maintained when scaled
+        this.apiFramework = '';             // [Optional] Defines the method to use for communication if the MediaFile is interactive.
+        this.uri = '';
+    }
+}
+
+// MediaFile delivery types
+MediaFile.DELIVERY = {
+    STREAMING: 'streaming',
+    PROGRESSIVE: 'progressive '
+};
 
 /**
 * @class StaticResource

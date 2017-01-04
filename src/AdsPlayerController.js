@@ -322,13 +322,12 @@ class AdsPlayerController {
     load (url) {
         let fileLoader = new FileLoader();
 
-        this._debug.log("(AdsPlayerController) load: " + url);
-
         // Reset the MAST and trigger managers
         this._mast = null;
         this._triggerManagers = [];
 
         // Download and parse MAST file
+        this._debug.log("Download MAST file: " + url);
 
         return new Promise((resolve, reject) => {
             fileLoader.load(url).then(result => {
@@ -358,7 +357,7 @@ class AdsPlayerController {
      */
     stop () {
 
-        this._debug.log("(AdsPlayerController) stop");
+        this._debug.log("Stop");
 
         // Stop/abort the file loaders
         for (var i = 0; i < this._fileLoaders.length; i++) {
@@ -377,7 +376,7 @@ class AdsPlayerController {
 
     reset () {
 
-        this._debug.log("(AdsPlayerController) reset");
+        this._debug.log("Reset");
 
         this.stop();
 
@@ -390,7 +389,7 @@ class AdsPlayerController {
 
     destroy () {
 
-        this._debug.log("(AdsPlayerController) destroy");
+        this._debug.log("Destroy");
 
         this.reset();
 
@@ -410,7 +409,7 @@ class AdsPlayerController {
      */
     play () {
 
-        this._debug.log("(AdsPlayerController) play");
+        this._debug.log("Play");
         // Play the ad player
         if (this._vastPlayerManager) {
             this._vastPlayerManager.play();
@@ -425,7 +424,7 @@ class AdsPlayerController {
      */
     pause () {
 
-        this._debug.log("(AdsPlayerController) pause");
+        this._debug.log("Pause");
         // Stop the ad player
         if (this._vastPlayerManager) {
             this._vastPlayerManager.pause();

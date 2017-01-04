@@ -54,7 +54,6 @@ class VastParser {
 
         trackingEvent.event = trackingNode.getAttribute('event');
         trackingEvent.uri = xmldom.getNodeTextValue(trackingNode);
-        /** Copyright (C) 2016 VIACCESS S.A and/or ORCA Interactive **/
         if (trackingEvent.event == "progress") {
             var offsetValue = trackingNode.getAttribute('offset');
             if (offsetValue.indexOf("%") == -1) {
@@ -65,7 +64,7 @@ class VastParser {
                 trackingEvent.offsetPercent = offsetValue.substring(0, offsetValue.indexOf("%")) / 100;
             }
         }
-        /** end **/
+
         return trackingEvent;
     }
 
@@ -147,7 +146,16 @@ class VastParser {
             iconsNodes,
             i;
 
-        linear.skipoffset = linearNode.getAttribute('skipoffset');
+        var offsetValue = linearNode.getAttribute('offset');
+        if (offsetValue) {
+            if (offsetValue.indexOf("%") == -1) {
+                /* convert HH:MM:SS ( or HH:MM:SS.mmm) in seconds */
+                linear.offsetInSeconds = new Date('1970-01-01T' + offsetValue + 'Z').getTime() / 1000;
+            }
+            else {
+                linear.offsetPercent = offsetValue.substring(0, offsetValue.indexOf("%")) / 100;
+            }
+        }
 
         adParametersNode = xmldom.getElement(linearNode, 'AdParameters');
         if (adParametersNode) {

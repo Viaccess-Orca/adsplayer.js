@@ -26,7 +26,7 @@ class AdPlayer {
             for (let i = 0; i < impressions.length; i++) {
                 impression = impressions[i];
                 if (impression.uri && impression.uri.length > 0) {
-                    this._logDebug("Send Impression, uri = " + impression.uri);
+                    this._debug.info("Send Impression, uri = " + impression.uri);
                     var http = new XMLHttpRequest();
                     http.open("GET", impression.uri, true);
                     http.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
@@ -37,7 +37,7 @@ class AdPlayer {
 
         _onCreativeEnd (){
 
-            this._logDebug("onCreativeEnd");
+            this._debug.info("onCreativeEnd");
 
             // Stop the current creative media
             this. _stopCreative();
@@ -49,7 +49,7 @@ class AdPlayer {
         }
 
         _pauseCreative (){
-            this._logDebug("pauseCreative ");
+            this._debug.info("pauseCreative ");
             if (!this._creativePlayer) {
                 return;
             }
@@ -57,7 +57,7 @@ class AdPlayer {
         }
 
         _resumeCreative (){
-            this._logDebug("resumeCreative ");
+            this._debug.info("resumeCreative ");
             if (!this._creativePlayer) {
                 return;
             }
@@ -65,7 +65,7 @@ class AdPlayer {
         }
 
         _resetCreative(){
-            this._logDebug("resetCreative ");
+            this._debug.info("(AdPlayer) resetCreative ");
             if (!this._creativePlayer) {
                 return;
             }
@@ -73,7 +73,7 @@ class AdPlayer {
         }
 
         _stopCreative(){
-            this._logDebug("stopCreative ");
+            this._debug.info("stopCreative ");
             this._eventBus.removeEventListener('creativeEnd', this._onCreativeEndListener);
 
             if (!this._creativePlayer) {
@@ -88,13 +88,13 @@ class AdPlayer {
                 linear;
 
             this._creativeIndex = index;
-            this._logDebug("playCreative(" + this._creativeIndex + ")");
+            this._debug.info("playCreative(" + this._creativeIndex + ")");
 
             // Play Linear element
             linear = creative.linear;
 
             if (linear) {
-                this._logDebug("Play Linear Ad, duration = " + linear.duration);
+                this._debug.info("Play Linear Ad, duration = " + linear.duration);
                 this._eventBus.addEventListener('creativeEnd', this._onCreativeEndListener);
                 this._creativePlayer = new CreativePlayer();
                 this._creativePlayer.init(this._adPlayerContainer, this._mainVideo);
@@ -108,7 +108,7 @@ class AdPlayer {
 
         _playAd(){
 
-           this._logDebug("PlayAd id = " + this._ad.id);
+           this._debug.info("(AdPlayer) PlayAd id = " + this._ad.id);
 
             // Send Impressions tracking
             this._sendImpressions(this._ad.inLine.impressions);
@@ -130,22 +130,6 @@ class AdPlayer {
                     data: {}
                 });
             }
-        }
-
-        _logDebug(str){
-            this._debug.log("(AdPlayer) " + str);
-        }
-
-        _logError(str){
-            this._debug.error("(AdPlayer) " + str);
-        }
-
-        _logWarn(str){
-            this._debug.warn("(AdPlayer) " + str);
-        }
-
-        _logInfo (str){
-            this._debug.info("(AdPlayer) " + str);
         }
 
     ///////////////////////////////////////////////////////////////////////////////////////////////

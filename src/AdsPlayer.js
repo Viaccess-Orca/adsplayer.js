@@ -35,7 +35,6 @@
 
 import AdsPlayerController from './AdsPlayerController';
 import EventBus from './EventBus';
-import Debug from './Debug';
 
 const NAME = 'AdsPlayer';
 const VERSION = '@@VERSION';
@@ -65,7 +64,6 @@ class AdsPlayer {
         this._error = null;
         this._warning = null;
         this._eventBus = EventBus.getInstance();
-        this._debug = Debug.getInstance();
         this._adsPlayerController = null;
 
         this.onErrorListener = _onError.bind(this);
@@ -113,7 +111,6 @@ class AdsPlayer {
     * @param {object} stream - the stream contaning all stream informations (url, protData, adsUrl)
     */
     load (stream, callback) {
-        this._debug.log("(AdsPlayer) load: " + stream.adsUrl);
         if (stream.adsUrl) {
             this._adsPlayerController.load(stream.adsUrl).then(function () {
                 callback();
@@ -133,7 +130,6 @@ class AdsPlayer {
     * @memberof AdsPlayer#
     */
     stop () {
-        this._debug.log("(AdsPlayer) stop");
         this._adsPlayerController.stop();
     }
 
@@ -145,7 +141,6 @@ class AdsPlayer {
     * @memberof AdsPlayer#
     */
     reset () {
-        this._debug.log("(AdsPlayer) reset");
         this._adsPlayerController.reset();
     }
 
@@ -157,7 +152,6 @@ class AdsPlayer {
     * @memberof AdsPlayer#
     */
     destroy () {
-        this._debug.log("(AdsPlayer) destroy");
         this._adsPlayerController.destroy();
         this._eventBus.removeEventListener('error', this.onErrorListener);
         this._eventBus.removeEventListener('warning', this.onWarningListener);
@@ -212,7 +206,6 @@ class AdsPlayer {
     * @memberof AdsPlayer#
     */
     play () {
-        this._debug.log("(AdsPlayer) play");
         this._adsPlayerController.play();
     }
 
@@ -223,7 +216,6 @@ class AdsPlayer {
     * @memberof AdsPlayer#
     */
     pause () {
-        this._debug.log("(AdsPlayer) pause");
         this._adsPlayerController.pause();
     }
 
