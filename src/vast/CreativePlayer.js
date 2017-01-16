@@ -281,8 +281,12 @@ class CreativePlayer {
             }
         });
 
-        // Remove the element from the DOM
-        this._adPlayerContainer.removeChild(this._mediaPlayer.getElement());
+        try {
+            // Remove the element from the DOM
+            this._adPlayerContainer.removeChild(this._mediaPlayer.getElement());
+        } catch(e) {
+            this._debug.warn("Failed to remove child: " + e);
+        }
 
         // Reset the media player
         this._mediaPlayer.reset();
