@@ -281,7 +281,6 @@ class CreativePlayer {
             }
         });
 
-        // Remove the element from the DOM
         this._adPlayerContainer.removeChild(this._mediaPlayer.getElement());
 
         // Reset the media player

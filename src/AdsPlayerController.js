@@ -196,9 +196,6 @@ class AdsPlayerController {
         // Pause the main video element
         this._pauseVideo();
 
-        // Notifies the application ad(s) playback starts
-        this._eventBus.dispatchEvent({type: 'start', data: null});
-
         // Add trigger end event listener
         this._eventBus.addEventListener('triggerEnd', this._onTriggerEndListener);
 
@@ -262,6 +259,11 @@ class AdsPlayerController {
         var trigger = this._checkTriggersStart();
         if (trigger !== null) {
             this._activateTrigger(trigger);
+
+            if (trigger.activated === true) {
+                // Notifies the application ad(s) playback starts
+                this._eventBus.dispatchEvent({type: 'start', data: null});
+            }
         }
     }
 
