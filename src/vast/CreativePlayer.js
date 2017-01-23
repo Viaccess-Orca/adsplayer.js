@@ -281,12 +281,7 @@ class CreativePlayer {
             }
         });
 
-        try {
-            // Remove the element from the DOM
-            this._adPlayerContainer.removeChild(this._mediaPlayer.getElement());
-        } catch(e) {
-            this._debug.warn("Failed to remove child: " + e);
-        }
+        this._adPlayerContainer.removeChild(this._mediaPlayer.getElement());
 
         // Reset the media player
         this._mediaPlayer.reset();
