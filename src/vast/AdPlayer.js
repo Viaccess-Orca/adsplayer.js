@@ -183,8 +183,7 @@ class AdPlayer {
         if (!this._creativePlayer) {
             return;
         }
-
-        this._creativePlayer.abort();
+        
         this._stopCreative();
     }
 
