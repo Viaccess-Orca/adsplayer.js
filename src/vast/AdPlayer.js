@@ -40,7 +40,7 @@ class AdPlayer {
             this._debug.info("onCreativeEnd");
 
             // Stop the current creative media
-            this. _stopCreative();
+            this._stopCreative();
 
             this._resetCreative();
 
@@ -65,7 +65,7 @@ class AdPlayer {
         }
 
         _resetCreative(){
-            this._debug.info("(AdPlayer) resetCreative ");
+            this._debug.info("resetCreative ");
             if (!this._creativePlayer) {
                 return;
             }
@@ -183,8 +183,7 @@ class AdPlayer {
         if (!this._creativePlayer) {
             return;
         }
-
-        this._creativePlayer.abort();
+        
         this._stopCreative();
     }
 
