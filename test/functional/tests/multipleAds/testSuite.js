@@ -208,9 +208,9 @@ define(function(require) {
             // Test a mast xml file with 2 triggers
             "doubleTriggersInMast": function () {
                 // this test is not reliable on chrome/LINUX, don't know why?
-                if ( (this.remote.session.capabilities.browserName === 'chrome') && (this.remote.session.capabilities.platform === 'LINUX') ) {
+              /*  if ( (this.remote.session.capabilities.browserName === 'chrome') && (this.remote.session.capabilities.platform === 'LINUX') ) {
                     this.skip('skipped on chrome/LINUX');
-                }
+                }*/
 
                 // wait for the play event
                 command
