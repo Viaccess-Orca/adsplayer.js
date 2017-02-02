@@ -128,8 +128,8 @@ gulp.task('package-info', function() {
 
 gulp.task('lint', function() {
     return gulp.src(sources.all)
-    .pipe(jshint())
-    .pipe(jshint.reporter('jshint-stylish'));
+        .pipe(jshint())
+        .pipe(jshint.reporter('jshint-stylish'));
 });
 
 
@@ -173,33 +173,30 @@ gulp.task('build', ['clean', 'package-info', 'lint'], function() {
 
 // Copyright (C) 2016 VIACCESS S.A and/or ORCA Interactive **/
 // sample build
-gulp.task('build-samples', ['build-demoPlayer'], function() {
-    return gulp.src(['samples/cswebplayer.js'])
-    .pipe(gulp.dest(outDir + '/samples/'));
+gulp.task('build-samples', ['build-voAdsPlayer'], function() {
+
 });
 
 var replaceSourcesByBuild = function() {
-    return replace(/<!-- sources -->([\s\S]*?)<!-- endsources -->/, '<script src="../../' + outName + '"></script>');
+    //return replace(/<!-- sources -->([\s\S]*?)<!-- endsources -->/, '<script type="text/javascript" src="../../' + outName + '"></script>');
+    //In all *.html file,  replace path where to get csadsplugin.js file
+    return gulpif('*.html',replace('src="../../dist/csadsplugin.js"', 'src="../../csadsplugin.js"'));
+
 };
 
-gulp.task('build-adsTestsPlayer', function() {
-    /* copie le rep adsTestsPlayer dans dist/samples et modifie l'acces au fichier csadsplugin.js */
-    gulp.src(['samples/adsTestsPlayer/**'])
+gulp.task('build-voAdsPlayer', function() {
+    /* copie le rep voAdsPlayer dans dist/samples et modifie l'acces au fichier csadsplugin.js */
+    gulp.src(['samples/voAdsPlayer/**']) //  , '!samples/voAdsPlayer/*.html'])
         .pipe(replaceSourcesByBuild())
-        .pipe(gulp.dest(outDir + '/samples/adsTestsPlayer/'));
+        .pipe(gulp.dest(outDir + '/samples/voAdsPlayer/'));
     /* copie le rep ads dans dist/samples */
     gulp.src(['samples/ads/**'])
         .pipe(gulp.dest(outDir + '/samples/ads'));
-    /* copie le fichier cswebplayer.js dans dist/samples */
-    gulp.src(['samples/cswebplayer.js'])
+    /* copie le fichier hasplayer.min.js dans dist/samples */
+    return gulp.src(['samples/hasplayer.min.js'])
         .pipe(gulp.dest(outDir + '/samples/'));
 });
 
-gulp.task('build-demoPlayer', function() {
-    return gulp.src(['samples/demoPlayer/**'])
-        .pipe(replaceSourcesByBuild())
-        .pipe(gulp.dest(outDir + '/samples/demoPlayer/'));
-});
 // end
 
 gulp.task('releases-notes', function() {
