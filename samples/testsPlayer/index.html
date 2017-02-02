@@ -5,6 +5,31 @@
         <script src="../../dist/csadsplugin.js"></script>
         <!-- uses cswebplayer-->
         <script src="../hasplayer.min.js"></script>
+
+        <style>
+            .tracking_events, .event {
+                display: flex;
+            }
+
+            .tracking_events {
+                flex-wrap: wrap;
+                width: 700px;
+                margin-bottom: 10px;
+            }
+
+            .event {
+                margin-bottom: 5px;
+                width: 33%;
+            }
+
+            .event .event_title {
+                min-width: 155px;
+            }
+
+            .event input {
+                width: 30px;
+            }
+        </style>
     </head>
 
     <body>
@@ -40,6 +65,87 @@
                     <td><input id="event_pause" type="number" value="0" style="width:30px" disabled> </input></td>
                 </tr>
             </table>
+
+            <h4>Tracking Events</h4>
+            <div class="tracking_events">
+                <div class="event">
+                    <div class="event_title">creativeView</div>
+                    <input id="te_creativeView" type="number" value="0" disabled> </input>
+                </div>
+                <div class="event">
+                    <div class="event_title">start</div>
+                    <input id="te_start" type="number" value="0" disabled> </input>
+                </div>
+                <div class="event">
+                    <div class="event_title">firstQuartile</div>
+                    <input id="te_firstQuartile" type="number" value="0" disabled> </input>
+                </div>
+                <div class="event">
+                    <div class="event_title">midpoint</div>
+                    <input id="te_midpoint" type="number" value="0" disabled> </input>
+                </div>
+                <div class="event">
+                    <div class="event_title">thirdQuartile</div>
+                    <input id="te_thirdQuartile" type="number" value="0" disabled> </input>
+                </div>
+                <div class="event">
+                    <div class="event_title">complete</div>
+                    <input id="te_complete" type="number" value="0" disabled> </input>
+                </div>
+                <div class="event">
+                    <div class="event_title">mute</div>
+                    <input id="te_mute" type="number" value="0" disabled> </input>
+                </div>
+                <div class="event">
+                    <div class="event_title">unmute</div>
+                    <input id="te_unmute" type="number" value="0" disabled> </input>
+                </div>
+                <div class="event">
+                    <div class="event_title">pause</div>
+                    <input id="te_pause" type="number" value="0" disabled> </input>
+                </div>
+                <div class="event">
+                    <div class="event_title">rewind</div>
+                    <input id="te_rewind" type="number" value="0" disabled> </input>
+                </div>
+                <div class="event">
+                    <div class="event_title">resume</div>
+                    <input id="te_resume" type="number" value="0" disabled> </input>
+                </div>
+                <div class="event">
+                    <div class="event_title">fullscreen</div>
+                    <input id="te_fullscreen" type="number" value="0" disabled> </input>
+                </div>
+                <div class="event">
+                    <div class="event_title">exitFullscreen</div>
+                    <input id="te_exitFullscreen" type="number" value="0" disabled> </input>
+                </div>
+                <div class="event">
+                    <div class="event_title">expand</div>
+                    <input id="te_expand" type="number" value="0" disabled> </input>
+                </div>
+                <div class="event">
+                    <div class="event_title">collapse</div>
+                    <input id="te_collapse" type="number" value="0" disabled> </input>
+                </div>
+                <div class="event">
+                    <div class="event_title">acceptInvitationLinear</div>
+                    <input id="te_acceptInvitationLinear" type="number" value="0" disabled> </input>
+                </div>
+                <div class="event">
+                    <div class="event_title">closeLinear</div>
+                    <input id="te_closeLinear" type="number" value="0" disabled> </input>
+                </div>
+                <div class="event">
+                    <div class="event_title">skip</div>
+                    <input id="te_skip" type="number" value="0" disabled> </input>
+                </div>
+                <div class="event">
+                    <div class="event_title">progress</div>
+                    <input id="te_progress" type="number" value="0" disabled> </input>
+                </div>
+            </div>
+            <button id="clear_te_button" >Clear all</button>
         </div>
 
         <script>
@@ -112,10 +218,75 @@
                 document.getElementById('event_end').value = "0";
             });
 
+            /** TRACKING EVENTS **/
 
+            var s_ajaxListener = new Object();
+
+            // Added for IE support
+            if (typeof XMLHttpRequest === "undefined") {
+                XMLHttpRequest = function () {
+                    try { return new ActiveXObject("Msxml2.XMLHTTP.6.0"); }
+                    catch (e) {}
+                    try { return new ActiveXObject("Msxml2.XMLHTTP.3.0"); }
+                    catch (e) {}
+                    try { return new ActiveXObject("Microsoft.XMLHTTP"); }
+                    catch (e) {}
+                    throw new Error("This browser does not support XMLHttpRequest.");
+                };
+            }
+
+            s_ajaxListener.tempOpen = XMLHttpRequest.prototype.open;
+            s_ajaxListener.tempSend = XMLHttpRequest.prototype.send;
+
+            // Callback for XHR
+            s_ajaxListener.callback = function () {
+                // this.method: the ajax method used
+                // this.url   : the url of the requested script (including query string, if any) (urlencoded)
+                // this.data  : the data sent, if any ex: foo=bar&a=b (urlencoded)
+                if (this.url.indexOf("http://cswebplayer.viaccess.fr/adsserver/js?event=")!=-1) {
+                    // Get event name from URL
+                    var newEvent = this.data.split("=");
+                    if (newEvent &&
+                        newEvent.length > 1) {
+                        // Get input element from DOM
+                        var element = document.querySelector('#te_' + newEvent[1]);
+                        if (element) {
+                            // Increment event counter
+                            element.value++;
+                        }
+                    }
+                }
+            }
+
+            XMLHttpRequest.prototype.open = function(a,b) {
+                if (!a) var a='';
+                if (!b) var b='';
+                s_ajaxListener.tempOpen.apply(this, arguments);
+                s_ajaxListener.method = a;
+                s_ajaxListener.url = b;
+                if (a.toLowerCase() == 'get') {
+                    s_ajaxListener.data = b.split('?');
+                    s_ajaxListener.data = s_ajaxListener.data[1];
+                }
+            }
+
+            XMLHttpRequest.prototype.send = function(a,b) {
+                if (!a) var a='';
+                if (!b) var b='';
+                s_ajaxListener.tempSend.apply(this, arguments);
+                if(s_ajaxListener.method.toLowerCase() == 'post')s_ajaxListener.data = a;
+                s_ajaxListener.callback();
+            }
+
+            // "Clear all" button
+            document.querySelector('#clear_te_button').addEventListener("click",function(e) {
+                // Get tracking event input elements
+                var inputs = document.querySelectorAll(".tracking_events .event input");
+                for (var i = 0; i < inputs.length; i++) {
+                    // Reset input value
+                    inputs[i].value = 0;
+                }
+            });
         </script>
-
     </body>
-
-
 </html>
