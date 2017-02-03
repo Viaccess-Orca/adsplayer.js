@@ -173,14 +173,18 @@ gulp.task('build', ['clean', 'package-info', 'lint'], function() {
 
 // Copyright (C) 2016 VIACCESS S.A and/or ORCA Interactive **/
 // sample build
-gulp.task('build-samples', ['build-voAdsPlayer'], function() {
-
+gulp.task('build-samples', function() {
+    // copy all samples directory in dist and perform replaceSourcesByBuild function
+    gulp.src(['samples/**'])
+        .pipe(replaceSourcesByBuild())
+        .pipe(gulp.dest(outDir + '/samples/'));
 });
 
 var replaceSourcesByBuild = function() {
-    //return replace(/<!-- sources -->([\s\S]*?)<!-- endsources -->/, '<script type="text/javascript" src="../../' + outName + '"></script>');
     //In all *.html file,  replace path where to get csadsplugin.js file
-    return gulpif('*.html',replace('src="../../dist/csadsplugin.js"', 'src="../../csadsplugin.js"'));
+    return gulpif('**/*.html', replace(/<!-- sources modify by gulp.replaceSourcesByBuild -->([\s\S]*?)<!-- endsources -->/,
+                                    '<script type="text/javascript" src="../../' + outName + '"></script>'));
+    //return gulpif('*.html',replace('src="../../dist/csadsplugin.js"', 'src="../../csadsplugin.js"'));
 
 };
 
