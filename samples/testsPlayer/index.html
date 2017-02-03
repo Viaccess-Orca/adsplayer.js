@@ -49,27 +49,33 @@
             <button id="play_button" >Play</button>
             <button id="stop_button" >Stop</button><br>
             <h4>CSAdsPlugin Events</h4>
-            <table>
-                <tr>
-                    <td>start  </td>
-                    <td><input id="event_start" type="number" value="0" style="width:30px" disabled> </input></td>
-                    <td>stop  </td>
-                    <td><input id="event_end" type="number" value="0" style="width:30px" disabled> </input></td>
-                </tr>
-                <tr>
-                    <td>add  </td>
-                    <td><input id="event_add" type="number" value="0" style="width:30px" disabled> </input></td>
-                    <td>remove  </td>
-                    <td><input id="event_remove" type="number" value="0" style="width:30px" disabled> </input></td>
-                </tr>
-                <tr>
-                    <td>play  </td>
-                    <td><input id="event_play" type="number" value="0" style="width:30px" disabled> </input></td>
-                    <td>pause  </td>
-                    <td><input id="event_pause" type="number" value="0" style="width:30px" disabled> </input></td>
-                </tr>
-            </table>
-
+            <div class="tracking_events">
+                <div class="event">
+                    <div class="event_title">start</div>
+                    <input id="event_start" type="number" value="0" disabled> </input>
+                </div>
+                <div class="event">
+                    <div class="event_title">stop</div>
+                    <input id="event_end" type="number" value="0" disabled> </input>
+                </div>
+                <div class="event">
+                    <div class="event_title">add</div>
+                    <input id="event_add" type="number" value="0" disabled> </input>
+                </div>
+                <div class="event">
+                    <div class="event_title">remove</div>
+                    <input id="event_remove" type="number" value="0" disabled> </input>
+                </div>
+                <div class="event">
+                    <div class="event_title">play</div>
+                    <input id="event_play" type="number" value="0" disabled> </input>
+                </div>
+                <div class="event">
+                    <div class="event_title">pause</div>
+                    <input id="event_pause" type="number" value="0" disabled> </input>
+                </div>
+            </div>
+            <button id="clearEvents_button" >Clear all</button><br>
             <h4>Tracking Events</h4>
             <div class="tracking_events">
                 <div class="event">
@@ -150,6 +156,7 @@
                 </div>
             </div>
             <button id="clear_te_button" >Clear all</button>
+
         </div>
 
         <script>
@@ -168,14 +175,9 @@
                 });
 
                 // show the video player and update the number of end event
-                // reset the add/remove, play/pause events
                 adsPlugin.addEventListener('end', function(e) {
                     document.getElementById('videoplayer-container').style.display = 'block';
                     document.getElementById('event_end').value++;
-                    document.getElementById('event_add').value = "0";
-                    document.getElementById('event_remove').value = "0";
-                    document.getElementById('event_play').value = "0";
-                    document.getElementById('event_pause').value = "0";
                 });
 
                 adsPlugin.addEventListener('addElement', function(e) {
@@ -218,8 +220,16 @@
             // stop button
             document.querySelector('#stop_button').addEventListener("click",function(e) {
                 mediaPlayer.stop();
+            });
+
+            // clear events button
+            document.querySelector('#clearEvents_button').addEventListener("click",function(e) {
                 document.getElementById('event_start').value = "0";
                 document.getElementById('event_end').value = "0";
+                document.getElementById('event_add').value = "0";
+                document.getElementById('event_remove').value = "0";
+                document.getElementById('event_play').value = "0";
+                document.getElementById('event_pause').value = "0";
             });
 
             /** TRACKING EVENTS **/
