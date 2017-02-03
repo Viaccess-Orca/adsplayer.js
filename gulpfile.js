@@ -115,9 +115,19 @@ gulp.task('copyright', function() {
 
 // Copyright (C) 2016 VIACCESS S.A and/or ORCA Interactive **/
 gulp.task('gitTag', function() {
-    //Get last tag information
-    git.exec({args: 'describe --tags --dirty', quiet: true}, function (err, stdout) {
-        pkg.gitTag = stdout.replace(/(\r\n|\n|\r)/gm,"");
+    // Get current branch name
+    git.exec({args: 'rev-parse --abbrev-ref HEAD', quiet: true}, function (err, stdout) {
+        currentBranch = stdout.replace(/(\r\n|\n|\r)/gm, '');
+        // if branch "master", set pkg.gitTag value with the last tag name
+        if (currentBranch == "master") {
+            //Get last tag information
+            git.exec({args: 'describe --tags --dirty', quiet: true}, function (err, stdout) {
+                pkg.gitTag = stdout.replace(/(\r\n|\n|\r)/gm, "");
+            });
+        } else {
+            pkg.gitTag = outName.replace(".js", "-") + currentBranch;
+        }
+
     });
 });
 
@@ -220,7 +230,7 @@ gulp.task('doc', function () {
 });
 
 gulp.task('version', function() {
-    fs.writeFileSync(outDir + '/version.properties', 'GITTAG=' + pkg.gitTag+'\nVERSION=' + pkg.version);
+    fs.writeFileSync(outDir + '/version.properties', 'GITTAG=' + pkg.gitTag+'\nVERSION_'+ pkg.name+'=' + pkg.version);
 });
 
 gulp.task('default', function(cb) {
