@@ -277,11 +277,35 @@ define(function(require) {
                     .click()
                 .end();
 
+                // wait for the pause event
+                command
+                    .then(pollUntil(function (value) {
+                        return parseInt(document.getElementById('event_pause').value) == 1 ? true : null;
+                    }, null, 40000, 100))
+                    .then(function () {
+                        // the event pause has been detected, now get the tracking events
+                    },function (error) {
+                        // the event pause has NOT been detected
+                        assert.isFalse(true,"the event pause has NOT been detected for test pause");
+                    });
+
                 command
                 // resume the player
                 .findById("pause_button")
                     .click()
                 .end();
+
+                // wait for the play event
+                command
+                    .then(pollUntil(function (value) {
+                        return parseInt(document.getElementById('event_play').value) == 2 ? true : null;
+                    }, null, 40000, 100))
+                    .then(function () {
+                        // the event pause has been detected, now get the tracking events
+                    },function (error) {
+                        // the event play has NOT been detected
+                        assert.isFalse(true,"the event play has NOT been detected for test pause");
+                    });
 
                 // wait for the pause event
                 return(command
