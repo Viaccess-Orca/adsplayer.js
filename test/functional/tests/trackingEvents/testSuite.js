@@ -17,11 +17,79 @@ define(function(require) {
     var getMediaFileName = function(url){
         var array = url.split("/");
         return array[array.length-1];
-    }
+    };
 
     registerSuite(function(){
 
-        var command = null;
+        var command = null,
+            suiteConfig = config.tests.trackingEvents;
+
+        // Get event counter values for specified CSS selector
+        var getCounterValues = function(selector) {
+            // Object containing the event counter values
+            let json = {};
+
+            // Return the result object in a promise
+            return new Promise(resolve => {
+                // Get all counter elements
+                command.findAllByCssSelector(selector)
+                    .then(elements => {
+                        let promises = [];
+                        // Loop through the elements
+                        elements.forEach(element => {
+                            // Get element data (id + value) in a promise
+                            let p = new Promise(r => {
+                                // Get element ID
+                                element
+                                    .getAttribute("eventId")
+                                    .then(id => {
+                                        // Get element value
+                                        element
+                                            .getAttribute("value")
+                                            .then(value => {
+                                                // Update the result object
+                                                json[id] = value;
+
+                                                // Once all the element data is fetched, resolve the element promise
+                                                r();
+                                            })
+                                    });
+                            });
+
+                            promises.push(p);
+                        });
+
+                        // Wait until all element promises are resolved
+                        Promise.all(promises).then(() => {
+                            // Now that the JSON is full of data, resolve the main promise
+                            resolve(json);
+                        });
+                    });
+            });
+        };
+
+        // Compare real counter values against expected counter values
+        var compareCounters = function(realValues, expectedValues) {
+            // Loop through the expected values
+            for(let eventId in expectedValues) {
+                if (expectedValues.hasOwnProperty(eventId)) {
+                    // Check that event counter exists
+                    assert.isDefined(realValues[eventId], "Impossible to find event '" + eventId + "' in tracking events");
+
+                    // Check that real value is as expected ("x" means "any")
+                    if (expectedValues[eventId] !== "x") {
+                        let expectedValue = parseInt(expectedValues[eventId]),
+                            realValue = parseInt(realValues[eventId]);
+
+                        assert.strictEqual(
+                            realValue,
+                            expectedValue,
+                            "Wrong value for event '" + eventId + "'");
+                    }
+
+                }
+            }
+        };
 
         return {
 
@@ -53,7 +121,7 @@ define(function(require) {
                     .findById("ad_toplay").clearValue()
                     .end()
                     // type the ad url
-                    .findById("ad_toplay").type(config.tests.trackingEvents[test.name].adsUrl)
+                    .findById("ad_toplay").type(suiteConfig[test.name].adsUrl)
                     .end()
                     // start the player
                     .findById("play_button").click()
@@ -109,7 +177,7 @@ define(function(require) {
                         // the event play has been detected
                     },function (error) {
                         // the event play has NOT been detected
-                        assert.isFalse(true,"the event play has NOT been detected for test " + test.name);
+                        assert.isFalse(true,"the event play has NOT been detected for test preroll");
                     });
 
                 // wait for the pause event
@@ -117,13 +185,21 @@ define(function(require) {
                     .then(pollUntil(function (value) {
                         return document.getElementById('event_pause').value === "1" ? true : null;
                     }, null, 40000, 100))
-                    .then(function () {
-                        // the event pause has been detected
-                        // Check the tracking events
-                        command.findById("te_creativeView")
-                    },function (error) {
+                    .then(() => {
+                        // The event pause has been detected, now get the tracking events
+                        return getCounterValues("#tracking_events .event input");
+                    },
+                    function (error) {
                         // the event play has NOT been detected
-                        assert.isFalse(true,"the event play has NOT been detected for test " + test.name);
+                        assert.isFalse(true,"the event play has NOT been detected for test preroll");
+                    })
+                    .then(counters => {
+                        // Check configuration
+                        assert.isDefined(suiteConfig.preroll, "Configuration is not defined for preroll test counters");
+                        assert.isDefined(suiteConfig.preroll.ExpectedtrackingEvents, "Configuration is not defined for preroll test counters");
+
+                        // Finally, check the counter values
+                        compareCounters(counters, suiteConfig.preroll.ExpectedtrackingEvents);
                     })
                 );
             },
@@ -139,20 +215,30 @@ define(function(require) {
                         // the event has been detected
                     },function (error) {
                         // the event has NOT been detected
-                        assert.isFalse(true,"the event play  has NOT been detected for test " + test.name);
+                        assert.isFalse(true,"the event play has NOT been detected for test prerollImage");
                     });
 
                 // wait for the pause event
                 return(command
-                        .then(pollUntil(function (value) {
-                            return document.getElementById('event_pause').value === "1" ? true : null;
-                        }, null, 40000, 100))
-                        .then(function () {
-                            // the event pause has been detected
-                        },function (error) {
-                            // the event play has NOT been detected
-                            assert.isFalse(true,"the event play has NOT been detected for test " + test.name);
-                        })
+                    .then(pollUntil(function (value) {
+                        return document.getElementById('event_pause').value === "1" ? true : null;
+                    }, null, 40000, 100))
+                    .then(() => {
+                        // The event pause has been detected, now get the tracking events
+                        return getCounterValues("#tracking_events .event input");
+                    },
+                    function (error) {
+                        // the event play has NOT been detected
+                        assert.isFalse(true,"the event play has NOT been detected for test prerollImage");
+                    })
+                    .then(counters => {
+                        // Check configuration
+                        assert.isDefined(suiteConfig.prerollImage, "Configuration is not defined for prerollImage test counters");
+                        assert.isDefined(suiteConfig.prerollImage.ExpectedtrackingEvents, "Configuration is not defined for prerollImage test counters");
+
+                        // Finally, check the counter values
+                        compareCounters(counters, suiteConfig.prerollImage.ExpectedtrackingEvents);
+                    })
                 );
             },
 
@@ -168,20 +254,29 @@ define(function(require) {
                         // the event play has been detected
                     },function (error) {
                         // the event has NOT been detected
-                        assert.isFalse(true,"the event play has NOT been detected for test " + test.name);
+                        assert.isFalse(true,"the event play has NOT been detected for test prerollVast30");
                     });
 
                 // wait for the pause event
                 return(command
-                        .then(pollUntil(function (value) {
-                            return document.getElementById('event_pause').value === "1" ? true : null;
-                        }, null, 40000, 100))
-                        .then(function () {
-                            // the event pause has been detected
-                        },function (error) {
-                            // the event play has NOT been detected
-                            assert.isFalse(true,"the event play has NOT been detected for test " + test.name);
-                        })
+                    .then(pollUntil(function (value) {
+                        return document.getElementById('event_pause').value === "1" ? true : null;
+                    }, null, 40000, 100))
+                    .then(() => {
+                        // The event pause has been detected, now get the tracking events
+                        return getCounterValues("#tracking_events .event input");
+                    },function (error) {
+                        // the event play has NOT been detected
+                        assert.isFalse(true,"the event play has NOT been detected for test prerollVast30");
+                    })
+                    .then(counters => {
+                        // Check configuration
+                        assert.isDefined(suiteConfig.prerollVast30, "Configuration is not defined for prerollVast30 test counters");
+                        assert.isDefined(suiteConfig.prerollVast30.ExpectedtrackingEvents, "Configuration is not defined for prerollVast30 test counters");
+
+                        // Finally, check the counter values
+                        compareCounters(counters, suiteConfig.prerollVast30.ExpectedtrackingEvents);
+                    })
                 );
             }
         };
