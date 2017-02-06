@@ -116,7 +116,7 @@ gulp.task('copyright', function() {
 // Copyright (C) 2016 VIACCESS S.A and/or ORCA Interactive **/
 gulp.task('gitTag', function() {
     // Get current branch name
-    git.exec({args: 'rev-parse --abbrev-ref HEAD', quiet: true}, function (err, stdout) {
+    git.exec({args: 'symbolic-ref --short HEAD', quiet: true}, function (err, stdout) {
         currentBranch = stdout.replace(/(\r\n|\n|\r)/gm, '');
         // if branch "master", set pkg.gitTag value with the last tag name
         if (currentBranch == "master") {
