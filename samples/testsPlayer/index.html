@@ -2,11 +2,7 @@
 <html lang="en">
     <head>
         <!-- sources under test-->
-        
-        <!-- sources modify by gulp.replaceSourcesByBuild -->
         <script src="../../dist/csadsplugin.js"></script>
-        <!-- endsources -->
-        
         <!-- uses cswebplayer-->
         <script src="../hasplayer.min.js"></script>
 
@@ -43,10 +39,11 @@
         </div>
         <div>
             <br>
-            <input id="stream_toplay" type="text" size="100"> </input><br>
-            <input id="ad_toplay" type="text" size="100"> </input><br>
+            <input id="stream_toplay" type="text" size="100" value="http://playready.directtaps.net/smoothstreaming/SSWSS720H264/SuperSpeedway_720.ism/Manifest"> </input><br>
+            <input id="ad_toplay" type="text" size="100" value="../ads/xml/mast/preroll.xml"> </input><br>
             <br>
             <button id="play_button" >Play</button>
+            <button id="pause_button" >Pause</button>
             <button id="stop_button" >Stop</button><br>
             <h4>CSAdsPlugin Events</h4>
             <div class="events_list">
@@ -163,7 +160,28 @@
         <script>
 
             var mediaPlayer = null;
+            var adPlayer = null;
             var adsPlugin = null;
+
+            var onMainVideoPause = function(e) {
+                if (document.querySelector('#pause_button').innerHTML == "Pause") {
+                    mediaPlayer.pause();
+                    document.querySelector('#pause_button').innerHTML = "Resume";
+                } else {
+                    mediaPlayer.play();
+                    document.querySelector('#pause_button').innerHTML = "Pause";
+                }
+            }
+
+            var onAdPause = function(e) {
+                if (document.querySelector('#pause_button').innerHTML == "Pause") {
+                    adPlayer.pause();
+                    document.querySelector('#pause_button').innerHTML = "Resume";
+                } else {
+                    adPlayer.play();
+                    document.querySelector('#pause_button').innerHTML = "Pause";
+                }
+            }
 
             document.addEventListener("DOMContentLoaded", function(event){
 
@@ -186,11 +204,19 @@
                 adsPlugin.addEventListener('addElement', function(e) {
                     var element = document.getElementById('event_add');
                     element.setAttribute("value", parseInt(element.getAttribute("value")) + 1);
+                    // Store the adPlayer element
+                    adPlayer = e.data.element;
+                    // Change the listener for the pause button
+                    document.querySelector('#pause_button').removeEventListener("click", onMainVideoPause);
+                    document.querySelector('#pause_button').addEventListener("click", onAdPause);
                 });
 
                 adsPlugin.addEventListener('removeElement', function(e) {
                     var element = document.getElementById('event_remove');
                     element.setAttribute("value", parseInt(element.getAttribute("value")) + 1);
+                    // Change the listener for the pause button
+                    document.querySelector('#pause_button').removeEventListener("click", onAdPause);
+                    document.querySelector('#pause_button').addEventListener("click", onMainVideoPause);
                 });
 
                 adsPlugin.addEventListener('play', function(e) {
@@ -211,32 +237,34 @@
 
                 mediaPlayer.addPlugin(adsPlugin);
 
-            });
+                // play button
+                document.querySelector('#play_button').addEventListener("click",function(e) {
+                    var stream = {
+                        url : document.getElementById("stream_toplay").value,
+                        protData : null,
+                        adsUrl : document.getElementById("ad_toplay").value
+                    };
 
-            // play button
-            document.querySelector('#play_button').addEventListener("click",function(e) {
-                var stream = {
-                    url : document.getElementById("stream_toplay").value,
-                    protData : null,
-                    adsUrl : document.getElementById("ad_toplay").value
-                };
+                    mediaPlayer.load(stream);
+                });
 
-                mediaPlayer.load(stream);
-            });
+                // stop button
+                document.querySelector('#stop_button').addEventListener("click",function(e) {
+                    mediaPlayer.stop();
+                });
 
-            // stop button
-            document.querySelector('#stop_button').addEventListener("click",function(e) {
-                mediaPlayer.stop();
-            });
+                // pause button
+                document.querySelector('#pause_button').addEventListener("click", onMainVideoPause);
 
-            // clear events button
-            document.querySelector('#clearEvents_button').addEventListener("click",function(e) {
-                document.getElementById('event_start').setAttribute("value", 0);
-                document.getElementById('event_end').setAttribute("value", 0);
-                document.getElementById('event_add').setAttribute("value", 0);
-                document.getElementById('event_remove').setAttribute("value", 0);
-                document.getElementById('event_play').setAttribute("value", 0);
-                document.getElementById('event_pause').setAttribute("value", 0);
+                // clear events button
+            	document.querySelector('#clearEvents_button').addEventListener("click",function(e) {
+	                document.getElementById('event_start').setAttribute("value", 0);
+	                document.getElementById('event_end').setAttribute("value", 0);
+	                document.getElementById('event_add').setAttribute("value", 0);
+	                document.getElementById('event_remove').setAttribute("value", 0);
+	                document.getElementById('event_play').setAttribute("value", 0);
+	                document.getElementById('event_pause').setAttribute("value", 0);
+            	});
             });
 
             /** TRACKING EVENTS **/

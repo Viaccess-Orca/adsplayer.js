@@ -101,6 +101,9 @@ define(function(require) {
                 // load the web test page
                 command = this.remote.get(require.toUrl(config.testPageUrl));
 
+                //clear the ad url
+                command.findById("stream_toplay").clearValue();
+
                 // set the stream to play
                 command.findById("stream_toplay").type(config.streamUrl);
 
@@ -128,7 +131,7 @@ define(function(require) {
                     .end()
                     // wait for the event start
                     .then(pollUntil(function (value) {
-                        return document.getElementById('event_start').value === "1" ? true : null;
+                        return parseInt(document.getElementById('event_start').value) == 1 ? true : null;
                     }, null, 40000, 1000))
                     .then(function () {
                         // the event started has been detected
@@ -136,16 +139,34 @@ define(function(require) {
                         // the event started has NOT been detected
                         assert.isFalse(true,"the event started has NOT been detected for test " + test.name);
                     })
+                    .then(pollUntil(function (value) {
+                        return parseInt(document.getElementById('event_play').value) == 1 ? true : null;
+                    }, null, 40000, 100))
+                    .then(function () {
+                        // the event play has been detected
+                    },function (error) {
+                        // the event has NOT been detected
+                        assert.isFalse(true,"the event play has NOT been detected for test pause");
+                    })
                 );
             },
 
             afterEach: function (test) {
                 // executes after each test
-
                 return (command
-                // wait for the event end
+                    // wait for at least (some tests pause the ad) one pause event.
                     .then(pollUntil(function (value) {
-                        return document.getElementById('event_end').value === "1" ? true : null;
+                        return parseInt(document.getElementById('event_pause').value) >= 1 ? true : null;
+                    }, null, 40000, 100))
+                    .then(function () {
+                        // the event pause has been detected
+                    },function (error) {
+                        // the event play has NOT been detected
+                        assert.isFalse(true,"the event pause has NOT been detected for test pause");
+                    })
+                    // wait for the event end
+                    .then(pollUntil(function (value) {
+                        return parseInt(document.getElementById('event_end').value) == 1 ? true : null;
                     }, null, 40000, 1000))
                     .then(function () {
                         // the event end has been detected
@@ -168,31 +189,21 @@ define(function(require) {
 
             // Check the tracking events in case of preroll video ad
             "preroll": function () {
-                // wait for the play event
-                command
-                    .then(pollUntil(function (value) {
-                        return document.getElementById('event_play').value === "1" ? true : null;
-                    }, null, 40000, 100))
-                    .then(function () {
-                        // the event play has been detected
-                    },function (error) {
-                        // the event play has NOT been detected
-                        assert.isFalse(true,"the event play has NOT been detected for test preroll");
-                    });
 
                 // wait for the pause event
                 return(command
                     .then(pollUntil(function (value) {
-                        return document.getElementById('event_pause').value === "1" ? true : null;
+                        return parseInt(document.getElementById('event_pause').value) == 1 ? true : null;
                     }, null, 40000, 100))
-                    .then(function() {
-                        // The event pause has been detected, now get the tracking events
-                        return getCounterValues("#tracking_events .event input");
-                    },
-                    function (error) {
-                        // the event play has NOT been detected
-                        assert.isFalse(true,"the event play has NOT been detected for test preroll");
-                    })
+                    .then(  function() {
+                                // The event pause has been detected, now get the tracking events
+                                return getCounterValues("#tracking_events .event input");
+                            },
+                            function (error) {
+                                // the event play has NOT been detected
+                                assert.isFalse(true,"the event play has NOT been detected for test preroll");
+                            }
+                    )
                     .then(function(counters) {
                         // Check configuration
                         assert.isDefined(suiteConfig.preroll, "Configuration is not defined for preroll test counters");
@@ -206,22 +217,11 @@ define(function(require) {
 
             // Check the tracking events in case of preroll image ad
             "prerollImage": function () {
-                // wait for the play event
-                command
-                    .then(pollUntil(function (value) {
-                        return document.getElementById('event_play').value === "1" ? true : null;
-                    }, null, 40000, 100))
-                    .then(function () {
-                        // the event has been detected
-                    },function (error) {
-                        // the event has NOT been detected
-                        assert.isFalse(true,"the event play has NOT been detected for test prerollImage");
-                    });
 
                 // wait for the pause event
                 return(command
                     .then(pollUntil(function (value) {
-                        return document.getElementById('event_pause').value === "1" ? true : null;
+                        return parseInt(document.getElementById('event_pause').value) == 1 ? true : null;
                     }, null, 40000, 100))
                     .then(function() {
                         // The event pause has been detected, now get the tracking events
@@ -245,22 +245,10 @@ define(function(require) {
             // Check the tracking events in case of preroll video VAST30 ad
             "prerollVast30": function () {
 
-                // wait for the play event
-                command
-                    .then(pollUntil(function (value) {
-                        return document.getElementById('event_play').value === "1" ? true : null;
-                    }, null, 40000, 100))
-                    .then(function () {
-                        // the event play has been detected
-                    },function (error) {
-                        // the event has NOT been detected
-                        assert.isFalse(true,"the event play has NOT been detected for test prerollVast30");
-                    });
-
                 // wait for the pause event
                 return(command
                     .then(pollUntil(function (value) {
-                        return document.getElementById('event_pause').value === "1" ? true : null;
+                        return parseInt(document.getElementById('event_pause').value) == 1 ? true : null;
                     }, null, 40000, 100))
                     .then(function() {
                         // The event pause has been detected, now get the tracking events
@@ -277,6 +265,44 @@ define(function(require) {
                         // Finally, check the counter values
                         compareCounters(counters, suiteConfig.prerollVast30.ExpectedtrackingEvents);
                     })
+                );
+            },
+
+            // Check the tracking events when the ad is paused
+            "pause": function () {
+
+                command
+                // pause the player
+                .findById("pause_button")
+                    .click()
+                .end();
+
+                command
+                // resume the player
+                .findById("pause_button")
+                    .click()
+                .end();
+
+                // wait for the pause event
+                return(command
+                        .then(pollUntil(function (value) {
+                            return parseInt(document.getElementById('event_pause').value) == 2 ? true : null;
+                        }, null, 40000, 100))
+                        .then(function () {
+                            // the event pause has been detected, now get the tracking events
+                            return getCounterValues("#tracking_events .event input");
+                        },function (error) {
+                            // the event play has NOT been detected
+                            assert.isFalse(true,"the event pause has NOT been detected for test pause");
+                        })
+                        .then(function(counters) {
+                            // Check configuration
+                            assert.isDefined(suiteConfig.pause, "Configuration is not defined for prerollVast30 test counters");
+                            assert.isDefined(suiteConfig.pause.ExpectedtrackingEvents, "Configuration is not defined for prerollVast30 test counters");
+
+                            // Finally, check the counter values
+                            compareCounters(counters, suiteConfig.pause.ExpectedtrackingEvents);
+                        })
                 );
             }
         };
