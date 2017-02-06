@@ -36,6 +36,12 @@ define(function(require) {
                 // set the stream to play
                 command.findById("stream_toplay").type(config.streamUrl);
 
+                // clear the CSAdsPlugin events
+                command.findById("clearEvents_button").click();
+
+                // clear the Tracking events
+                command.findById("clear_te_button").click();
+
                 return command;
             },
 
@@ -80,6 +86,12 @@ define(function(require) {
                     })
                     //stop the player
                     .findById("stop_button").click()
+                    .end()
+                    // clear the CSAdsPlugin events
+                    .findById("clearEvents_button").click()
+                    .end()
+                    // clear the Tracking events
+                    .findById("clear_te_button").click()
                     .end()
                 );
             },
