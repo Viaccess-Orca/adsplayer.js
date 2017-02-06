@@ -27,26 +27,26 @@ define(function(require) {
         // Get event counter values for specified CSS selector
         var getCounterValues = function(selector) {
             // Object containing the event counter values
-            let json = {};
+            var json = {};
 
             // Return the result object in a promise
-            return new Promise(resolve => {
+            return new Promise(function(resolve) {
                 // Get all counter elements
                 command.findAllByCssSelector(selector)
-                    .then(elements => {
-                        let promises = [];
+                    .then(function(elements) {
+                        var promises = [];
                         // Loop through the elements
-                        elements.forEach(element => {
+                        elements.forEach(function(element) {
                             // Get element data (id + value) in a promise
-                            let p = new Promise(r => {
+                            var p = new Promise(function(r) {
                                 // Get element ID
                                 element
                                     .getAttribute("eventId")
-                                    .then(id => {
+                                    .then(function(id) {
                                         // Get element value
                                         element
                                             .getAttribute("value")
-                                            .then(value => {
+                                            .then(function(value) {
                                                 // Update the result object
                                                 json[id] = value;
 
@@ -60,7 +60,7 @@ define(function(require) {
                         });
 
                         // Wait until all element promises are resolved
-                        Promise.all(promises).then(() => {
+                        Promise.all(promises).then(function() {
                             // Now that the JSON is full of data, resolve the main promise
                             resolve(json);
                         });
@@ -71,14 +71,14 @@ define(function(require) {
         // Compare real counter values against expected counter values
         var compareCounters = function(realValues, expectedValues) {
             // Loop through the expected values
-            for(let eventId in expectedValues) {
+            for(var eventId in expectedValues) {
                 if (expectedValues.hasOwnProperty(eventId)) {
                     // Check that event counter exists
                     assert.isDefined(realValues[eventId], "Impossible to find event '" + eventId + "' in tracking events");
 
                     // Check that real value is as expected ("x" means "any")
                     if (expectedValues[eventId] !== "x") {
-                        let expectedValue = parseInt(expectedValues[eventId]),
+                        var expectedValue = parseInt(expectedValues[eventId]),
                             realValue = parseInt(realValues[eventId]);
 
                         assert.strictEqual(
@@ -185,7 +185,7 @@ define(function(require) {
                     .then(pollUntil(function (value) {
                         return document.getElementById('event_pause').value === "1" ? true : null;
                     }, null, 40000, 100))
-                    .then(() => {
+                    .then(function() {
                         // The event pause has been detected, now get the tracking events
                         return getCounterValues("#tracking_events .event input");
                     },
@@ -193,7 +193,7 @@ define(function(require) {
                         // the event play has NOT been detected
                         assert.isFalse(true,"the event play has NOT been detected for test preroll");
                     })
-                    .then(counters => {
+                    .then(function(counters) {
                         // Check configuration
                         assert.isDefined(suiteConfig.preroll, "Configuration is not defined for preroll test counters");
                         assert.isDefined(suiteConfig.preroll.ExpectedtrackingEvents, "Configuration is not defined for preroll test counters");
@@ -223,7 +223,7 @@ define(function(require) {
                     .then(pollUntil(function (value) {
                         return document.getElementById('event_pause').value === "1" ? true : null;
                     }, null, 40000, 100))
-                    .then(() => {
+                    .then(function() {
                         // The event pause has been detected, now get the tracking events
                         return getCounterValues("#tracking_events .event input");
                     },
@@ -231,7 +231,7 @@ define(function(require) {
                         // the event play has NOT been detected
                         assert.isFalse(true,"the event play has NOT been detected for test prerollImage");
                     })
-                    .then(counters => {
+                    .then(function(counters) {
                         // Check configuration
                         assert.isDefined(suiteConfig.prerollImage, "Configuration is not defined for prerollImage test counters");
                         assert.isDefined(suiteConfig.prerollImage.ExpectedtrackingEvents, "Configuration is not defined for prerollImage test counters");
@@ -262,14 +262,14 @@ define(function(require) {
                     .then(pollUntil(function (value) {
                         return document.getElementById('event_pause').value === "1" ? true : null;
                     }, null, 40000, 100))
-                    .then(() => {
+                    .then(function() {
                         // The event pause has been detected, now get the tracking events
                         return getCounterValues("#tracking_events .event input");
                     },function (error) {
                         // the event play has NOT been detected
                         assert.isFalse(true,"the event play has NOT been detected for test prerollVast30");
                     })
-                    .then(counters => {
+                    .then(function(counters) {
                         // Check configuration
                         assert.isDefined(suiteConfig.prerollVast30, "Configuration is not defined for prerollVast30 test counters");
                         assert.isDefined(suiteConfig.prerollVast30.ExpectedtrackingEvents, "Configuration is not defined for prerollVast30 test counters");
