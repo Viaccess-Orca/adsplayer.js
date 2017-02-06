@@ -116,8 +116,9 @@ gulp.task('copyright', function() {
 // Copyright (C) 2016 VIACCESS S.A and/or ORCA Interactive **/
 gulp.task('gitTag', function() {
     // Get current branch name
-    git.exec({args: 'symbolic-ref --short HEAD', quiet: true}, function (err, stdout) {
-        currentBranch = stdout.replace(/(\r\n|\n|\r)/gm, '');
+    git.exec({args: 'describe --all', quiet: true}, function (err, stdout) {
+        currentBranchDir = stdout.replace(/(\r\n|\n|\r)/gm, '').split('/').reverse();
+        currentBranch =currentBranchDir[0];
         // if branch "master", set pkg.gitTag value with the last tag name
         if (currentBranch == "master") {
             //Get last tag information
@@ -127,7 +128,6 @@ gulp.task('gitTag', function() {
         } else {
             pkg.gitTag = outName.replace(".js", "-") + currentBranch;
         }
-
     });
 });
 
