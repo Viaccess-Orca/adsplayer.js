@@ -91,13 +91,11 @@ class TrackingEventsManager {
                         break;
                     case 'pause':
                         trackingEvent.oneShot = false;
-                        /** Copyright (C) 2016 VIACCESS S.A and/or ORCA Interactive **/
                         trackingEvent.condition = () => {
                                 // to avoid pause event at the end of stream
                                 return (this._adMediaPlayer.getElement().ended === false );
                         };
                         this._addEventListener(this._adMediaPlayer.getElement(), 'pause', trackingEvent);
-                        /** end **/
                         break;
                     case 'resume':
                         trackingEvent.oneShot = false;
@@ -165,26 +163,12 @@ class TrackingEventsManager {
                         this._addEventListener(this._adMediaPlayer, 'volumechange', trackingEvent);
                         break;
                     case 'fullscreen':
-                        trackingEvent.oneShot = false;
-                        trackingEvent.condition = () => {
-                            /** Copyright (C) 2016 VIACCESS S.A and/or ORCA Interactive **/
-                            return (document.fullScreen===true || document.mozFullScreen===true ||
-                                document.webkitIsFullScreen===true || document.msFullscreenElement===true);
-                            /** end **/
-                        };
-                        this._addEventListener(document, 'webkitfullscreenchange', trackingEvent);
-                        this._addEventListener(document, 'mozfullscreenchange', trackingEvent);
-                        this._addEventListener(document, 'MSFullscreenChange', trackingEvent);
-                        this._addEventListener(document, 'fullscreenChange', trackingEvent);
-                        break;
-
-                    /** Copyright (C) 2016 VIACCESS S.A and/or ORCA Interactive **/
-                    // from VAST-3.0 tracking events
                     case 'exitFullscreen':
                         trackingEvent.oneShot = false;
-                        trackingEvent.condition = () => {
-                            return (document.fullScreen===false || document.mozFullScreen===false ||
-                            document.webkitIsFullScreen===false || document.msFullscreenElement===false );
+                        trackingEvent.condition = (event = trackingEvent.event) => {
+                            let state = (event === 'fullscreen');
+                            return (document.fullScreen === state || document.mozFullScreen === state ||
+                            	document.webkitIsFullScreen === state || document.msFullscreenElement === state);
                         };
                         this._addEventListener(document, 'webkitfullscreenchange', trackingEvent);
                         this._addEventListener(document, 'mozfullscreenchange', trackingEvent);
@@ -195,31 +179,24 @@ class TrackingEventsManager {
                     case 'progress':
                         trackingEvent.oneShot = true;
                         trackingEvent.condition = () => {
-                            if (trackingEvent.offsetPercent)
-                            {
+                            if (trackingEvent.offsetPercent) {
                                 //this._debug.log("progress:" + this._adMediaPlayer.getCurrentTime()+" vs offsetPercent = " + trackingEvent.offsetPercent * this._adMediaPlayer.getDuration());
                                 return (this._adMediaPlayer.getCurrentTime() >= trackingEvent.offsetPercent * this._adMediaPlayer.getDuration());
-                            }
-                            else
-                            {
+                            } else {
                                 //this._debug.log("progress:" + this._adMediaPlayer.getCurrentTime()+" vs offsetInSeconds " + trackingEvent.offsetInSeconds);
                                 return (this._adMediaPlayer.getCurrentTime() >= trackingEvent.offsetInSeconds);
                             }
                         };
                         this._addEventListener(this._adMediaPlayer, 'timeupdate', trackingEvent);
                         break;
-
                     case 'acceptInvitationLinear':
                         trackingEvent.oneShot = false;
                         this._addEventListener(this._adMediaPlayer, 'click', trackingEvent);
                         break;
-
                     case 'closeLinear':
                         trackingEvent.oneShot = false;
                         this._addEventListener(window, 'beforeunload', trackingEvent);
                         break;
-
-                    /** end **/
                     default:
                         break;
                 }
