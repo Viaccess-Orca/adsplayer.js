@@ -148,6 +148,8 @@ define(function(require) {
                         // the event has NOT been detected
                         assert.isFalse(true,"the event play has NOT been detected for test pause");
                     })
+                    // wait 500 ms after the play, pause test may fail if video current time = 0 because tracking event "resume" is not sent in this case
+                    .sleep(500)
                 );
             },
 
