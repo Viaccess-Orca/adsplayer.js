@@ -89,6 +89,15 @@ define(function(require) {
 
                 }
             }
+
+            // Loop through real values
+            for(var eventId in realValues) {
+                if (realValues.hasOwnProperty(eventId)) {
+                    // Check that there were no unexpected event dispatched
+                    var realValue = parseInt(realValues[eventId]);
+                    assert.isFalse(realValue > 0 && !expectedValues[eventId], "Event '" + eventId + "' should not be dispatched");
+                }
+            }
         };
 
         return {
