@@ -33,6 +33,9 @@ define(function(require) {
                 // load the web test page
                 command = this.remote.get(require.toUrl(config.testPageUrl));
 
+                //clear the ad url
+                command.findById("stream_toplay").clearValue();
+
                 // set the stream to play
                 command.findById("stream_toplay").type(config.streamUrl);
 
