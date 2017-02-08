@@ -29,7 +29,7 @@
 
 /**
 * AdsPlayerController is th main controller class for AdsPlayer module.
-* It is in charge of downloading the MAST/VAST files and orchestrates the
+* It is in charge of downloading the MAST/VMAP/VAST files and orchestrates the
 * detection of triggers and playing of ad(s).
 */
 
@@ -37,7 +37,7 @@ import Debug from './Debug';
 import FileLoader from './FileLoader';
 import ErrorHandler from './ErrorHandler';
 import EventBus from './EventBus';
-import MastParser from './mast/MastParser';
+import Parser from './Parser';
 import TriggerManager from './mast/TriggerManager';
 import VastParser from './vast/VastParser';
 import VastPlayerManager from './vast/VastPlayerManager';
@@ -80,7 +80,7 @@ class AdsPlayerController {
             uri = trigger.sources[i].uri;
             // Check for relative uri path
             if (uri.indexOf('http://') === -1) {
-                uri = this._mast.baseUrl + uri;
+                uri = this._ad.baseUrl + uri;
             }
             loadVastPromises.push(this._loadVast(uri));
         }
@@ -101,24 +101,24 @@ class AdsPlayerController {
         });
     }
 
-    _parseMastFile (mastContent, mastBaseUrl) {
+    _parseAdFile (adContent, adBaseUrl) {
         var triggerManager,
             i;
 
-        // Parse the MAST file
-        this._mast = this._mastParser.parse(mastContent);
+        // Parse the file
+        this._ad = this._parser.parse(adContent);
 
-        if (!this._mast) {
+        if (!this._ad) {
             return;
         }
 
         // Store base URL for subsequent VATS files download
-        this._mast.baseUrl = mastBaseUrl;
+        this._ad.baseUrl = adBaseUrl;
 
         // Initialize the trigger managers
-        for (i = 0; i < this._mast.triggers.length; i++) {
+        for (i = 0; i < this._ad.triggers.length; i++) {
             triggerManager = new TriggerManager();
-            triggerManager.init(this._mast.triggers[i]);
+            triggerManager.init(this._ad.triggers[i]);
             this._triggerManagers.push(triggerManager);
         }
     }
@@ -253,12 +253,12 @@ class AdsPlayerController {
     }
 
     _start () {
-        if (!this._mast) {
+        if (!this._ad) {
             return;
         }
 
-        if (this._mast.triggers.length === 0) {
-            this._debug.warn('No trigger in MAST');
+        if (this._ad.triggers.length === 0) {
+            this._debug.warn('No trigger in ad');
         }
 
         // Check for pre-roll trigger
@@ -277,11 +277,11 @@ class AdsPlayerController {
         this._mainPlayer = null;
         this._mainVideo = null;
         this._adsPlayerContainer = null;
-        this._mast = null;
+        this._ad = null;
         this._fileLoaders = [];
         this._triggerManagers = [];
         this._vastPlayerManager = null;
-        this._mastParser = new MastParser();
+        this._parser = new Parser();
         this._vastParser = new VastParser();
         this._errorHandler = ErrorHandler.getInstance();
         this._debug = Debug.getInstance();
@@ -317,26 +317,26 @@ class AdsPlayerController {
 
 
     /**
-     * Load/open a MAST file.
+     * Load/open an ad file.
      * @method load
      * @access public
      * @memberof AdsPlayerController#
-     * @param {string} mastUrl - the MAST file url
+     * @param {string} url - the ad file url
      */
     load (url) {
         let fileLoader = new FileLoader();
 
-        // Reset the MAST and trigger managers
-        this._mast = null;
+        // Reset the ad and trigger managers
+        this._ad = null;
         this._triggerManagers = [];
 
-        // Download and parse MAST file
-        this._debug.log("Download MAST file: " + url);
+        // Download and parse ad file
+        this._debug.log("Download ad file: " + url);
 
         return new Promise((resolve, reject) => {
             fileLoader.load(url).then(result => {
-                this._debug.log("Parse MAST file");
-                this._parseMastFile(result.response, result.baseUrl);
+                this._debug.log("Parse ad file");
+                this._parseAdFile(result.response, result.baseUrl);
                 // Start managing triggers and ads playing
                 this._debug.log("Start");
                 this._start();
@@ -387,8 +387,8 @@ class AdsPlayerController {
         // Reset the trigger managers
         this._triggerManagers = [];
 
-        // Reset the MAST
-        this._mast = null;
+        // Reset the ad
+        this._ad = null;
     }
 
     destroy () {
