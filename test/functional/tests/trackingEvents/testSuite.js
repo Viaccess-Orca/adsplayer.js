@@ -125,6 +125,10 @@ define(function(require) {
                 return command;
             },
 
+            teardown: function () {
+                command.quit();
+            },
+
             beforeEach: function (test) {
                 // executes before each test
 
@@ -194,6 +198,9 @@ define(function(require) {
                     .end()
                     // clear the Tracking events
                     .findById("clear_te_button").click()
+                    .end()
+                    // clear the html5 video events
+                    .findById("clear_event_html5_button").click()
                     .end()
                 );
             },
@@ -279,7 +286,7 @@ define(function(require) {
                 );
             },
 
-            // Check the tracking events when the ad is paused
+            // Check the tracking events when the ad is paused and resumed
             "pause": function () {
 
                 command
@@ -337,6 +344,66 @@ define(function(require) {
 
                             // Finally, check the counter values
                             compareCounters(counters, suiteConfig.pause.ExpectedtrackingEvents);
+                        })
+                );
+            },
+
+            // Check the tracking events when the ad is muted and un-muted
+            "mute": function () {
+
+                command
+                // mute the player
+                    .findById("mute_button")
+                    .click()
+                    .end();
+
+                // wait for the volume has changed
+                command
+                    .then(pollUntil(function (value) {
+                        return parseInt(document.getElementById('event_hml5_volumechange').value) == 1 ? true : null;
+                    }, null, 10000, 100))
+                    .then(function () {
+                        assert.isFalse(true,"the player has been muted");
+                    },function (error) {
+                        assert.isFalse(true,"the player has NOT been muted");
+                    })
+
+                command
+                // unmute the player
+                    .findById("mute_button")
+                    .click()
+                    .end()
+
+                // wait for the volume has changed
+                command
+                    .then(pollUntil(function (value) {
+                        return parseInt(document.getElementById('event_hml5_volumechange').value) == 2 ? true : null;
+                    }, null, 10000, 100))
+                    .then(function () {
+                        assert.isFalse(true,"the player has been muted");
+                    },function (error) {
+                        assert.isFalse(true,"the player has NOT been muted");
+                    })
+
+                // wait for the pause event
+                return(command
+                        .then(pollUntil(function (value) {
+                            return parseInt(document.getElementById('event_pause').value) == 1 ? true : null;
+                        }, null, 40000, 100))
+                        .then(function () {
+                            // the event pause has been detected, now get the tracking events
+                            return getCounterValues("#tracking_events .event input");
+                        },function (error) {
+                            // the event play has NOT been detected
+                            assert.isFalse(true,"the event pause has NOT been detected for test pause");
+                        })
+                        .then(function(counters) {
+                            // Check configuration
+                            assert.isDefined(suiteConfig.mute, "Configuration is not defined for prerollVast30 test counters");
+                            assert.isDefined(suiteConfig.mute.ExpectedtrackingEvents, "Configuration is not defined for prerollVast30 test counters");
+
+                            // Finally, check the counter values
+                            compareCounters(counters, suiteConfig.mute.ExpectedtrackingEvents);
                         })
                 );
             }
