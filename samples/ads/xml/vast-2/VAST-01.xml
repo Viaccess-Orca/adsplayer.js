@@ -28,9 +28,11 @@
 							<ClickThrough>
 								<![CDATA[http://www.viaccess-orca.com]]>
 							</ClickThrough>
-							<ClickTracking>http://tv-has.orange-labs.fr/adserver/tracking/clickTracking0</ClickTracking>
-							<ClickTracking>http://tv-has.orange-labs.fr/adserver/tracking/clickTracking1</ClickTracking>
-							<ClickTracking>http://tv-has.orange-labs.fr/adserver/tracking/clickTracking2</ClickTracking>
+							<ClickTracking id="clickTracking0">http://tv-has.orange-labs.fr/adserver/tracking/clickTracking0</ClickTracking>
+							<ClickTracking id="clickTracking1">http://tv-has.orange-labs.fr/adserver/tracking/clickTracking1</ClickTracking>
+							<ClickTracking id="clickTracking2">http://tv-has.orange-labs.fr/adserver/tracking/clickTracking2</ClickTracking>
+							<CustomClick id="customClick0">http://tv-has.orange-labs.fr/adserver/tracking/customClick0</CustomClick>
+							<CustomClick id="customClick1">http://tv-has.orange-labs.fr/adserver/tracking/customClick1</CustomClick>
 						</VideoClicks>
 						<MediaFiles>
 							<MediaFile id="video1" delivery="progressive" type="video/mp4">
