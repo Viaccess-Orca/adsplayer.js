@@ -33,6 +33,7 @@
 */
 class Mast {
     constructor () {
+        this.format = "mast";
         this.baseUrl = '';
         this.triggers = [];     // pointer to any number of Ad objects
     }

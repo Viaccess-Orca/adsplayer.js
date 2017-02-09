@@ -38,10 +38,9 @@ import FileLoader from './FileLoader';
 import ErrorHandler from './ErrorHandler';
 import EventBus from './EventBus';
 import Parser from './Parser';
-import TriggerManager from './mast/TriggerManager';
+import AdManager from "./AdManager";
 import VastParser from './vast/VastParser';
 import VastPlayerManager from './vast/VastPlayerManager';
-
 
 class AdsPlayerController {
 
@@ -80,7 +79,7 @@ class AdsPlayerController {
             uri = trigger.sources[i].uri;
             // Check for relative uri path
             if (uri.indexOf('http://') === -1) {
-                uri = this._ad.baseUrl + uri;
+                uri = this._sequence.baseUrl + uri;
             }
             loadVastPromises.push(this._loadVast(uri));
         }
@@ -101,25 +100,25 @@ class AdsPlayerController {
         });
     }
 
-    _parseAdFile (adContent, adBaseUrl) {
-        var triggerManager,
+    _parseAdFile (fileContent, fileBaseUrl) {
+        var adManager,
             i;
 
         // Parse the file
-        this._ad = this._parser.parse(adContent);
+        this._sequence = this._parser.parse(fileContent);
 
-        if (!this._ad) {
+        if (!this._sequence) {
             return;
         }
 
         // Store base URL for subsequent VATS files download
-        this._ad.baseUrl = adBaseUrl;
+        this._sequence.baseUrl = fileBaseUrl;
 
-        // Initialize the trigger managers
-        for (i = 0; i < this._ad.triggers.length; i++) {
-            triggerManager = new TriggerManager();
-            triggerManager.init(this._ad.triggers[i]);
-            this._triggerManagers.push(triggerManager);
+        // Initialize the ad managers
+        for (i = 0; i < this._sequence.triggers.length; i++) {
+            adManager = new AdManager(this._sequence.format);
+            adManager.init(this._sequence.triggers[i]);
+            this._adManagers.push(adManager);
         }
     }
 
@@ -234,31 +233,31 @@ class AdsPlayerController {
     }
 
     _checkTriggersStart () {
-        for (var i = 0; i < this._triggerManagers.length; i++) {
-            if (this._triggerManagers[i].checkStartConditions(this._mainVideo)) {
-                return this._triggerManagers[i].getTrigger();
+        for (var i = 0; i < this._adManagers.length; i++) {
+            if (this._adManagers[i].checkStartConditions(this._mainVideo)) {
+                return this._adManagers[i].getTrigger();
             }
         }
         return null;
     }
 
     _checkTriggersEnd () {
-        for (var i = 0; i < this._triggerManagers.length; i++) {
-            if (this._triggerManagers[i].checkEndConditions(this._mainVideo)) {
-                // Remove trigger manager => will not be activated anymore
-                this._triggerManagers.splice(0, 1);
+        for (var i = 0; i < this._adManagers.length; i++) {
+            if (this._adManagers[i].checkEndConditions(this._mainVideo)) {
+                // Remove ad manager => will not be activated anymore
+                this._adManagers.splice(0, 1);
                 i--;
             }
         }
     }
 
     _start () {
-        if (!this._ad) {
+        if (!this._sequence) {
             return;
         }
 
-        if (this._ad.triggers.length === 0) {
-            this._debug.warn('No trigger in ad');
+        if (this._sequence.triggers.length === 0) {
+            this._debug.warn('No ad in sequence');
         }
 
         // Check for pre-roll trigger
@@ -277,9 +276,9 @@ class AdsPlayerController {
         this._mainPlayer = null;
         this._mainVideo = null;
         this._adsPlayerContainer = null;
-        this._ad = null;
+        this._sequence = null;
         this._fileLoaders = [];
-        this._triggerManagers = [];
+        this._adManagers = [];
         this._vastPlayerManager = null;
         this._parser = new Parser();
         this._vastParser = new VastParser();
@@ -317,27 +316,27 @@ class AdsPlayerController {
 
 
     /**
-     * Load/open an ad file.
+     * Load/open a sequence file.
      * @method load
      * @access public
      * @memberof AdsPlayerController#
-     * @param {string} url - the ad file url
+     * @param {string} url - the sequence file url
      */
     load (url) {
         let fileLoader = new FileLoader();
 
-        // Reset the ad and trigger managers
-        this._ad = null;
-        this._triggerManagers = [];
+        // Reset the sequence and ad managers
+        this._sequence = null;
+        this._adManagers = [];
 
-        // Download and parse ad file
-        this._debug.log("Download ad file: " + url);
+        // Download and parse sequence file
+        this._debug.log("Download sequence file: " + url);
 
         return new Promise((resolve, reject) => {
             fileLoader.load(url).then(result => {
-                this._debug.log("Parse ad file");
+                this._debug.log("Parse sequence file");
                 this._parseAdFile(result.response, result.baseUrl);
-                // Start managing triggers and ads playing
+                // Start managing ads playing
                 this._debug.log("Start");
                 this._start();
                 resolve();
@@ -384,11 +383,11 @@ class AdsPlayerController {
 
         this.stop();
 
-        // Reset the trigger managers
-        this._triggerManagers = [];
+        // Reset the ad managers
+        this._adManagers = [];
 
-        // Reset the ad
-        this._ad = null;
+        // Reset the sequence
+        this._sequence = null;
     }
 
     destroy () {
