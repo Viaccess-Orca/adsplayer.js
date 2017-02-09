@@ -41,8 +41,8 @@
 */
 class Vast {
     constructor () {
-        this.version = '';                  // [Required] Current version is 3.0
-        this.ads = [];                      // [Required] Top-level element,wraps each ad in the response
+        this.version = '';                  // [Required] Current supported version are 2.0 and 3.0
+        this.ads = [];                      // [Required] Ad elements
     }
 }
 
@@ -65,16 +65,16 @@ class Ad {
 */
 class InLine {
     constructor () {
-        this.adSystem = null;               // [Required] Source ad server
+        this.adSystem = null;               // [Required] AdSystem element
         this.adTitle = '';                  // [Required] Title
         this.description = '';              // [Optional] Description
         this.advertiser = '';               // [Optional] Advertiser name
-        this.pricing = null;                // [Optional] Pricing
+        this.pricing = null;                // [Optional] Pricing element
         this.survey = '';                   // [Optional] URI of request to survey vendor
         this.error = '';                    // [Optional] URI to request if ad does not play due to error
-        this.impressions = [];              // [Required] URIs to track impressions.
+        this.impressions = [];              // [Required] Impression elements
         this.creatives = [];                // [Required] Creative elements
-        this.extensions = [];               // [Optional] Any valid XML may be included in the Extensions node
+        this.extensions = [];               // [Optional] Extensions elements
     }
 }
 
@@ -133,9 +133,9 @@ class Creative {
         this.adId = '';                     // [Optional] Ad-ID for the creative (formerly ISCI)
         this.sequence = 0;                  // [Optional] The preferred order in which multiple Creatives should be displayed
         this.apiFramework = '';             // [Optional] A string that identify an API that is needed to execute the creative.
-        this.linear = null;                 // [Optional] Linear ad
-        this.companionAds = [];             // [Optional] Companion ads
-        this.nonLinearAds = [];             // [Optional] Non-linear ads
+        this.linear = null;                 // [Optional] Linear element
+        this.companionAds = [];             // [Optional] Companion elements
+        this.nonLinearAds = [];             // [Optional] NonLinear elements
     }
 }
 
@@ -154,11 +154,11 @@ class Linear {
     constructor () {
         this.skipoffsetInSeconds = 0;       // [Optional] Time value that identifies when skip controls are made available to the end user.
         this.skipoffsetPercent = 0;         // [Optional] Time value that identifies when skip controls are made available to the end user.
-        this.adParameters = null;           // [Optional] Data to be passed into the video ad
+        this.adParameters = null;           // [Optional] AdParameters element
         this.duration = 0;                  // [Required] Duration in standard time format, hh:mm:ss
-        this.mediaFiles = [];               // [Required] Media file elements
-        this.trackingEvents = [];           // [Optional] Tracking events elements
-        this.videoClicks = null;            // [Optional] Video clicks
+        this.mediaFiles = [];               // [Required] MediaFile elements
+        this.trackingEvents = [];           // [Optional] TrackingEvent elements
+        this.videoClicks = null;            // [Optional] VideoClicks element
         this.icons = [];                    // [Optional]
     }
 }
@@ -172,10 +172,10 @@ class Companion {
         this.id = '';                       // optional : identifier
         this.width = 0;                     // width pixel dimension of companion
         this.height = 0;                    // height pixel dimension of companion
-        this.staticResource = null;         // optional : pointer to the static resource : AdsPlayer.vast.model.Ad.StaticResource
+        this.staticResource = null;         // optional : StaticResource element
         this.iFrameResource = '';           // optional : URI source for an IFrame to display the companion element
         this.hTMLResource = '';             // optional : HTML to display the companion element : shall be CDATA value
-        this.trackingEvents = [];           // optional : pointer to any number of tracking objects : AdsPlayer.vast.model.Ad.CompanionTracking
+        this.trackingEvents = [];           // optional : TrackingEvent elements
         this.clickThrough = '';             // optional : URI to open as destination page when user clicks on the companion
         this.altText = '';                  // optional : alt text to be displayed when companion is rendered in HTML environment.
         this.adParameters = '';             // optional : data to be passed into the companion ads
@@ -202,7 +202,7 @@ class NonLinear {
         this.apiFramework = '';             // optional : defines the method to use for communication with the nonlinear element
         this.staticResource = null;         // optional : pointer to the static resource : AdsPlayer.vast.model.Ad.StaticResource
         this.hTMLResource = '';             // optional : HTML to display the companion element : shall be CDATA value
-        this.trackingEvents = [];           // optional : pointer to any number of tracking objects : AdsPlayer.vast.model.Ad.Tracking
+        this.trackingEvents = [];           // optional : TrackingEvent elements
         this.clickThrough = '';             // optional : URI to open as destination page when user clicks on the non-linear ad unit
         this.adParameters = '';             // optional : data to be passed into the video ad
     }
@@ -261,9 +261,9 @@ TrackingEvent.TYPE = {
 */
 class VideoClicks {
     constructor () {
-        this.clickThrough = null;             // [Optional] URI to open as destination page when user clicks on the video
-        this.clickTracking = null;            // [Optional] URI to request for tracking purposes when user clicks on the video
-        this.customClick = null;              // [Optional] URI to request on custom events such as hotspotted video
+        this.clickThrough = null;           // [Required] Click element
+        this.clickTracking = [];            // [Optional] Click elements
+        this.customClick = [];              // [Optional] Click elements
     }
 }
 

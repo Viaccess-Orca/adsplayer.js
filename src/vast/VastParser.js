@@ -69,32 +69,34 @@ class VastParser {
     }
 
     _getVideoClicks (videoClicksNode) {
-        let videoClicks = new vast.VideoClicks(),
-            nodeName,
-            nodeValue;
+        let videoClicks = new vast.VideoClicks();
+        
+        let clickThroughNode = xmldom.getElement(videoClicksNode, 'ClickThrough');
+        if (clickThroughNode) {
+            videoClicks.clickThrough = new vast.Click();
+            videoClicks.clickThrough.id = clickThroughNode.getAttribute('id');
+            videoClicks.clickThrough.uri = xmldom.getNodeTextValue(clickThroughNode);
+        } else {
+            this._debug.warn("(VastParser) VAST/Ad/Inline/Creatives/Linear/VideoClicks/ClickThrough is mandatory but not present.");
+        }
 
-        for (let i = 0; i < videoClicksNode.childNodes.length; i++) {
-            nodeName = videoClicksNode.childNodes[i].nodeName;
+        let numberOfClickTracking = videoClicksNode.getElementsByTagName('ClickTracking').length;
+        let clickTrackingNodes = xmldom.getElements(videoClicksNode, 'ClickTracking');
+        if (clickTrackingNodes) {
+            for (let i = 0; i < numberOfClickTracking; i++){
+                videoClicks.clickTracking[i] = new vast.Click();
+                videoClicks.clickTracking[i].id = clickTrackingNodes[i].getAttribute('id');
+                videoClicks.clickTracking[i].uri = xmldom.getNodeTextValue(clickTrackingNodes[i]);
+            }
+        }
 
-            switch (nodeName) {
-                case "ClickThrough":
-                    nodeValue = xmldom.getElement(videoClicksNode,"ClickThrough");
-                    videoClicks.clickThrough = new vast.Click();
-                    videoClicks.clickThrough.id = nodeValue.getAttribute('id');
-                    videoClicks.clickThrough.uri = xmldom.getNodeTextValue(nodeValue);
-                    break;
-                case "ClickTracking":
-                    nodeValue = xmldom.getElement(videoClicksNode,"ClickTracking");
-                    videoClicks.clickTracking = new vast.Click();
-                    videoClicks.clickTracking.id = nodeValue.getAttribute('id');
-                    videoClicks.clickTracking.uri = xmldom.getNodeTextValue(nodeValue);
-                    break;
-                case "CustomClick":
-                    nodeValue = xmldom.getElement(videoClicksNode,"CustomClick");
-                    videoClicks.customClick = new vast.Click();
-                    videoClicks.customClick.id = nodeValue.getAttribute('id');
-                    videoClicks.customClick.uri = xmldom.getNodeTextValue(nodeValue);
-                    break;
+        let numberOfCustomClick = videoClicksNode.getElementsByTagName('CustomClick').length;
+        let customClickNodes = xmldom.getElements(videoClicksNode, 'CustomClick');
+        if (customClickNodes) {
+            for (let i = 0; i < numberOfCustomClick; i++){
+                videoClicks.customClick[i] = new vast.Click();
+                videoClicks.customClick[i].id = customClickNodes[i].getAttribute('id');
+                videoClicks.customClick[i].uri = xmldom.getNodeTextValue(customClickNodes[i]);
             }
         }
 
