@@ -45,6 +45,9 @@ define(function(require) {
                 // clear the Tracking events
                 command.findById("clear_te_button").click();
 
+                // clear the html5 video events
+                command.findById("clear_event_html5_button").click();
+
                 return command;
             },
 
