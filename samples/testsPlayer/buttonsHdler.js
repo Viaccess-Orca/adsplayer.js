@@ -41,7 +41,8 @@ function initButtonsHdler() {
 
     // stop button
     document.querySelector('#stop_button').addEventListener("click",function(e) {
-		mediaPlayer.reset();
+		//mediaPlayer.reset();
+        mediaPlayer.stop();
     });
 
     // pause button
