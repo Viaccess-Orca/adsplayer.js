@@ -318,7 +318,11 @@
 
                 initHtml5VideoEvtsHdler();
 
+            });
 
+            document.addEventListener("beforeunload", function(event) {
+                mediaPlayer.removePlugin(adsPlugin);
+                mediaPlayer.reset(1);
             });
 
         </script>
