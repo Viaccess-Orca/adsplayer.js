@@ -32,7 +32,7 @@
  * and construct the corresponding VMAP object according to VMAP data model.
  */
 
-//import mast from './model/Mast';
+import vmap from './model/Vmap';
 import xmldom from '../utils/xmldom';
 
 class VmapParser {
@@ -40,67 +40,56 @@ class VmapParser {
     ///////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////// PRIVATE ////////////////////////////////////////////
 
-    _getCondition (conditionNode) {
-        let condition = new mast.Condition(),
-            conditionNodes;
+    _getAdSource(adSourceNode) {
+        let adSource = new vmap.AdSource(),
+            adTagURINode,
+            VASTAdDataNode,
+            CustomAdDataNode;
 
-        condition.type = conditionNode.getAttribute('type');
-        condition.name = conditionNode.getAttribute('name');
-        condition.value = conditionNode.getAttribute('value');
-        condition.operator = conditionNode.getAttribute('operator');
-        conditionNodes = conditionNode.getElementsByTagName('condition');
-        for (let i = 0; i < conditionNodes.length; i++) {
-            condition.conditions.push(this._getCondition(conditionNodes[i]));
+        adSource.id = adSourceNode.getAttribute('id');
+        adSource.allowMultipleAds = adSourceNode.getAttribute('allowMultipleAds');
+        adSource.followRedirects = adSourceNode.getAttribute('followRedirects');
+        adSource.templateType = adSourceNode.getAttribute('templateType');
+
+        adTagURINode = xmldom.getElement(adSourceNode, 'AdTagURI');
+        if (adTagURINode ) {
+            adSource.uri = xmldom.getNodeTextValue(adTagURINode);
         }
 
-        return condition;
+        VASTAdDataNode = xmldom.getElement(adSourceNode, 'VASTAdData');
+        if (VASTAdDataNode ) {
+            adSource.VASTAdData = xmldom.getNodeTextValue(VASTAdDataNode);
+        }
+
+        CustomAdDataNode = xmldom.getElement(adSourceNode, 'CustomAdData');
+        if (CustomAdDataNode ) {
+            adSource.CustomAdData = xmldom.getNodeTextValue(CustomAdDataNode);
+        }
+
+        return adSource;
     }
 
-    _getSource (sourceNode) {
-        let source = new mast.Source(),
-            sourceNodes;
+    _getAdBreak(triggerNode) {
+        let adBreak = new vmap.AdBreak(),
+            adSourceNode = xmldom.getElement(triggerNode, 'AdSource');
 
-        source.uri = sourceNode.getAttribute('uri');
-        source.altReference = sourceNode.getAttribute('altReference');
-        source.format = sourceNode.getAttribute('format');
-        sourceNodes = sourceNode.getElementsByTagName('source');
-        for (let i = 0; i < sourceNodes.length; i++) {
-            source.sources.push(this._getSource(sourceNodes[i]));
+        adBreak.id = triggerNode.getAttribute('breakId');
+        adBreak.breakType = triggerNode.getAttribute('breakType');
+        adBreak.timeOffset = triggerNode.getAttribute('timeOffset');
+
+        if (adSourceNode) {
+            // Create an array for genericity purpose, although VMAP allow only one source
+            adBreak.sources = [this._getAdSource(adSourceNode)];
         }
 
-        return source;
+        return adBreak;
     }
 
-    _getTrigger (triggerNode) {
-        let trigger = new mast.Trigger(),
-            startConditionNodes = xmldom.getSubElements(triggerNode, 'startConditions', 'condition'),
-            endConditionNodes = xmldom.getSubElements(triggerNode, 'endConditions', 'condition'),
-            sourceNodes = xmldom.getSubElements(triggerNode, 'sources', 'source'),
-            i;
+    _AdBreaks(mastNode, vmap) {
+        let adBreakNodes = xmldom.getElements(mastNode, 'AdBreak');
 
-        trigger.id = triggerNode.getAttribute('id');
-        trigger.description = triggerNode.getAttribute('description');
-
-        for (i = 0; i < startConditionNodes.length; i++) {
-            trigger.startConditions.push(this._getCondition(startConditionNodes[i]));
-        }
-
-        for (i = 0; i < endConditionNodes.length; i++) {
-            trigger.endConditions.push(this._getCondition(endConditionNodes[i]));
-        }
-
-        for (i = 0; i < sourceNodes.length; i++) {
-            trigger.sources.push(this._getSource(sourceNodes[i]));
-        }
-
-        return trigger;
-    }
-
-    _getTriggers (mastNode, mast) {
-        let triggerNodes = xmldom.getSubElements(mastNode, 'triggers', 'trigger');
-
-        for (let i = 0; i < triggerNodes.length; i++) {
-            mast.triggers.push(this._getTrigger(triggerNodes[i]));
+        for (let i = 0; i < adBreakNodes.length; i++) {
+            vmap.triggers.push(this._getAdBreak(adBreakNodes[i]));
         }
     }
 
@@ -115,16 +104,16 @@ class VmapParser {
      * @param {object} xmlDom - the XML DOM to parse
      */
     parse (xmlDom) {
-        /*let mast_ = new mast.Mast(),
-            mastNode = xmldom.getElement(xmlDom, 'MAST');
+        let vmap_ = new vmap.Vmap(),
+            vmapNode = xmldom.getElement(xmlDom, 'VMAP');
 
-        if (mastNode === null) {
-            return mast_;
+        if (vmapNode === null) {
+            return vmap_;
         }
 
-        this._getTriggers(mastNode, mast_);
+        this._AdBreaks(vmapNode, vmap_);
 
-        return mast_;*/
+        return vmap_;
     }
 }
 

@@ -38,7 +38,7 @@ import FileLoader from './FileLoader';
 import ErrorHandler from './ErrorHandler';
 import EventBus from './EventBus';
 import Parser from './Parser';
-import AdManager from "./AdManager";
+import AdsManager from "./AdsManager";
 import VastParser from './vast/VastParser';
 import VastPlayerManager from './vast/VastPlayerManager';
 
@@ -101,7 +101,7 @@ class AdsPlayerController {
     }
 
     _parseAdFile (fileContent, fileBaseUrl) {
-        var adManager,
+        var adsManager,
             i;
 
         // Parse the file
@@ -116,9 +116,9 @@ class AdsPlayerController {
 
         // Initialize the ad managers
         for (i = 0; i < this._sequence.triggers.length; i++) {
-            adManager = new AdManager(this._sequence.format);
-            adManager.init(this._sequence.triggers[i]);
-            this._adManagers.push(adManager);
+            adsManager = new AdsManager(this._sequence.format);
+            adsManager.init(this._sequence.triggers[i]);
+            this._adsManagers.push(adsManager);
         }
     }
 
@@ -233,19 +233,19 @@ class AdsPlayerController {
     }
 
     _checkTriggersStart () {
-        for (var i = 0; i < this._adManagers.length; i++) {
-            if (this._adManagers[i].checkStartConditions(this._mainVideo)) {
-                return this._adManagers[i].getTrigger();
+        for (var i = 0; i < this._adsManagers.length; i++) {
+            if (this._adsManagers[i].checkStartConditions(this._mainVideo)) {
+                return this._adsManagers[i].getTrigger();
             }
         }
         return null;
     }
 
     _checkTriggersEnd () {
-        for (var i = 0; i < this._adManagers.length; i++) {
-            if (this._adManagers[i].checkEndConditions(this._mainVideo)) {
+        for (var i = 0; i < this._adsManagers.length; i++) {
+            if (this._adsManagers[i].checkEndConditions(this._mainVideo)) {
                 // Remove ad manager => will not be activated anymore
-                this._adManagers.splice(0, 1);
+                this._adsManagers.splice(0, 1);
                 i--;
             }
         }
@@ -278,7 +278,7 @@ class AdsPlayerController {
         this._adsPlayerContainer = null;
         this._sequence = null;
         this._fileLoaders = [];
-        this._adManagers = [];
+        this._adsManagers = [];
         this._vastPlayerManager = null;
         this._parser = new Parser();
         this._vastParser = new VastParser();
@@ -327,7 +327,7 @@ class AdsPlayerController {
 
         // Reset the sequence and ad managers
         this._sequence = null;
-        this._adManagers = [];
+        this._adsManagers = [];
 
         // Download and parse sequence file
         this._debug.log("Download sequence file: " + url);
@@ -384,7 +384,7 @@ class AdsPlayerController {
         this.stop();
 
         // Reset the ad managers
-        this._adManagers = [];
+        this._adsManagers = [];
 
         // Reset the sequence
         this._sequence = null;

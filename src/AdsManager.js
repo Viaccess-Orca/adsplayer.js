@@ -1,6 +1,7 @@
 import TriggerManager from "./mast/TriggerManager";
+import AdBreakManager from "./vmap/AdBreakManager";
 
-class AdManager {
+class AdsManager {
     constructor(format) {
         this._manager = null;
 
@@ -10,6 +11,7 @@ class AdManager {
                 break;
 
             case "vmap":
+                this._manager = new AdBreakManager();
                 break;
 
             default:
@@ -42,4 +44,4 @@ class AdManager {
     }
 }
 
-export default AdManager;
+export default AdsManager;
