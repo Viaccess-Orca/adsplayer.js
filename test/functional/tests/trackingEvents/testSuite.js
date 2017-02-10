@@ -173,7 +173,7 @@ define(function(require) {
                     // wait for the event start
                     .then(pollUntil(function (value) {
                         return parseInt(document.getElementById('event_start').value) == 1 ? true : null;
-                    }, null, 40000, 1000))
+                    }, null, 10000, 1000))
                     .then(function () {
                         // the event started has been detected
                     }, function (error) {
@@ -182,12 +182,12 @@ define(function(require) {
                     })
                     .then(pollUntil(function (value) {
                         return parseInt(document.getElementById('event_play').value) == 1 ? true : null;
-                    }, null, 40000, 100))
+                    }, null, 10000, 1000))
                     .then(function () {
                         // the event play has been detected
                     },function (error) {
                         // the event has NOT been detected
-                        assert.isFalse(true,"the event play has NOT been detected for test pause");
+                        assert.isFalse(true,"the event play has NOT been detected for test " + test.name);
                     })
                     // wait 500 ms after the play, pause test may fail if video current time = 0 because tracking event "resume" is not sent in this case
                     .sleep(500)
@@ -200,7 +200,7 @@ define(function(require) {
                     // wait for at least (some tests pause the ad) one pause event.
                     .then(pollUntil(function (value) {
                         return parseInt(document.getElementById('event_pause').value) >= 1 ? true : null;
-                    }, null, 40000, 100))
+                    }, null, 10000, 1000))
                     .then(function () {
                         // the event pause has been detected
                     },function (error) {
@@ -210,7 +210,7 @@ define(function(require) {
                     // wait for the event end
                     .then(pollUntil(function (value) {
                         return parseInt(document.getElementById('event_end').value) == 1 ? true : null;
-                    }, null, 40000, 1000))
+                    }, null, 10000, 1000))
                     .then(function () {
                         // the event end has been detected
                         assert.isTrue(true,"End detected");
@@ -240,7 +240,7 @@ define(function(require) {
                 return(command
                     .then(pollUntil(function (value) {
                         return parseInt(document.getElementById('event_pause').value) == 1 ? true : null;
-                    }, null, 40000, 100))
+                    }, null, 10000, 1000))
                     .then(  function() {
                                 // The event pause has been detected, now get the tracking events
                                 return getCounterValues("#tracking_events .event input");
@@ -268,7 +268,7 @@ define(function(require) {
                 return(command
                     .then(pollUntil(function (value) {
                         return parseInt(document.getElementById('event_pause').value) == 1 ? true : null;
-                    }, null, 40000, 100))
+                    }, null, 10000, 1000))
                     .then(function() {
                         // The event pause has been detected, now get the tracking events
                         return getCounterValues("#tracking_events .event input");
@@ -295,7 +295,7 @@ define(function(require) {
                 return(command
                     .then(pollUntil(function (value) {
                         return parseInt(document.getElementById('event_pause').value) == 1 ? true : null;
-                    }, null, 40000, 100))
+                    }, null, 10000, 1000))
                     .then(function() {
                         // The event pause has been detected, now get the tracking events
                         return getCounterValues("#tracking_events .event input");
@@ -327,7 +327,7 @@ define(function(require) {
                 command
                     .then(pollUntil(function (value) {
                         return parseInt(document.getElementById('event_pause').value) == 1 ? true : null;
-                    }, null, 40000, 100))
+                    }, null, 10000, 1000))
                     .then(function () {
                         // the event pause has been detected, now get the tracking events
                     },function (error) {
@@ -345,7 +345,7 @@ define(function(require) {
                 command
                     .then(pollUntil(function (value) {
                         return parseInt(document.getElementById('event_play').value) == 2 ? true : null;
-                    }, null, 40000, 100))
+                    }, null, 10000, 1000))
                     .then(function () {
                         // the event pause has been detected, now get the tracking events
                     },function (error) {
@@ -357,7 +357,7 @@ define(function(require) {
                 return(command
                         .then(pollUntil(function (value) {
                             return parseInt(document.getElementById('event_pause').value) == 2 ? true : null;
-                        }, null, 40000, 100))
+                        }, null, 10000, 1000))
                         .then(function () {
                             // the event pause has been detected, now get the tracking events
                             return getCounterValues("#tracking_events .event input");
@@ -389,7 +389,7 @@ define(function(require) {
                 command
                     .then(pollUntil(function (value) {
                         return parseInt(document.getElementById('event_hml5_volumechange').value) == 1 ? true : null;
-                    }, null, 10000, 100))
+                    }, null, 10000, 1000))
                     .then(function () {
                         assert.isFalse(true,"the player has been muted");
                     },function (error) {
@@ -406,7 +406,7 @@ define(function(require) {
                 command
                     .then(pollUntil(function (value) {
                         return parseInt(document.getElementById('event_hml5_volumechange').value) == 2 ? true : null;
-                    }, null, 10000, 100))
+                    }, null, 10000, 1000))
                     .then(function () {
                         assert.isFalse(true,"the player has been muted");
                     },function (error) {
@@ -417,7 +417,7 @@ define(function(require) {
                 return(command
                         .then(pollUntil(function (value) {
                             return parseInt(document.getElementById('event_pause').value) == 1 ? true : null;
-                        }, null, 40000, 100))
+                        }, null, 10000, 1000))
                         .then(function () {
                             // the event pause has been detected, now get the tracking events
                             return getCounterValues("#tracking_events .event input");
