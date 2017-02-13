@@ -1,7 +1,36 @@
-/**
- TEST_MULTIPLE_ADS_IN_MAST:
+/*
+ * The copyright in this software module is being made available under the BSD License, included
+ * below. This software module may be subject to other third party and/or contributor rights,
+ * including patent rights, and no such rights are granted under this license.
+ *
+ * Copyright (C) 2016 VIACCESS S.A and/or ORCA Interactive
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without modification, are permitted
+ * provided that the following conditions are met:
+ * - Redistributions of source code must retain the above copyright notice, this list of conditions
+ *   and the following disclaimer.
+ * - Redistributions in binary form must reproduce the above copyright notice, this list of
+ *   conditions and the following disclaimer in the documentation and/or other materials provided
+ *   with the distribution.
+ * - Neither the name of Orange nor the names of its contributors may be used to endorse or promote
+ *   products derived from this software module without specific prior written permission.
+ *
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS “AS IS” AND ANY EXPRESS OR
+ * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
+ * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER O
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
+ * WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
 
-Check the adsPlugin behaviour when the mast file embeds more than one ad
+/**
+ TRACKING_EVENTS:
+
+Check the ads tracking events are properly sent
 
  **/
 define(function(require) {
@@ -125,6 +154,9 @@ define(function(require) {
                 return command;
             },
 
+            teardown: function () {
+            },
+
             beforeEach: function (test) {
                 // executes before each test
 
@@ -141,7 +173,7 @@ define(function(require) {
                     // wait for the event start
                     .then(pollUntil(function (value) {
                         return parseInt(document.getElementById('event_start').value) == 1 ? true : null;
-                    }, null, 40000, 1000))
+                    }, null, 10000, 1000))
                     .then(function () {
                         // the event started has been detected
                     }, function (error) {
@@ -150,12 +182,12 @@ define(function(require) {
                     })
                     .then(pollUntil(function (value) {
                         return parseInt(document.getElementById('event_play').value) == 1 ? true : null;
-                    }, null, 40000, 100))
+                    }, null, 10000, 1000))
                     .then(function () {
                         // the event play has been detected
                     },function (error) {
                         // the event has NOT been detected
-                        assert.isFalse(true,"the event play has NOT been detected for test pause");
+                        assert.isFalse(true,"the event play has NOT been detected for test " + test.name);
                     })
                     // wait 500 ms after the play, pause test may fail if video current time = 0 because tracking event "resume" is not sent in this case
                     .sleep(500)
@@ -168,7 +200,7 @@ define(function(require) {
                     // wait for at least (some tests pause the ad) one pause event.
                     .then(pollUntil(function (value) {
                         return parseInt(document.getElementById('event_pause').value) >= 1 ? true : null;
-                    }, null, 40000, 100))
+                    }, null, 10000, 1000))
                     .then(function () {
                         // the event pause has been detected
                     },function (error) {
@@ -178,7 +210,7 @@ define(function(require) {
                     // wait for the event end
                     .then(pollUntil(function (value) {
                         return parseInt(document.getElementById('event_end').value) == 1 ? true : null;
-                    }, null, 40000, 1000))
+                    }, null, 10000, 1000))
                     .then(function () {
                         // the event end has been detected
                         assert.isTrue(true,"End detected");
@@ -195,6 +227,9 @@ define(function(require) {
                     // clear the Tracking events
                     .findById("clear_te_button").click()
                     .end()
+                    // clear the html5 video events
+                    .findById("clear_event_html5_button").click()
+                    .end()
                 );
             },
 
@@ -205,7 +240,7 @@ define(function(require) {
                 return(command
                     .then(pollUntil(function (value) {
                         return parseInt(document.getElementById('event_pause').value) == 1 ? true : null;
-                    }, null, 40000, 100))
+                    }, null, 10000, 1000))
                     .then(  function() {
                                 // The event pause has been detected, now get the tracking events
                                 return getCounterValues("#tracking_events .event input");
@@ -233,7 +268,7 @@ define(function(require) {
                 return(command
                     .then(pollUntil(function (value) {
                         return parseInt(document.getElementById('event_pause').value) == 1 ? true : null;
-                    }, null, 40000, 100))
+                    }, null, 10000, 1000))
                     .then(function() {
                         // The event pause has been detected, now get the tracking events
                         return getCounterValues("#tracking_events .event input");
@@ -260,7 +295,7 @@ define(function(require) {
                 return(command
                     .then(pollUntil(function (value) {
                         return parseInt(document.getElementById('event_pause').value) == 1 ? true : null;
-                    }, null, 40000, 100))
+                    }, null, 10000, 1000))
                     .then(function() {
                         // The event pause has been detected, now get the tracking events
                         return getCounterValues("#tracking_events .event input");
@@ -279,7 +314,7 @@ define(function(require) {
                 );
             },
 
-            // Check the tracking events when the ad is paused
+            // Check the tracking events when the ad is paused and resumed
             "pause": function () {
 
                 command
@@ -292,7 +327,7 @@ define(function(require) {
                 command
                     .then(pollUntil(function (value) {
                         return parseInt(document.getElementById('event_pause').value) == 1 ? true : null;
-                    }, null, 40000, 100))
+                    }, null, 10000, 1000))
                     .then(function () {
                         // the event pause has been detected, now get the tracking events
                     },function (error) {
@@ -310,7 +345,7 @@ define(function(require) {
                 command
                     .then(pollUntil(function (value) {
                         return parseInt(document.getElementById('event_play').value) == 2 ? true : null;
-                    }, null, 40000, 100))
+                    }, null, 10000, 1000))
                     .then(function () {
                         // the event pause has been detected, now get the tracking events
                     },function (error) {
@@ -322,7 +357,7 @@ define(function(require) {
                 return(command
                         .then(pollUntil(function (value) {
                             return parseInt(document.getElementById('event_pause').value) == 2 ? true : null;
-                        }, null, 40000, 100))
+                        }, null, 10000, 1000))
                         .then(function () {
                             // the event pause has been detected, now get the tracking events
                             return getCounterValues("#tracking_events .event input");
@@ -337,6 +372,66 @@ define(function(require) {
 
                             // Finally, check the counter values
                             compareCounters(counters, suiteConfig.pause.ExpectedtrackingEvents);
+                        })
+                );
+            },
+
+            // Check the tracking events when the ad is muted and un-muted
+            "mute": function () {
+
+                command
+                // mute the player
+                    .findById("mute_button")
+                    .click()
+                    .end();
+
+                // wait for the volume has changed
+                command
+                    .then(pollUntil(function (value) {
+                        return parseInt(document.getElementById('event_hml5_volumechange').value) == 1 ? true : null;
+                    }, null, 10000, 1000))
+                    .then(function () {
+                        assert.isFalse(true,"the player has been muted");
+                    },function (error) {
+                        assert.isFalse(true,"the player has NOT been muted");
+                    })
+
+                command
+                // unmute the player
+                    .findById("mute_button")
+                    .click()
+                    .end()
+
+                // wait for the volume has changed
+                command
+                    .then(pollUntil(function (value) {
+                        return parseInt(document.getElementById('event_hml5_volumechange').value) == 2 ? true : null;
+                    }, null, 10000, 1000))
+                    .then(function () {
+                        assert.isFalse(true,"the player has been muted");
+                    },function (error) {
+                        assert.isFalse(true,"the player has NOT been muted");
+                    })
+
+                // wait for the pause event
+                return(command
+                        .then(pollUntil(function (value) {
+                            return parseInt(document.getElementById('event_pause').value) == 1 ? true : null;
+                        }, null, 10000, 1000))
+                        .then(function () {
+                            // the event pause has been detected, now get the tracking events
+                            return getCounterValues("#tracking_events .event input");
+                        },function (error) {
+                            // the event play has NOT been detected
+                            assert.isFalse(true,"the event pause has NOT been detected for test pause");
+                        })
+                        .then(function(counters) {
+                            // Check configuration
+                            assert.isDefined(suiteConfig.mute, "Configuration is not defined for prerollVast30 test counters");
+                            assert.isDefined(suiteConfig.mute.ExpectedtrackingEvents, "Configuration is not defined for prerollVast30 test counters");
+
+                            // Finally, check the counter values
+                            compareCounters(counters, suiteConfig.mute.ExpectedtrackingEvents);
                         })
                 );
             }

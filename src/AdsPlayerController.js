@@ -209,7 +209,7 @@ class AdsPlayerController {
     _activateTrigger (trigger, firstTrigger) {
 
         // Check if a trigger is not already activated
-        if (this._vastPlayerManager) {
+        if (this._vastPlayerManager || this.loadingTrigger) {
             return;
         }
 
@@ -224,8 +224,13 @@ class AdsPlayerController {
 
         if (trigger.vasts.length === 0) {
             // Download VAST files
+            this.loadingTrigger = true;
             this._loadTriggerVasts(trigger).then(() => {
+                this.loadingTrigger = false;
                 this._playTrigger(trigger);
+            }, () => {
+                this.loadingTrigger = false;
+
             });
         } else {
             this._playTrigger(trigger);
@@ -285,6 +290,7 @@ class AdsPlayerController {
         this._errorHandler = ErrorHandler.getInstance();
         this._debug = Debug.getInstance();
         this._eventBus = EventBus.getInstance();
+        this.loadingTrigger = false;
 
         this._onVideoPlayingListener = this._onVideoPlaying.bind(this);
         this._onVideoTimeupdateListener = this._onVideoTimeupdate.bind(this);
