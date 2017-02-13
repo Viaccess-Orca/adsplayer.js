@@ -38,48 +38,55 @@ class AdBreakManager {
     ///////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////// PRIVATE ////////////////////////////////////////////
 
-    _parseTime (str) {
-        var timeParts,
-            SECONDS_IN_HOUR = 60 * 60,
-            SECONDS_IN_MIN = 60;
+    _comparePercent(percentString, current, total) {
+        var percent = parseFloat(percentString),
+            res = false;
 
-        if (!str) {
-            return -1;
+        if (percent && !isNaN(current) && !isNaN(total)) {
+            res = percent / 100 <= current / total;
         }
 
-        timeParts = str.split(':');
-
-        // Check time format, must be HH:MM:SS(.mmm)
-        if (timeParts.length !== 3) {
-            return -1;
-        }
-
-        return  (parseInt(timeParts[0]) * SECONDS_IN_HOUR) +
-                (parseInt(timeParts[1]) * SECONDS_IN_MIN) +
-                (parseFloat(timeParts[2]));
+        return res;
     }
 
-    _compareValues (value1, value2, operator) {
-        var res = false;
+    _compareTimestamp(timestamp, current) {
+        var hours = parseInt(timestamp[1]),
+            minutes = parseInt(timestamp[2]),
+            seconds = parseFloat(timestamp[3]),
+            res = false;
 
-        if (value1 < 0 || value2 < 0) {
-            return false;
+        if (!isNaN(hours) && !isNaN(minutes) && !isNaN(seconds)) {
+            res = hours * 3600 + minutes * 60 + seconds <= current;
         }
 
         return res;
     }
 
     _evaluateTimeOffset (timeOffset, video) {
-        var res = false;
+        var res = false,
+            percentRegex = /^(\d+.\d*)%$/,
+            percent,
+            timestampRegex = /^(\d{2}):(\d{2}):(\d{2}(?:.\d{3})?)$/,
+            timestamp;
 
         // Check start time offset for activation
         if (video.currentTime < 0.5 && timeOffset === "start") {
             res = true;
         }
 
-        // Revocation when video is ended
-        // TODO: always revoke with VMAP? -> check
-        if (video.ended) {
+        // Check mid-roll condition for activation
+        percent = timeOffset.match(percentRegex);
+        if (percent && percent.length >= 2) {
+            res = this._comparePercent(percent[1], video.currentTime, video.duration);
+        }
+
+        timestamp = timeOffset.match(timestampRegex);
+        if (timestamp && timestamp.length >= 4) {
+            res = this._compareTimestamp(timestamp, video.currentTime);
+        }
+
+        // Check post-roll condition for activation
+        if (video.ended && timeOffset === "end") {
             res = true;
         }
 
@@ -137,7 +144,8 @@ class AdBreakManager {
      * @param {Number} video - the main video element
      */
     checkEndConditions (video) {
-        return this._evaluateTimeOffset(this._adBreak.timeOffset, video);
+        // TODO: always revoke on video ending with VMAP? -> check
+        return true;
     }
 }
 

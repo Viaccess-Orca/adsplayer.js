@@ -78,7 +78,7 @@ class VmapParser {
         adBreak.timeOffset = triggerNode.getAttribute('timeOffset');
 
         if (adSourceNode) {
-            // Create an array for genericity purpose, although VMAP allow only one source
+            // Create an array for genericity purpose, even if VMAP allows only one source
             adBreak.sources = [this._getAdSource(adSourceNode)];
         }
 
