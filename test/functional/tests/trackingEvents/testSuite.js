@@ -234,7 +234,7 @@ define(function(require) {
             },
 
             // Check the tracking events in case of preroll video ad
-            "preroll": function () {
+            "prerollMast": function () {
 
                 // wait for the pause event
                 return(command
@@ -247,22 +247,22 @@ define(function(require) {
                             },
                             function (error) {
                                 // the event play has NOT been detected
-                                assert.isFalse(true,"the event play has NOT been detected for test preroll");
+                                assert.isFalse(true,"the event play has NOT been detected for test prerollMast");
                             }
                     )
                     .then(function(counters) {
                         // Check configuration
-                        assert.isDefined(suiteConfig.preroll, "Configuration is not defined for preroll test counters");
-                        assert.isDefined(suiteConfig.preroll.ExpectedtrackingEvents, "Configuration is not defined for preroll test counters");
+                        assert.isDefined(suiteConfig.prerollMast, "Configuration is not defined for preroll test counters");
+                        assert.isDefined(suiteConfig.prerollMast.ExpectedtrackingEvents, "Configuration is not defined for preroll test counters");
 
                         // Finally, check the counter values
-                        compareCounters(counters, suiteConfig.preroll.ExpectedtrackingEvents);
+                        compareCounters(counters, suiteConfig.prerollMast.ExpectedtrackingEvents);
                     })
                 );
             },
 
             // Check the tracking events in case of preroll image ad
-            "prerollImage": function () {
+            "prerollMastImage": function () {
 
                 // wait for the pause event
                 return(command
@@ -275,21 +275,21 @@ define(function(require) {
                     },
                     function (error) {
                         // the event play has NOT been detected
-                        assert.isFalse(true,"the event play has NOT been detected for test prerollImage");
+                        assert.isFalse(true,"the event play has NOT been detected for test prerollMastImage");
                     })
                     .then(function(counters) {
                         // Check configuration
-                        assert.isDefined(suiteConfig.prerollImage, "Configuration is not defined for prerollImage test counters");
-                        assert.isDefined(suiteConfig.prerollImage.ExpectedtrackingEvents, "Configuration is not defined for prerollImage test counters");
+                        assert.isDefined(suiteConfig.prerollMastImage, "Configuration is not defined for prerollImage test counters");
+                        assert.isDefined(suiteConfig.prerollMastImage.ExpectedtrackingEvents, "Configuration is not defined for prerollImage test counters");
 
                         // Finally, check the counter values
-                        compareCounters(counters, suiteConfig.prerollImage.ExpectedtrackingEvents);
+                        compareCounters(counters, suiteConfig.prerollMastImage.ExpectedtrackingEvents);
                     })
                 );
             },
 
             // Check the tracking events in case of preroll video VAST30 ad
-            "prerollVast30": function () {
+            "prerollMastVast30": function () {
 
                 // wait for the pause event
                 return(command
@@ -301,16 +301,100 @@ define(function(require) {
                         return getCounterValues("#tracking_events .event input");
                     },function (error) {
                         // the event play has NOT been detected
-                        assert.isFalse(true,"the event play has NOT been detected for test prerollVast30");
+                        assert.isFalse(true,"the event play has NOT been detected for test prerollMastVast30");
                     })
                     .then(function(counters) {
                         // Check configuration
-                        assert.isDefined(suiteConfig.prerollVast30, "Configuration is not defined for prerollVast30 test counters");
-                        assert.isDefined(suiteConfig.prerollVast30.ExpectedtrackingEvents, "Configuration is not defined for prerollVast30 test counters");
+                        assert.isDefined(suiteConfig.prerollMastVast30, "Configuration is not defined for prerollVast30 test counters");
+                        assert.isDefined(suiteConfig.prerollMastVast30.ExpectedtrackingEvents, "Configuration is not defined for prerollVast30 test counters");
 
                         // Finally, check the counter values
-                        compareCounters(counters, suiteConfig.prerollVast30.ExpectedtrackingEvents);
+                        compareCounters(counters, suiteConfig.prerollMastVast30.ExpectedtrackingEvents);
                     })
+                );
+            },
+
+            // Check the tracking events in case of VMAP preroll video ad
+            "prerollVmap": function () {
+
+                // wait for the pause event
+                return(command
+                        .then(pollUntil(function (value) {
+                            return parseInt(document.getElementById('event_pause').value) == 1 ? true : null;
+                        }, null, 10000, 1000))
+                        .then(  function() {
+                                // The event pause has been detected, now get the tracking events
+                                return getCounterValues("#tracking_events .event input");
+                            },
+                            function (error) {
+                                // the event play has NOT been detected
+                                assert.isFalse(true,"the event play has NOT been detected for test prerollVmap");
+                            }
+                        )
+                        .then(function(counters) {
+                            // Check configuration
+                            assert.isDefined(suiteConfig.prerollVmap, "Configuration is not defined for midrollVmap test counters");
+                            assert.isDefined(suiteConfig.prerollVmap.ExpectedtrackingEvents, "Configuration is not defined for prerollVmap test counters");
+
+                            // Finally, check the counter values
+                            compareCounters(counters, suiteConfig.prerollVmap.ExpectedtrackingEvents);
+                        })
+                );
+            },
+
+            // Check the tracking events in case of VMAP midroll with percent video ad
+            "midrollVmapPercent": function () {
+
+                // wait for the pause event
+                return(command
+                        .then(pollUntil(function (value) {
+                            return parseInt(document.getElementById('event_pause').value) == 1 ? true : null;
+                        }, null, 10000, 1000))
+                        .then(  function() {
+                                // The event pause has been detected, now get the tracking events
+                                return getCounterValues("#tracking_events .event input");
+                            },
+                            function (error) {
+                                // the event play has NOT been detected
+                                assert.isFalse(true,"the event play has NOT been detected for test midrollVmapPercent");
+                            }
+                        )
+                        .then(function(counters) {
+                            // Check configuration
+                            assert.isDefined(suiteConfig.midrollVmapPercent, "Configuration is not defined for midrollVmapPercent test counters");
+                            assert.isDefined(suiteConfig.midrollVmapPercent.ExpectedtrackingEvents, "Configuration is not defined for midrollVmapPercent test counters");
+
+                            // Finally, check the counter values
+                            compareCounters(counters, suiteConfig.midrollVmapPercent.ExpectedtrackingEvents);
+                        })
+                );
+            },
+
+            // Check the tracking events in case of VMAP midroll video ad
+            "midrollVmapTimestamp": function () {
+
+                // wait for the pause event
+                return(command
+                        .then(pollUntil(function (value) {
+                            return parseInt(document.getElementById('event_pause').value) == 1 ? true : null;
+                        }, null, 10000, 1000))
+                        .then(  function() {
+                                // The event pause has been detected, now get the tracking events
+                                return getCounterValues("#tracking_events .event input");
+                            },
+                            function (error) {
+                                // the event play has NOT been detected
+                                assert.isFalse(true,"the event play has NOT been detected for test midrollVmapTimestamp");
+                            }
+                        )
+                        .then(function(counters) {
+                            // Check configuration
+                            assert.isDefined(suiteConfig.midrollVmapTimestamp, "Configuration is not defined for midrollVmapTimestamp test counters");
+                            assert.isDefined(suiteConfig.midrollVmapTimestamp.ExpectedtrackingEvents, "Configuration is not defined for midrollVmapTimestamp test counters");
+
+                            // Finally, check the counter values
+                            compareCounters(counters, suiteConfig.midrollVmapTimestamp.ExpectedtrackingEvents);
+                        })
                 );
             },
 

@@ -41,15 +41,27 @@ define(function(require) {
                     noAd: {"adsUrl":"",
                         "ExpectedtrackingEvents":{} },
 
-                    preroll: {"adsUrl":"../ads/xml/mast/preroll.xml",
+                    prerollMast: {"adsUrl":"../ads/xml/mast/preroll.xml",
                         "ExpectedtrackingEvents":{"creativeView":1,"start":1,"firstQuartile":1,"midpoint":1,"thirdQuartile":1,"complete":1} },
 
-                    prerollImage: {"adsUrl":"../ads/xml/mast/preroll-image.xml",
+                    prerollMastImage: {"adsUrl":"../ads/xml/mast/preroll-image.xml",
                         "ExpectedtrackingEvents":{} },
 
-                    prerollVast30: {"adsUrl":"../ads/xml/mast/preroll-vast30.xml",
+                    prerollMastVast30: {"adsUrl":"../ads/xml/mast/preroll-vast30.xml",
                         "ExpectedtrackingEvents":{"creativeView":1,"start":1,"firstQuartile":1,"midpoint":1,"thirdQuartile":1,"complete":1,"progress":3,"rewind":'x'} },
 
+                    prerollVmap: {"adsUrl":"../ads/xml/vmap/preroll.xml",
+                        "ExpectedtrackingEvents":{"creativeView":1,"start":1,"firstQuartile":1,"midpoint":1,"thirdQuartile":1,"complete":1}
+                    },
+                    postrollVmap: {"adsUrl":"../ads/xml/vmap/postroll.xml",
+                        "ExpectedtrackingEvents":{"creativeView":1,"start":1,"firstQuartile":1,"midpoint":1,"thirdQuartile":1,"complete":1}
+                    },
+                    midrollVmapPercent: {"adsUrl":"../ads/xml/vmap/midroll-percent.xml",
+                        "ExpectedtrackingEvents":{"creativeView":1,"start":1,"firstQuartile":1,"midpoint":1,"thirdQuartile":1,"complete":1}
+                    },
+                    midrollVmapTimestamp: {"adsUrl":"../ads/xml/vmap/midroll-timestamp.xml",
+                        "ExpectedtrackingEvents":{"creativeView":1,"start":1,"firstQuartile":1,"midpoint":1,"thirdQuartile":1,"complete":1}
+                    },
                     pause: {
                         "adsUrl":"../ads/xml/mast/preroll-vast30.xml",
                         "ExpectedtrackingEvents":{"creativeView":1,"start":1,"firstQuartile":1,"midpoint":1,"thirdQuartile":1,"complete":1,"pause":1,"resume":1,"progress":3,"rewind":'x'}

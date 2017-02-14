@@ -13,15 +13,19 @@ class Parser {
     }
 
     parse (xmlDom) {
-        if (!this._parser) {
-            if (xmldom.getElement(xmlDom, "MAST")) {
-                this._parser = new MastParser();
-            } else if(xmldom.getElement(xmlDom, "VMAP")) {
-                this._parser = new VmapParser();
-            } else {
-                this._debug.error('Unknown ad format');
-                return false;
-            }
+        if (!xmldom.getElement(xmlDom, "MAST") && !xmldom.getElement(xmlDom, "VMAP")) {
+            this._debug.error('Unknown ad format');
+            return false;
+        }
+
+        if (xmldom.getElement(xmlDom, "MAST") &&
+                (!this._parser || this._parser.format !== "mast")) {
+            this._parser = null;
+            this._parser = new MastParser();
+        } else if(xmldom.getElement(xmlDom, "VMAP") &&
+                (!this._parser || this._parser.format !== "vmap")) {
+            this._parser = null;
+            this._parser = new VmapParser();
         }
 
         return this._parser.parse(xmlDom);

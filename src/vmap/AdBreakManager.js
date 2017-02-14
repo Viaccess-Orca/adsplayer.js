@@ -64,7 +64,7 @@ class AdBreakManager {
 
     _evaluateTimeOffset (timeOffset, video) {
         var res = false,
-            percentRegex = /^(\d+.\d*)%$/,
+            percentRegex = /^(\d+(?:.\d*)?)%$/,
             percent,
             timestampRegex = /^(\d{2}):(\d{2}):(\d{2}(?:.\d{3})?)$/,
             timestamp;
