@@ -230,8 +230,7 @@ class AdsPlayerController {
                 this._playTrigger(trigger);
             }, () => {
                 this.loadingTrigger = false;
-
-            });
+                });
         } else {
             this._playTrigger(trigger);
         }

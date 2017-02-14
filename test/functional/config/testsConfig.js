@@ -18,7 +18,7 @@ define(function(require) {
                         ads: [{media: "../ads/media/vo_ad_2.mp4", duration: 6000},
                             {media: "../ads/media/vo_ad_4.mp4", duration: 4000}]
                     },
-                    doubleAdsInVast: {
+                    doubleAdsInVastMast: {
                         mastUrl: "../ads/xml/mast/preroll-double-vast2.xml",
                         ads: [{media: "../ads/adsserver/media/vo_ad_2.mp4", duration: 6000},
                             {media: "../ads/adsserver/media/vo_ad_4.mp4", duration: 4000}]
@@ -32,7 +32,17 @@ define(function(require) {
                         mastUrl: "../ads/xml/mast/preroll-vast30-doubleVastsInTrigger.xml",
                         ads: [{media: "../ads/adsserver/media/vo_ad_2.mp4", duration: 6000},
                             {media: "../ads/adsserver/media/vo_logo.png", duration: 5000}]
-                    }
+                    },
+                    doubleAdsInVastVmap: {
+                        mastUrl: "../ads/xml/vmap/preroll-double-vast2.xml",
+                        ads: [{media: "../ads/adsserver/media/vo_ad_2.mp4", duration: 6000},
+                            {media: "../ads/adsserver/media/vo_ad_4.mp4", duration: 4000}]
+                    },
+                    doubleTriggersInVmap: {
+                        mastUrl: "../ads/xml/vmap/preroll1-preroll2.xml",
+                        ads: [{media: "../ads/adsserver/media/vo_ad_2.mp4", duration: 6000},
+                            {media: "../ads/adsserver/media/vo_ad_4.mp4", duration: 4000}]
+                    },
                 },
 
                 // trackingEvents test suite specific configuration fields
