@@ -28,9 +28,9 @@
  */
 
 /**
- TEST_MULTIPLE_ADS:
+ VMAP:
 
-Check the adsPlayer behaviour when the ad xml file embeds more than one ad
+Check basic functionalities for VMAP format
 
  **/
 define(function(require) {
@@ -48,13 +48,12 @@ define(function(require) {
         return array[array.length-1];
     }
 
-    registerSuite(function(){
-
-        var command = null;
+    registerSuite(function() {
+        var command = null,
+            vmapConfig = config.tests.vmap;
 
         return {
-
-            name: "TEST_MULTIPLE_ADS",
+            name: "VMAP",
 
             setup: function () {
                 // executes before suite starts;
@@ -80,9 +79,6 @@ define(function(require) {
                 return command;
             },
 
-            teardown: function () {
-            },
-
             beforeEach: function (test) {
                 // executes before each test
 
@@ -91,7 +87,7 @@ define(function(require) {
                     .findById("ad_toplay").clearValue()
                     .end()
                     // type the ad url
-                    .findById("ad_toplay").type(config.tests.multipleAds[test.name].mastUrl)
+                    .findById("ad_toplay").type(vmapConfig[test.name].mastUrl)
                     .end()
                     // start the player
                     .findById("play_button").click()
@@ -136,70 +132,7 @@ define(function(require) {
                 );
             },
 
-            // Test an ad pod:
-            // Check that the first and the second ads are played in the right order
-            "adPod": function () {
-                // wait for the play event
-                command
-                    .then(pollUntil(function (value) {
-                        return document.getElementById('event_play').value === "1" ? true : null;
-                    }, null, 40000, 100))
-                    .then(function () {
-                        // the event has been detected
-                    },function (error) {
-                        // the event play has NOT been detected
-                        assert.isFalse(true,"the event play has NOT been detected for test " + test.name);
-                    });
-
-                // Check the expected ad is played
-                command
-                    .findById("adsplayer-container")
-                        .findByTagName("video")
-                            .getAttribute("src")
-                            .then(function (src) {
-                                assert.strictEqual(getMediaFileName(src), getMediaFileName(config.tests.multipleAds.adPod.ads[0].media));
-                            })
-                        .end()
-                    .end()
-                .end();
-
-                // wait for the pause event
-                command
-                    .then(pollUntil(function (value) {
-                        return document.getElementById('event_pause').value === "1" ? true : null;
-                    }, null, 40000, 100))
-                    .then(function () {
-                        // the event has been detected
-                    },function (error) {
-                        // the event pause has NOT been detected
-                        assert.isFalse(true,"the event pause has NOT been detected for test " + test.name);
-                    });
-
-                // wait for the play event
-                // Check the expected ad is played
-                return(command
-                        .then(pollUntil(function (value) {
-                            return document.getElementById('event_play').value === "2" ? true : null;
-                        }, null, 40000, 100))
-                        .then(function () {
-                            // the event end has been detected
-                        },function (error) {
-                            // the event play has NOT been detected
-                            assert.isFalse(true,"the event play has NOT been detected for test " + test.name);
-                        })
-                        .findById("adsplayer-container")
-                            .findByTagName("video")
-                                .getAttribute("src")
-                                .then(function (src) {
-                                    assert.strictEqual(getMediaFileName(src), getMediaFileName(config.tests.multipleAds.adPod.ads[1].media));
-                                })
-                            .end()
-                        .end()
-                );
-            },
-
-            // Test a vast xml file with 2 ads but outside an ad pod
-            // The 2 ads are played in the order they appear in the xml file.
+            // 1 VAST with 2 ads
             "doubleAdsInVast": function () {
                 // wait for the play event
                 command
@@ -210,16 +143,16 @@ define(function(require) {
                         // the event play has been detected
                     },function (error) {
                         // the event play has NOT been detected
-                        assert.isFalse(true,"the event play has NOT been detected for test " + test.name);
+                        assert.isFalse(true,"the event play has NOT been detected for test doubleAdsInVast");
                     });
 
                 // Check the expected ad is played
                 command
                     .findById("adsplayer-container")
-                        .findByTagName("video")
-                            .getAttribute("src")
-                            .then(function (src){assert.strictEqual(getMediaFileName(src), getMediaFileName(config.tests.multipleAds.doubleAdsInVast.ads[0].media));})
-                        .end()
+                    .findByTagName("video")
+                    .getAttribute("src")
+                    .then(function (src){assert.strictEqual(getMediaFileName(src), getMediaFileName(vmapConfig.doubleAdsInVast.ads[0].media));})
+                    .end()
                     .end();
 
                 // wait for the pause event
@@ -231,7 +164,7 @@ define(function(require) {
                         // the event pause has been detected
                     },function (error) {
                         // the event pause has NOT been detected
-                        assert.isFalse(true,"the event pause has NOT been detected for test " + test.name);
+                        assert.isFalse(true,"the event pause has NOT been detected for test doubleAdsInVast");
                     });
 
                 // wait for the play event
@@ -250,15 +183,15 @@ define(function(require) {
                         .findByTagName("video")
                         .getAttribute("src")
                         .then(function (src){
-                            assert.strictEqual(getMediaFileName(src), getMediaFileName(config.tests.multipleAds.doubleAdsInVast.ads[1].media));
+                            assert.strictEqual(getMediaFileName(src), getMediaFileName(vmapConfig.doubleAdsInVast.ads[1].media));
                         })
                         .end()
                         .end()
                 );
             },
 
-            // Test a mast xml file with 2 triggers
-            "doubleTriggersInMast": function () {
+            // 2 VASTs with 1 ad
+            "doubleAdBreak": function () {
                 // wait for the play event
                 command
                     .then(pollUntil(function (value) {
@@ -268,16 +201,16 @@ define(function(require) {
                         // the event has been detected
                     },function (error) {
                         // the event has NOT been detected
-                        assert.isFalse(true,"the event play  has NOT been detected for test " + test.name);
+                        assert.isFalse(true,"the event play has NOT been detected for test doubleAdBreak");
                     });
 
                 // Check the expected ad is played
                 command
                     .findById("adsplayer-container")
-                        .findByTagName("video")
-                            .getAttribute("src")
-                            .then(function (src) {assert.strictEqual(getMediaFileName(src), getMediaFileName(config.tests.multipleAds.doubleTriggersInMast.ads[0].media));})
-                        .end()
+                    .findByTagName("video")
+                    .getAttribute("src")
+                    .then(function (src) {assert.strictEqual(getMediaFileName(src), getMediaFileName(vmapConfig.doubleAdBreak.ads[0].media));})
+                    .end()
                     .end()
 
                 // wait for the pause event
@@ -289,7 +222,7 @@ define(function(require) {
                         // the event has been detected
                     },function (error) {
                         // the event has NOT been detected
-                        assert.isFalse(true,"the event pause has NOT been detected for test " + test.name);
+                        assert.isFalse(true,"the event pause has NOT been detected for test doubleAdBreak");
                     });
 
                 return (command
@@ -300,68 +233,13 @@ define(function(require) {
                             // the event end has been detected
                         },function (error) {
                             // the event end has NOT been detected
-                            assert.isFalse(true,"the event play has NOT been detected for test " + test.name);
+                            assert.isFalse(true,"the event play has NOT been detected for test doubleAdBreak");
                         })
                         .findById("adsplayer-container")
-                            .findByTagName("video")
-                                .getAttribute("src")
-                                .then(function (src) {assert.strictEqual(getMediaFileName(src), getMediaFileName(config.tests.multipleAds.doubleTriggersInMast.ads[1].media));})
-                            .end()
-                        .end()
-                );
-            },
-
-            // Test a mast xml file with 1 trigger with 2 Vasts xml files
-            "doubleVastsInTrigger": function () {
-
-                // wait for the play event
-                command
-                    .then(pollUntil(function (value) {
-                        return document.getElementById('event_play').value === "1" ? true : null;
-                    }, null, 40000, 100))
-                    .then(function () {
-                        // the event has been detected
-                    },function (error) {
-                        // the event has NOT been detected
-                        assert.isFalse(true,"the event play has NOT been detected for test " + test.name);
-                    });
-
-                // Check the expected ad is played
-                command
-                    .findById("adsplayer-container")
                         .findByTagName("video")
-                            .getAttribute("src")
-                            .then(function (src) {assert.strictEqual(getMediaFileName(src), getMediaFileName(config.tests.multipleAds.doubleVastsInTrigger.ads[0].media));})
+                        .getAttribute("src")
+                        .then(function (src) {assert.strictEqual(getMediaFileName(src), getMediaFileName(vmapConfig.doubleAdBreak.ads[1].media));})
                         .end()
-                    .end();
-
-                // wait for the pause event
-                command
-                    .then(pollUntil(function (value) {
-                        return document.getElementById('event_pause').value === "1" ? true : null;
-                    }, null, 40000, 100))
-                    .then(function () {
-                        // the event has been detected
-                    },function (error) {
-                        // the event pause has NOT been detected
-                        assert.isFalse(true,"the event pause has NOT been detected for test " + test.name);
-                    });
-
-                return (command
-                        .then(pollUntil(function (value) {
-                            return document.getElementById('event_play').value === "2" ? true : null;
-                        }, null, 40000, 100))
-                        .then(function () {
-                            // the event end has been detected
-                        },function (error) {
-                            // the event end has NOT been detected
-                            assert.isFalse(true,"the event play has NOT been detected for test " + test.name);
-                        })
-                        .findById("adsplayer-container")
-                            .findByTagName("img")
-                                .getAttribute("src")
-                                .then(function (src) {assert.strictEqual(getMediaFileName(src), getMediaFileName(config.tests.multipleAds.doubleVastsInTrigger.ads[1].media));})
-                            .end()
                         .end()
                 );
             }
