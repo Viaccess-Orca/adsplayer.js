@@ -3,7 +3,7 @@
  * below. This software module may be subject to other third party and/or contributor rights,
  * including patent rights, and no such rights are granted under this license.
  *
- * Copyright (c) 2016, Orange
+ * Copyright (C) 2016 VIACCESS S.A and/or ORCA Interactive
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification, are permitted

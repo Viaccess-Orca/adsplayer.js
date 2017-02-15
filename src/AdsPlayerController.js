@@ -116,7 +116,7 @@ class AdsPlayerController {
 
         // Initialize the ad managers
         for (i = 0; i < this._sequence.triggers.length; i++) {
-            adsManager = new AdsManager(this._sequence.format);
+            adsManager = new AdsManager(this._parser.getFormat());
             adsManager.init(this._sequence.triggers[i]);
             this._adsManagers.push(adsManager);
         }
