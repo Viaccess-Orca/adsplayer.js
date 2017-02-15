@@ -3,7 +3,7 @@ define(function(require) {
     var _createInstance = function() {
         return {
             // Common tests suite configuration fields
-            testPageUrl : "http://cswebplayer.viaccess.fr/functionnalTests/CSAdsPlugin-Dev/samples/testsPlayer",        // url of the html page under test
+            testPageUrl : "http://cswebplayer.viaccess.fr/functionnalTests/CSAdsPlugin-Adrien/samples/testsPlayer",        // url of the html page under test
             //testPageUrl : "http://localhost:8080/samples/testsPlayer",
             streamUrl   : "http://playready.directtaps.net/smoothstreaming/SSWSS720H264/SuperSpeedway_720.ism/Manifest",// url of the main stream
                                                                                                                         // take care using one with video.currentTime = 0 at the beginning
