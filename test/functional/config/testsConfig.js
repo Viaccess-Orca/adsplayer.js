@@ -36,20 +36,19 @@ define(function(require) {
 
                 // trackingEvents test suite specific configuration fields
                 trackingEvents: {
-                    testPageUrl : "http://cswebplayer.viaccess.fr/functionnalTests/CSAdsPlugin-Master/samples/adsTestsPlayer", //url of the html page under test
                     adsDuration : 10,
-                    play: {
-                        ads: [
-                            {"adsUrl":"",
-                             "ExpectedtrackingEvents":{} },
-                            {"adsUrl":"../ads/xml/mast/preroll.xml",
-                             "ExpectedtrackingEvents":{"creativeView":1,"start":1,"firstQuartile":1,"midpoint":1,"thirdQuartile":1,"complete":1} },
-                            {"adsUrl":"../ads/xml/mast/preroll-image.xml",
-                             "ExpectedtrackingEvents":{} },
-                            {"adsUrl":"../ads/xml/mast/preroll-vast30.xml",
-                             "ExpectedtrackingEvents":{"creativeView":1,"start":1,"firstQuartile":1,"midpoint":1,"thirdQuartile":1,"complete":1,"progress":3,"rewind":'x'} }
-                        ]
-                    },
+                    noAd: {"adsUrl":"",
+                        "ExpectedtrackingEvents":{} },
+
+                    preroll: {"adsUrl":"../ads/xml/mast/preroll.xml",
+                        "ExpectedtrackingEvents":{"creativeView":1,"start":1,"firstQuartile":1,"midpoint":1,"thirdQuartile":1,"complete":1} },
+
+                    prerollImage: {"adsUrl":"../ads/xml/mast/preroll-image.xml",
+                        "ExpectedtrackingEvents":{} },
+
+                    prerollVast30: {"adsUrl":"../ads/xml/mast/preroll-vast30.xml",
+                        "ExpectedtrackingEvents":{"creativeView":1,"start":1,"firstQuartile":1,"midpoint":1,"thirdQuartile":1,"complete":1,"progress":3,"rewind":'x'} },
+
                     pause: {
                         "adsUrl":"../ads/xml/mast/preroll-vast30.xml",
                         "ExpectedtrackingEvents":{"creativeView":1,"start":1,"firstQuartile":1,"midpoint":1,"thirdQuartile":1,"complete":1,"pause":1,"resume":1,"progress":3,"rewind":'x'}

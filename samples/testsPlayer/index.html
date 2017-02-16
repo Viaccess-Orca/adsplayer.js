@@ -1,25 +1,304 @@
+<!--
+/*
+ * The copyright in this software module is being made available under the BSD License, included
+ * below. This software module may be subject to other third party and/or contributor rights,
+ * including patent rights, and no such rights are granted under this license.
+ *
+ * Copyright (C) 2016 VIACCESS S.A and/or ORCA Interactive
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without modification, are permitted
+ * provided that the following conditions are met:
+ * - Redistributions of source code must retain the above copyright notice, this list of conditions
+ *   and the following disclaimer.
+ * - Redistributions in binary form must reproduce the above copyright notice, this list of
+ *   conditions and the following disclaimer in the documentation and/or other materials provided
+ *   with the distribution.
+ * - Neither the name of Orange nor the names of its contributors may be used to endorse or promote
+ *   products derived from this software module without specific prior written permission.
+ *
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS “AS IS” AND ANY EXPRESS OR
+ * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
+ * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER O
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
+ * WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+-->
+
 <!DOCTYPE html>
 <html lang="en">
     <head>
         <!-- sources under test-->
+        <!-- sources modify by gulp.replaceSourcesByBuild -->
+        <!-- !!! DO NOT REMOVE OR CHANGE THE COMMENTS LINE ABOVE !!! -->
         <script src="../../dist/csadsplugin.js"></script>
+        <!-- !!! DO NOT REMOVE OR CHANGE THE COMMENT LINE BELOW!!! -->
+        <!-- endsources -->
+
         <!-- uses cswebplayer-->
         <script src="../hasplayer.min.js"></script>
+
+		<!-- index.html handlers-->
+        <script src="adsPluginEvtsHdler.js"></script>
+        <script src="buttonsHdler.js"></script>
+        <script src="trackingEvtsHdler.js"></script>
+        <script src="html5VideoEvtsHdler.js"></script>
+
+        <style>
+            .events_list, .event {
+                display: flex;
+            }
+
+            .events_list {
+                flex-wrap: wrap;
+                width: 700px;
+                margin-bottom: 10px;
+            }
+
+            .event {
+                margin-bottom: 5px;
+                width: 33%;
+            }
+
+            .event .event_title {
+                min-width: 155px;
+            }
+
+            .event input {
+                width: 30px;
+            }
+        </style>
     </head>
 
     <body>
         <div id="container" style="min-height: 300px">
             <video id="videoplayer-container" width="700" height="300" controls>  </video>
-            <div id="adsplayer-container" width="700" height="300" controls> </div>
+            <div id="adsplayer-container" width="700" height="300"> </div>
         </div>
         <div>
-            <input id="stream_toplay" type="text" size="100"> </input><br>
-            <input id="ad_toplay" type="text" size="100"> </input><br>
+            <br>
+            <input id="stream_toplay" type="text" size="100" value="http://playready.directtaps.net/smoothstreaming/SSWSS720H264/SuperSpeedway_720.ism/Manifest"> </input><br>
+            <input id="ad_toplay" type="text" size="100" value="../ads/xml/mast/preroll.xml"> </input><br>
+            <br>
             <button id="play_button" >Play</button>
-            <button id="stop_button" >Stop</button><br>
-            start/end event <input id="event_started" type="checkbox"> </input>
-            add/remove event <input id="event_added" type="checkbox"> </input>
-            play/pause event <input id="event_play" type="checkbox"> </input>
+            <button id="pause_button" >Pause</button>
+            <button id="stop_button" >Stop</button>
+            <button id="mute_button" >Mute</button><br>
+
+            <h4>HTML5 video Events</h4>
+
+            <div class="events_list">
+                <div class="event">
+                    <div class="event_title">loadstart</div>
+                    <input id="event_html5_loadstart" type="number" value="0" disabled> </input>
+                </div>
+                <div class="event">
+                    <div class="event_title">emptied</div>
+                    <input id="event_html5_emptied" type="number" value="0" disabled> </input>
+                </div>
+                <div class="event">
+                    <div class="event_title">canalplaythrough</div>
+                    <input id="event_html5_canalplaythrough" type="number" value="0" disabled> </input>
+                </div>
+                <div class="event">
+                    <div class="event_title">ended</div>
+                    <input id="event_html5_ended" type="number" value="0" disabled> </input>
+                </div>
+                <div class="event">
+                    <div class="event_title">ratechange</div>
+                    <input id="event_html5_ratechange" type="number" value="0" disabled> </input>
+                </div>
+                <div class="event">
+                    <div class="event_title">progress</div>
+                    <input id="event_html5_progress" type="number" value="0" disabled> </input>
+                </div>
+                <div class="event">
+                    <div class="event_title">stalled</div>
+                    <input id="event_html5_stalled" type="number" value="0" disabled> </input>
+                </div>
+                <div class="event">
+                    <div class="event_title">playing</div>
+                    <input id="event_html5_playing" type="number" value="0" disabled> </input>
+                </div>
+                <div class="event">
+                    <div class="event_title">durationchange</div>
+                    <input id="event_html5_durationchange" type="number" value="0" disabled> </input>
+                </div>
+                <div class="event">
+                    <div class="event_title">resize</div>
+                    <input id="event_html5_resize" type="number" value="0" disabled> </input>
+                </div>
+                <div class="event">
+                    <div class="event_title">suspend</div>
+                    <input id="event_html5_suspend" type="number" value="0" disabled> </input>
+                </div>
+                <div class="event">
+                    <div class="event_title">loadedmetadata</div>
+                    <input id="event_html5_loadedmetadata" type="number" value="0" disabled> </input>
+                </div>
+                <div class="event">
+                    <div class="event_title">waiting</div>
+                    <input id="event_html5_waiting" type="number" value="0" disabled> </input>
+                </div>
+                <div class="event">
+                    <div class="event_title">timeupdate</div>
+                    <input id="event_html5_timeupdate" type="number" value="0" disabled> </input>
+                </div>
+                <div class="event">
+                    <div class="event_title">volumechange</div>
+                    <input id="event_html5_volumechange" type="number" value="0" disabled> </input>
+                </div>
+                <div class="event">
+                    <div class="event_title">abort</div>
+                    <input id="event_html5_abort" type="number" value="0" disabled> </input>
+                </div>
+                <div class="event">
+                    <div class="event_title">loadeddata</div>
+                    <input id="event_html5_loadeddata" type="number" value="0" disabled> </input>
+                </div>
+                <div class="event">
+                    <div class="event_title">seeking</div>
+                    <input id="event_html5_seeking" type="number" value="0" disabled> </input>
+                </div>
+                <div class="event">
+                    <div class="event_title">play</div>
+                    <input id="event_html5_play" type="number" value="0" disabled> </input>
+                </div>
+                <div class="event">
+                    <div class="event_title">error</div>
+                    <input id="event_html5_error" type="number" value="0" disabled> </input>
+                </div>
+                <div class="event">
+                    <div class="event_title">canplay</div>
+                    <input id="event_html5_canplay" type="number" value="0" disabled> </input>
+                </div>
+                <div class="event">
+                    <div class="event_title">seeked</div>
+                    <input id="event_html5_seeked" type="number" value="0" disabled> </input>
+                </div>
+                <div class="event">
+                    <div class="event_title">pause</div>
+                    <input id="event_html5_pause" type="number" value="0" disabled> </input>
+                </div>
+            </div>
+            <button id="clear_event_html5_button" >Clear all</button><br>
+
+            <h4>CSAdsPlugin Events</h4>
+
+            <div class="events_list">
+                <div class="event">
+                    <div class="event_title">start</div>
+                    <input id="event_start" type="number" value="0" disabled> </input>
+                </div>
+                <div class="event">
+                    <div class="event_title">stop</div>
+                    <input id="event_end" type="number" value="0" disabled> </input>
+                </div>
+                <div class="event">
+                    <div class="event_title">add</div>
+                    <input id="event_add" type="number" value="0" disabled> </input>
+                </div>
+                <div class="event">
+                    <div class="event_title">remove</div>
+                    <input id="event_remove" type="number" value="0" disabled> </input>
+                </div>
+                <div class="event">
+                    <div class="event_title">play</div>
+                    <input id="event_play" type="number" value="0" disabled> </input>
+                </div>
+                <div class="event">
+                    <div class="event_title">pause</div>
+                    <input id="event_pause" type="number" value="0" disabled> </input>
+                </div>
+            </div>
+            <button id="clearEvents_button" >Clear all</button><br>
+
+            <h4>Tracking Events</h4>
+
+            <div id="tracking_events" class="events_list">
+                <div class="event">
+                    <div class="event_title">creativeView</div>
+                    <input id="te_creativeView" eventId="creativeView" type="number" value="0" disabled> </input>
+                </div>
+                <div class="event">
+                    <div class="event_title">start</div>
+                    <input id="te_start" eventId="start" type="number" value="0" disabled> </input>
+                </div>
+                <div class="event">
+                    <div class="event_title">firstQuartile</div>
+                    <input id="te_firstQuartile" eventId="firstQuartile" type="number" value="0" disabled> </input>
+                </div>
+                <div class="event">
+                    <div class="event_title">midpoint</div>
+                    <input id="te_midpoint" eventId="midpoint" type="number" value="0" disabled> </input>
+                </div>
+                <div class="event">
+                    <div class="event_title">thirdQuartile</div>
+                    <input id="te_thirdQuartile" eventId="thirdQuartile" type="number" value="0" disabled> </input>
+                </div>
+                <div class="event">
+                    <div class="event_title">complete</div>
+                    <input id="te_complete" eventId="complete" type="number" value="0" disabled> </input>
+                </div>
+                <div class="event">
+                    <div class="event_title">mute</div>
+                    <input id="te_mute" eventId="mute" type="number" value="0" disabled> </input>
+                </div>
+                <div class="event">
+                    <div class="event_title">unmute</div>
+                    <input id="te_unmute" eventId="unmute" type="number" value="0" disabled> </input>
+                </div>
+                <div class="event">
+                    <div class="event_title">pause</div>
+                    <input id="te_pause" eventId="pause" type="number" value="0" disabled> </input>
+                </div>
+                <div class="event">
+                    <div class="event_title">rewind</div>
+                    <input id="te_rewind" eventId="rewind" type="number" value="0" disabled> </input>
+                </div>
+                <div class="event">
+                    <div class="event_title">resume</div>
+                    <input id="te_resume" eventId="resume" type="number" value="0" disabled> </input>
+                </div>
+                <div class="event">
+                    <div class="event_title">fullscreen</div>
+                    <input id="te_fullscreen" eventId="fullscreen" type="number" value="0" disabled> </input>
+                </div>
+                <div class="event">
+                    <div class="event_title">exitFullscreen</div>
+                    <input id="te_exitFullscreen" eventId="exitFullscreen" type="number" value="0" disabled> </input>
+                </div>
+                <div class="event">
+                    <div class="event_title">expand</div>
+                    <input id="te_expand" eventId="expand" type="number" value="0" disabled> </input>
+                </div>
+                <div class="event">
+                    <div class="event_title">collapse</div>
+                    <input id="te_collapse" eventId="collapse" type="number" value="0" disabled> </input>
+                </div>
+                <div class="event">
+                    <div class="event_title">acceptInvitationLinear</div>
+                    <input id="te_acceptInvitationLinear" eventId="acceptInvitationLinear" type="number" value="0" disabled> </input>
+                </div>
+                <div class="event">
+                    <div class="event_title">closeLinear</div>
+                    <input id="te_closeLinear" eventId="closeLinear" type="number" value="0" disabled> </input>
+                </div>
+                <div class="event">
+                    <div class="event_title">skip</div>
+                    <input id="te_skip" eventId="skip" type="number" value="0" disabled> </input>
+                </div>
+                <div class="event">
+                    <div class="event_title">progress</div>
+                    <input id="te_progress" eventId="progress" type="number" value="0" disabled> </input>
+                </div>
+            </div>
+            <button id="clear_te_button" >Clear all</button>
+
         </div>
 
         <script>
@@ -31,34 +310,7 @@
 
                 adsPlugin = new adsplayer.AdsPlayer(document.getElementById('adsplayer-container'));
 
-                // hide the video player and update the checkbox when an ad starts
-                adsPlugin.addEventListener('start', function(e) {
-                    document.getElementById('videoplayer-container').style.display = 'none' ;
-                    document.getElementById('event_started').checked = true;
-                });
-
-                // show the video player and update the checkbox at the end of the ad
-                adsPlugin.addEventListener('end', function(e) {
-                    document.getElementById('videoplayer-container').style.display = 'block';
-                    document.getElementById('event_started').checked = false;
-                });
-
-                adsPlugin.addEventListener('addElement', function(e) {
-                    document.getElementById('event_added').checked = true;
-                });
-
-                adsPlugin.addEventListener('removeElement', function(e) {
-                    //document.getElementById('videoplayer-container').currentTime = 0;
-                    document.getElementById('event_added').checked = false;
-                });
-
-                adsPlugin.addEventListener('play', function(e) {
-                    document.getElementById('event_play').checked = true;
-                });
-
-                adsPlugin.addEventListener('pause', function(e) {
-                    document.getElementById('event_play').checked = false;
-                });
+                initAdsPluginEvtsHdler(adsPlugin);
 
                 mediaPlayer = new MediaPlayer();
 
@@ -68,28 +320,19 @@
 
                 mediaPlayer.addPlugin(adsPlugin);
 
+                initButtonsHdler();
+
+                trackingEvtsHdler();
+
+                initHtml5VideoEvtsHdler();
+
             });
 
-            // play button
-            document.querySelector('#play_button').addEventListener("click",function(e) {
-                var stream = {
-                    url : document.getElementById("stream_toplay").value,
-                    protData : null,
-                    adsUrl : document.getElementById("ad_toplay").value
-                };
-
-                mediaPlayer.load(stream);
+            document.addEventListener("beforeunload", function(event) {
+                mediaPlayer.removePlugin(adsPlugin);
+                mediaPlayer.reset(1);
             });
-
-            // stop button
-            document.querySelector('#stop_button').addEventListener("click",function(e) {
-                mediaPlayer.stop();
-            });
-
 
         </script>
-
     </body>
-
-
 </html>

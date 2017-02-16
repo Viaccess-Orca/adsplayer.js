@@ -247,15 +247,6 @@ class CreativePlayer {
         this._mediaPlayer.pause();
     }
 
-    _abort  () {
-        if (!this._mediaPlayer) {
-            return;
-        }
-        var abort_event = new Event('abort');
-        this._mediaPlayer.getElement().dispatchEvent(abort_event);
-        this._stop();
-    }
-
     _reset () {
         if (!this._mediaPlayer) {
             return;
@@ -290,7 +281,6 @@ class CreativePlayer {
             }
         });
 
-        // Remove the element from the DOM
         this._adPlayerContainer.removeChild(this._mediaPlayer.getElement());
 
         // Reset the media player
@@ -357,10 +347,6 @@ class CreativePlayer {
 
     stop () {
         this._stop();
-    }
-
-    abort() {
-        this._abort();
     }
 
     reset () {
