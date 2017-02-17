@@ -29,7 +29,7 @@
 
 /**
 * AdsPlayerController is th main controller class for AdsPlayer module.
-* It is in charge of downloading the MAST/VAST files and orchestrates the
+* It is in charge of downloading the MAST/VMAP/VAST files and orchestrates the
 * detection of triggers and playing of ad(s).
 */
 
@@ -37,11 +37,10 @@ import Debug from './Debug';
 import FileLoader from './FileLoader';
 import ErrorHandler from './ErrorHandler';
 import EventBus from './EventBus';
-import MastParser from './mast/MastParser';
-import TriggerManager from './mast/TriggerManager';
+import Parser from './Parser';
+import AdsManager from "./AdsManager";
 import VastParser from './vast/VastParser';
 import VastPlayerManager from './vast/VastPlayerManager';
-
 
 class AdsPlayerController {
 
@@ -80,7 +79,7 @@ class AdsPlayerController {
             uri = trigger.sources[i].uri;
             // Check for relative uri path
             if (uri.indexOf('http://') === -1) {
-                uri = this._mast.baseUrl + uri;
+                uri = this._sequence.baseUrl + uri;
             }
             loadVastPromises.push(this._loadVast(uri));
         }
@@ -101,25 +100,25 @@ class AdsPlayerController {
         });
     }
 
-    _parseMastFile (mastContent, mastBaseUrl) {
-        var triggerManager,
+    _parseAdFile (fileContent, fileBaseUrl) {
+        var adsManager,
             i;
 
-        // Parse the MAST file
-        this._mast = this._mastParser.parse(mastContent);
+        // Parse the file
+        this._sequence = this._parser.parse(fileContent);
 
-        if (!this._mast) {
+        if (!this._sequence) {
             return;
         }
 
         // Store base URL for subsequent VATS files download
-        this._mast.baseUrl = mastBaseUrl;
+        this._sequence.baseUrl = fileBaseUrl;
 
-        // Initialize the trigger managers
-        for (i = 0; i < this._mast.triggers.length; i++) {
-            triggerManager = new TriggerManager();
-            triggerManager.init(this._mast.triggers[i]);
-            this._triggerManagers.push(triggerManager);
+        // Initialize the ad managers
+        for (i = 0; i < this._sequence.triggers.length; i++) {
+            adsManager = new AdsManager(this._parser.getFormat());
+            adsManager.init(this._sequence.triggers[i]);
+            this._adsManagers.push(adsManager);
         }
     }
 
@@ -231,39 +230,38 @@ class AdsPlayerController {
                 this._playTrigger(trigger);
             }, () => {
                 this.loadingTrigger = false;
-
-            });
+                });
         } else {
             this._playTrigger(trigger);
         }
     }
 
     _checkTriggersStart () {
-        for (var i = 0; i < this._triggerManagers.length; i++) {
-            if (this._triggerManagers[i].checkStartConditions(this._mainVideo)) {
-                return this._triggerManagers[i].getTrigger();
+        for (var i = 0; i < this._adsManagers.length; i++) {
+            if (this._adsManagers[i].checkStartConditions(this._mainVideo)) {
+                return this._adsManagers[i].getTrigger();
             }
         }
         return null;
     }
 
     _checkTriggersEnd () {
-        for (var i = 0; i < this._triggerManagers.length; i++) {
-            if (this._triggerManagers[i].checkEndConditions(this._mainVideo)) {
-                // Remove trigger manager => will not be activated anymore
-                this._triggerManagers.splice(0, 1);
+        for (var i = 0; i < this._adsManagers.length; i++) {
+            if (this._adsManagers[i].checkEndConditions(this._mainVideo)) {
+                // Remove ad manager => will not be activated anymore
+                this._adsManagers.splice(0, 1);
                 i--;
             }
         }
     }
 
     _start () {
-        if (!this._mast) {
+        if (!this._sequence) {
             return;
         }
 
-        if (this._mast.triggers.length === 0) {
-            this._debug.warn('No trigger in MAST');
+        if (this._sequence.triggers.length === 0) {
+            this._debug.warn('No ad in sequence');
         }
 
         // Check for pre-roll trigger
@@ -282,11 +280,11 @@ class AdsPlayerController {
         this._mainPlayer = null;
         this._mainVideo = null;
         this._adsPlayerContainer = null;
-        this._mast = null;
+        this._sequence = null;
         this._fileLoaders = [];
-        this._triggerManagers = [];
+        this._adsManagers = [];
         this._vastPlayerManager = null;
-        this._mastParser = new MastParser();
+        this._parser = new Parser();
         this._vastParser = new VastParser();
         this._errorHandler = ErrorHandler.getInstance();
         this._debug = Debug.getInstance();
@@ -323,27 +321,27 @@ class AdsPlayerController {
 
 
     /**
-     * Load/open a MAST file.
+     * Load/open a sequence file.
      * @method load
      * @access public
      * @memberof AdsPlayerController#
-     * @param {string} mastUrl - the MAST file url
+     * @param {string} url - the sequence file url
      */
     load (url) {
         let fileLoader = new FileLoader();
 
-        // Reset the MAST and trigger managers
-        this._mast = null;
-        this._triggerManagers = [];
+        // Reset the sequence and ad managers
+        this._sequence = null;
+        this._adsManagers = [];
 
-        // Download and parse MAST file
-        this._debug.log("Download MAST file: " + url);
+        // Download and parse sequence file
+        this._debug.log("Download sequence file: " + url);
 
         return new Promise((resolve, reject) => {
             fileLoader.load(url).then(result => {
-                this._debug.log("Parse MAST file");
-                this._parseMastFile(result.response, result.baseUrl);
-                // Start managing triggers and ads playing
+                this._debug.log("Parse sequence file");
+                this._parseAdFile(result.response, result.baseUrl);
+                // Start managing ads playing
                 this._debug.log("Start");
                 this._start();
                 resolve();
@@ -390,11 +388,11 @@ class AdsPlayerController {
 
         this.stop();
 
-        // Reset the trigger managers
-        this._triggerManagers = [];
+        // Reset the ad managers
+        this._adsManagers = [];
 
-        // Reset the MAST
-        this._mast = null;
+        // Reset the sequence
+        this._sequence = null;
     }
 
     destroy () {

@@ -1,3 +1,7 @@
+### Release Notes CSAdsPlugin-1.x.y (xx/xx/2017)
+* VMAP: Embeds a VMAP parser
+* VMAP: Support linear ad break type
+
 ### Release Notes CSAdsPlugin-1.0.0 (16/02/2017)
 * Add voAdsplayer sample
 * VAST 3.0: adPods

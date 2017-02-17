@@ -318,10 +318,10 @@ define(function(require) {
             "pause": function () {
 
                 command
-                // pause the player
-                .findById("pause_button")
+                    // pause the player
+                    .findById("pause_button")
                     .click()
-                .end();
+                    .end();
 
                 // wait for the pause event
                 command
@@ -336,10 +336,10 @@ define(function(require) {
                     });
 
                 command
-                // resume the player
-                .findById("pause_button")
-                    .click()
-                .end();
+                    // resume the player
+                    .findById("pause_button")
+                        .click()
+                    .end();
 
                 // wait for the play event
                 command
