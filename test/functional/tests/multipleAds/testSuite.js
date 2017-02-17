@@ -364,6 +364,119 @@ define(function(require) {
                             .end()
                         .end()
                 );
+            },
+
+            // Test a VMAP XML file with 1 ad break with 2 VASTs XML files
+            // The 2 ads are played in the order they appear in the xml file.
+            "doubleAdsInVastVmap": function() {
+                // wait for the play event
+                command
+                    .then(pollUntil(function (value) {
+                        return document.getElementById('event_play').value === "1" ? true : null;
+                    }, null, 40000, 100))
+                    .then(function () {
+                        // the event play has been detected
+                    },function (error) {
+                        // the event play has NOT been detected
+                        assert.isFalse(true,"the event play has NOT been detected for test doubleAdsInVastVmap");
+                    });
+
+                // Check the expected ad is played
+                command
+                    .findById("adsplayer-container")
+                    .findByTagName("video")
+                    .getAttribute("src")
+                    .then(function (src){assert.strictEqual(getMediaFileName(src), getMediaFileName(config.tests.multipleAds.doubleAdsInVastVmap.ads[0].media));})
+                    .end()
+                    .end();
+
+                // wait for the pause event
+                command
+                    .then(pollUntil(function (value) {
+                        return document.getElementById('event_pause').value === "1" ? true : null;
+                    }, null, 40000, 100))
+                    .then(function () {
+                        // the event pause has been detected
+                    },function (error) {
+                        // the event pause has NOT been detected
+                        assert.isFalse(true,"the event pause has NOT been detected for test doubleAdsInVastVmap");
+                    });
+
+                // wait for the play event
+                // Check the expected ad is played
+                return(command
+                        .then(pollUntil(function (value) {
+                            return document.getElementById('event_play').value === "2" ? true : null;
+                        }, null, 40000, 100))
+                        .then(function () {
+                            // the event end has been detected
+                        },function (error) {
+                            // the event end has NOT been detected
+                            assert.isFalse(true);
+                        })
+                        .findById("adsplayer-container")
+                        .findByTagName("video")
+                        .getAttribute("src")
+                        .then(function (src){
+                            assert.strictEqual(getMediaFileName(src), getMediaFileName(config.tests.multipleAds.doubleAdsInVastVmap.ads[1].media));
+                        })
+                        .end()
+                        .end()
+                );
+            },
+
+            // Test a VMAP XML file with 2 ad breaks
+            "doubleAdBreaksInVmap": function() {
+                // wait for the play event
+                command
+                    .then(pollUntil(function (value) {
+                        return document.getElementById('event_play').value === "1" ? true : null;
+                    }, null, 40000, 100))
+                    .then(function () {
+                        // the event has been detected
+                    },function (error) {
+                        // the event has NOT been detected
+                        assert.isFalse(true,"the event play  has NOT been detected for test doubleAdBreaksInVmap");
+                    });
+
+                // Check the expected ad is played
+                command
+                    .findById("adsplayer-container")
+                    .findByTagName("video")
+                    .getAttribute("src")
+                    .then(function (src) {assert.strictEqual(getMediaFileName(src), getMediaFileName(config.tests.multipleAds.doubleAdBreaksInVmap.ads[0].media));})
+                    .end()
+                    .end()
+
+                // wait for the pause event
+                command
+                    .then(pollUntil(function (value) {
+                        return document.getElementById('event_pause').value === "1" ? true : null;
+                    }, null, 40000, 100))
+                    .then(function () {
+                        // the event has been detected
+                    },function (error) {
+                        // the event has NOT been detected
+                        assert.isFalse(true,"the event pause has NOT been detected for test doubleAdBreaksInVmap");
+                    });
+
+                return (command
+                        .then(pollUntil(function (value) {
+                            return document.getElementById('event_play').value === "2" ? true : null;
+                        }, null, 40000, 100))
+                        .then(function () {
+                            // the event end has been detected
+                        },function (error) {
+                            // the event end has NOT been detected
+                            assert.isFalse(true,"the event play has NOT been detected for test doubleAdBreaksInVmap");
+                        })
+                        .findById("adsplayer-container")
+                        .findByTagName("video")
+                        .getAttribute("src")
+                        .then(function (src) {assert.strictEqual(getMediaFileName(src), getMediaFileName(config.tests.multipleAds.doubleAdBreaksInVmap.ads[1].media));})
+                        .end()
+                        .end()
+                );
             }
         };
     });

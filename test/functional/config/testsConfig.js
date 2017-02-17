@@ -1,9 +1,11 @@
 define(function(require) {
 
+    var vast01 = ["../../media/vo_ad_2.mp4"];
+
     var _createInstance = function() {
         return {
             // Common tests suite configuration fields
-            testPageUrl : "http://cswebplayer.viaccess.fr/functionnalTests/CSAdsPlugin-Dev/samples/testsPlayer",        // url of the html page under test
+            testPageUrl : "http://cswebplayer.viaccess.fr/functionnalTests/CSAdsPlugin-Adrien/samples/testsPlayer",        // url of the html page under test
             //testPageUrl : "http://localhost:8080/samples/testsPlayer",
             streamUrl   : "http://playready.directtaps.net/smoothstreaming/SSWSS720H264/SuperSpeedway_720.ism/Manifest",// url of the main stream
                                                                                                                         // take care using one with video.currentTime = 0 at the beginning
@@ -32,6 +34,30 @@ define(function(require) {
                         mastUrl: "../ads/xml/mast/preroll-vast30-doubleVastsInTrigger.xml",
                         ads: [{media: "../ads/adsserver/media/vo_ad_2.mp4", duration: 6000},
                             {media: "../ads/adsserver/media/vo_logo.png", duration: 5000}]
+                    },
+                    doubleAdsInVastVmap: {
+                        mastUrl: "../ads/xml/vmap/preroll-double-vast2.xml",
+                        ads: [
+                            {
+                                media: "../ads/adsserver/media/vo_ad_2.mp4",
+                                duration: 6000
+                            }, {
+                                media: "../ads/adsserver/media/vo_ad_4.mp4",
+                                duration: 4000
+                            }
+                        ]
+                    },
+                    doubleAdBreaksInVmap: {
+                        mastUrl: "../ads/xml/vmap/preroll1-preroll2.xml",
+                        ads: [
+                            {
+                                media: "../ads/adsserver/media/vo_ad_2.mp4",
+                                duration: 6000
+                            }, {
+                                media: "../ads/adsserver/media/vo_ad_4.mp4",
+                                duration: 4000
+                            }
+                        ]
                     }
                 },
 
@@ -77,15 +103,42 @@ define(function(require) {
                 },
 
                 vmap: {
-                    doubleAdsInVast: {
-                        mastUrl: "../ads/xml/vmap/preroll-double-vast2.xml",
-                        ads: [{media: "../ads/adsserver/media/vo_ad_2.mp4", duration: 6000},
-                            {media: "../ads/adsserver/media/vo_ad_4.mp4", duration: 4000}]
+                    marginOfError: 0.5,
+                    preroll: {
+                        mastUrl: "../ads/xml/vmap/preroll.xml",
+                        ads: [
+                            {
+                                media: vast01[0]
+                            }
+                        ],
+                        timeOffset: 0
                     },
-                    doubleAdBreak: {
-                        mastUrl: "../ads/xml/vmap/preroll1-preroll2.xml",
-                        ads: [{media: "../ads/adsserver/media/vo_ad_2.mp4", duration: 6000},
-                            {media: "../ads/adsserver/media/vo_ad_4.mp4", duration: 4000}]
+                    midrollTimestamp: {
+                        mastUrl: "../ads/xml/vmap/midroll-timestamp.xml",
+                        ads: [
+                            {
+                                media: vast01[0]
+                            }
+                        ],
+                        timeOffset: 5.514
+                    },
+                    midrollPercent: {
+                        mastUrl: "../ads/xml/vmap/midroll-percent.xml",
+                        ads: [
+                            {
+                                media: vast01[0]
+                            }
+                        ],
+                        timeOffset: 3.6
+                    },
+                    postroll: {
+                        mastUrl: "../ads/xml/vmap/postroll.xml",
+                        ads: [
+                            {
+                                media: vast01[0]
+                            }
+                        ],
+                        timeOffset: 120.5
                     }
                 }
             }
