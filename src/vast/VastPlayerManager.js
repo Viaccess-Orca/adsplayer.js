@@ -48,8 +48,6 @@ class VastPlayerManager {
 
         this._debug.log("(VastPlayerManager) _onAdEnd");
 
-        this._eventBus.removeEventListener('adEnd', this._onAdEndListener);
-
         // Stop the current ad
         this._stopAd();
 
@@ -89,6 +87,8 @@ class VastPlayerManager {
 
         if (this._adPlayer) {
             this._adPlayer.stop();
+            this._eventBus.removeEventListener('adEnd', this._onAdEndListener);
+            this._adPlayer = null;
         }
 
     }
