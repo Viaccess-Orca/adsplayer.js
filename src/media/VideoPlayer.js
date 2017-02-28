@@ -184,6 +184,9 @@ class VideoPlayer {
     }
 
     isEnded () {
+        if (!this._video) {
+            return true;
+        }
         return this._video.ended;
     }
 }
