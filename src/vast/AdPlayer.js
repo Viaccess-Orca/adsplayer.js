@@ -80,7 +80,6 @@ class AdPlayer {
                 return;
             }
             this._creativePlayer.stop();
-            this._creativePlayer = null;
         }
 
         _playCreative(index){
@@ -96,8 +95,6 @@ class AdPlayer {
             if (linear) {
                 this._debug.info("Play Linear Ad, duration = " + linear.duration);
                 this._eventBus.addEventListener('creativeEnd', this._onCreativeEndListener);
-                this._creativePlayer = new CreativePlayer();
-                this._creativePlayer.init(this._adPlayerContainer, this._mainVideo);
                 if (!this._creativePlayer.load(creative.linear, this._baseUrl)) {
                     this._playNextCreative();
                 }
@@ -155,9 +152,9 @@ class AdPlayer {
         this._creativeIndex = -1;
         this._debug = Debug.getInstance();
         this._eventBus = EventBus.getInstance();
-        this._creativePlayer = null;
-
+        this._creativePlayer = new CreativePlayer();
         this._onCreativeEndListener = this._onCreativeEnd.bind(this);
+        this._creativePlayer.init(this._adPlayerContainer, this._mainVideo);
     }
 
     start(){
