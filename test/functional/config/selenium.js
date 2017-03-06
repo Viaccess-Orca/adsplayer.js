@@ -26,6 +26,6 @@ define({
 			'ie.ensureCleanSession' : true,
 			'InternetExplorerDriver.IE_ENSURE_CLEAN_SESSION' : true
         },
-        leaveRemoteOpen:'fail'
+        leaveRemoteOpen:'false'
     }
 });
