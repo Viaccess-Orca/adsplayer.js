@@ -1,0 +1,7 @@
+<vmap:VMAP xmlns:vmap="http://www.iab.net/videosuite/vmap" version="1.0">
+    <vmap:AdBreak breakType="linear" breakId="mypre" timeOffset="start">
+        <vmap:AdSource allowMultipleAds="true" followRedirects="true" id="1">
+            <vmap:AdTagURI templateType="vast2"><![CDATA[../vast-2/VAST-01.xml]]></vmap:AdTagURI>
+        </vmap:AdSource>
+    </vmap:AdBreak>
+</vmap:VMAP>

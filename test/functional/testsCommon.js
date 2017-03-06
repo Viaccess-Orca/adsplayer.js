@@ -4,7 +4,6 @@ define(function(require) {
 
     var seleniumConfigs = require('./config/selenium');
     var browsersConfig = require('./config/browsers');
-    var testsConfig = require('./config/testsConfig');
 
     ///////////////////////////////////////////////////////////////////////////////////////////////
     // Selenium configuration
@@ -24,7 +23,8 @@ define(function(require) {
         // Functional test suite(s) to run in each browser once non-functional tests are completed
         functionalSuites: [
             'test/functional/tests/multipleAds/testSuite',
-            'test/functional/tests/trackingEvents/testSuite'
+            'test/functional/tests/trackingEvents/testSuite',
+            'test/functional/tests/vmap/testSuite'
         ],
 
         // The amount of time, in milliseconds, an asynchronous test can run before it is considered timed out. By default this value is 30 seconds.

@@ -189,8 +189,6 @@ define(function(require) {
                         // the event has NOT been detected
                         assert.isFalse(true,"the event play has NOT been detected for test " + test.name);
                     })
-                    // wait 500 ms after the play, pause test may fail if video current time = 0 because tracking event "resume" is not sent in this case
-                    .sleep(500)
                 );
             },
 
@@ -317,32 +315,39 @@ define(function(require) {
             // Check the tracking events when the ad is paused and resumed
             "pause": function () {
 
+                // wait for the ad current time > 0 , pause test may fail if video current time = 0 because tracking event "resume" is not sent in this case
                 command
-                // pause the player
-                .findById("pause_button")
-                    .click()
-                .end();
+                    .then(pollUntil(function (value) {
+                        return document.getElementById('adsplayer-container').getElementsByTagName('video')[0].currentTime > 0 ? true : null;
+                    }, null, 10000, 1000))
+                    .then(function () {
+                        // ad current time > 0
+                    },function (error) {
+                        // the event has NOT been detected
+                        assert.isFalse(true,"ad current time = 0 for test " + test.name);
+                    });
 
-                // wait for the pause event
+
+                // pause the player and wait for the pause event
                 command
+                    .findById("pause_button")
+                    .click()
+                    .end()
                     .then(pollUntil(function (value) {
                         return parseInt(document.getElementById('event_pause').value) == 1 ? true : null;
                     }, null, 10000, 1000))
                     .then(function () {
-                        // the event pause has been detected, now get the tracking events
+                        // the event pause has been detected
                     },function (error) {
                         // the event pause has NOT been detected
                         assert.isFalse(true,"the event pause has NOT been detected for test pause");
                     });
 
+                // resume the player and wait for the play event
                 command
-                // resume the player
-                .findById("pause_button")
+                    .findById("pause_button")
                     .click()
-                .end();
-
-                // wait for the play event
-                command
+                    .end()
                     .then(pollUntil(function (value) {
                         return parseInt(document.getElementById('event_play').value) == 2 ? true : null;
                     }, null, 10000, 1000))
@@ -388,10 +393,10 @@ define(function(require) {
                 // wait for the volume has changed
                 command
                     .then(pollUntil(function (value) {
-                        return parseInt(document.getElementById('event_hml5_volumechange').value) == 1 ? true : null;
+                        return parseInt(document.getElementById('event_html5_volumechange').value) == 1 ? true : null;
                     }, null, 10000, 1000))
                     .then(function () {
-                        assert.isFalse(true,"the player has been muted");
+						// the volume has changed
                     },function (error) {
                         assert.isFalse(true,"the player has NOT been muted");
                     })
@@ -405,10 +410,10 @@ define(function(require) {
                 // wait for the volume has changed
                 command
                     .then(pollUntil(function (value) {
-                        return parseInt(document.getElementById('event_hml5_volumechange').value) == 2 ? true : null;
+                        return parseInt(document.getElementById('event_html5_volumechange').value) == 2 ? true : null;
                     }, null, 10000, 1000))
                     .then(function () {
-                        assert.isFalse(true,"the player has been muted");
+                    	// the volume has changed
                     },function (error) {
                         assert.isFalse(true,"the player has NOT been muted");
                     })

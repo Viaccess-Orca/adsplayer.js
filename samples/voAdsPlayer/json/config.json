@@ -33,39 +33,57 @@ jsonAdsDescription = '[ { "name": "No ad insertion",                            
                         { "name": "Custom",                                                               \
                           "url" : ""},                                                                    \
                                                                                                           \
-                        { "name": "Preroll",                                                              \
+                        { "name": "Mast Preroll",                                                         \
                           "url" : "../../samples/ads/xml/mast/preroll.xml"},                              \
                                                                                                           \
-                        { "name": "Preroll-double-vast2",                                                 \
+                        { "name": "Mast Preroll-double-vast2",                                            \
                           "url" : "../../samples/ads/xml/mast/preroll-double-vast2.xml"},                 \
                                                                                                           \
-                        { "name": "Midroll 20 seconds",                                                   \
+                        { "name": "Mast Midroll 20 seconds",                                              \
                           "url" : "../../samples/ads/xml/mast/midroll.xml"},                              \
                                                                                                           \
-                        { "name": "Preroll - Midroll 20 seconds",                                         \
+                        { "name": "Mast Preroll - Midroll 20 seconds",                                    \
                           "url" : "../../samples/ads/xml/mast/preroll-midroll.xml"},                      \
                                                                                                           \
-                        { "name": "Postroll",                                                             \
+                        { "name": "Mast Postroll",                                                        \
                           "url" : "../../samples/ads/xml/mast/postroll.xml"},                             \
                                                                                                           \
-                        { "name": "Preroll image",                                                        \
+                        { "name": "Mast Preroll image",                                                   \
                           "url" : "../../samples/ads/xml/mast/preroll-image.xml"},                        \
                                                                                                           \
-                        { "name": "Preroll image - Preroll",                                              \
+                        { "name": "Mast Preroll image - Preroll",                                         \
                           "url" : "../../samples/ads/xml/mast/preroll-image-preroll.xml"},                \
                                                                                                           \
-                        { "name": "Preroll image - Preroll-double-vast2",                                 \
+                        { "name": "Mast Preroll image - Preroll-double-vast2",                            \
                           "url" : "../../samples/ads/xml/mast/preroll-image-preroll-doublevast2.xml"},    \
                                                                                                           \
-                        { "name": "Preroll VAST30",                                                       \
+                        { "name": "Mast Preroll VAST30",                                                  \
                           "url" : "../../samples/ads/xml/mast/preroll-vast30.xml"},                       \
                                                                                                           \
-                        { "name": "Preroll VAST30 AdPods",                                                \
+                        { "name": "Mast Preroll VAST30 AdPods",                                           \
                           "url" : "../../samples/ads/xml/mast/preroll-vast30-adPods.xml"},                \
                                                                                                           \
-                        { "name": "Preroll VAST30 double trigger",                                        \
-                        "url" : "../../samples/ads/xml/mast/preroll-vast30-doubleVastsInTrigger.xml"}     \
-]';
+                        { "name": "Mast Preroll VAST30 double trigger",                                   \
+                        "url" : "../../samples/ads/xml/mast/preroll-vast30-doubleVastsInTrigger.xml"},    \
+                                                                                                          \
+                        { "name": "Vmap Preroll",                                                         \
+                          "url" : "../../samples/ads/xml/vmap/preroll.xml"},                              \
+                                                                                                          \
+                        { "name": "Vmap Miroll percent",                                                  \
+                          "url" : "../../samples/ads/xml/vmap/midroll-percent.xml"},                      \
+                                                                                                          \
+                        { "name": "Vmap Miroll timestamp",                                                \
+                          "url" : "../../samples/ads/xml/vmap/midroll-timestamp.xml"},                    \
+                                                                                                          \
+                        { "name": "Vmap Postroll",                                                        \
+                          "url" : "../../samples/ads/xml/vmap/postroll.xml"},                             \
+                                                                                                          \
+                        { "name": "Vmap Preroll-double-vast2",                                            \
+                          "url" : "../../samples/ads/xml/vmap/preroll-double-vast2.xml"},                 \
+                                                                                                          \
+                        { "name": "Vmap Preroll1 Preroll2",                                               \
+                        "url" : "../../samples/ads/xml/vmap/preroll1-preroll2.xml"}                       \
+                          ]';
 
 jsonStreamsDescription = '[{ "name" : "custom",                                                                       \
               "url" : "",                                                                                             \
