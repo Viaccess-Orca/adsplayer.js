@@ -86,7 +86,7 @@ define([
             for(var eventId in expectedValues) {
                 if (expectedValues.hasOwnProperty(eventId)) {
                     // Check that event counter exists
-                    assert.isDefined(realValues[eventId], "Impossible to find event '" + eventId + "' in tracking events");
+                    assert.isDefined(realValues[eventId], "Impossible to find event '" + eventId + "' in events");
 
                     // Check that real value is as expected ("x" means "any")
                     if (expectedValues[eventId] !== "x") {

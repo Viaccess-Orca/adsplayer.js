@@ -51,109 +51,156 @@ define(function(require) {
             name: "TEST_EVENTS",
 
             setup: function () {
-                // executes before suite starts;
+                // executes before suite starts
 
                 // load the web test page
                 command = this.remote.get(require.toUrl(config.testPageUrl));
 
-                //clear the ad url
-                command.findById("stream_toplay").clearValue();
-
-                // set the stream to play
-                command.findById("stream_toplay").type(config.streamUrl);
-
-                // clear the CSAdsPlugin events
-                command.findById("clearEvents_button").click();
-
-                // clear the Tracking events
-                command.findById("clear_te_button").click();
-
-                // clear the html5 video events
-                command.findById("clear_event_html5_button").click();
-
-                return command;
+                return (command
+                        //clear the stream url
+                        .findById("stream_toplay").clearValue().end()
+                        // type the stream to play
+                        .findById("stream_toplay").type(config.streamUrl).end()
+                        // clear the CSAdsPlugin events
+                        .findById("clearEvents_button").click().end()
+                        // clear the Tracking events
+                        .findById("clear_te_button").click().end()
+                        // clear the html5 video events
+                        .findById("clear_event_html5_button").click().end()
+                        //clear the ad url
+                        .findById("ad_toplay").clearValue().end()
+                        // type the ad url
+                        .findById("ad_toplay").type(config.tests.events.adUrl).end()
+                        // start the player
+                        .findById("play_button").click().end()
+                );
             },
 
             teardown: function () {
+                // executes at the end of the suite
+
+                return (command
+                        //stop the player
+                        .findById("stop_button").click()
+                        .end()
+                        // clear the CSAdsPlugin events
+                        .findById("clearEvents_button").click()
+                        .end()
+                        // clear the Tracking events
+                        .findById("clear_te_button").click()
+                        .end()
+                        .findById("clear_event_html5_button").click()
+                        .end()
+                );
             },
 
             beforeEach: function (test) {
-                // executes before each test
-
-                return (command
-                    //clear the ad url
-                    .findById("ad_toplay").clearValue()
-                    .end()
-                    // type the ad url
-                    .findById("ad_toplay").type(config.tests.events[test.name].adUrl)
-                    .end()
-                    // start the player
-                    .findById("play_button").click()
-                    .end()
-                    // wait for the event start
-                    .then(pollUntil(function (value) {
-                        return document.getElementById('event_start').value === "1" ? true : null;
-                    }, null, 40000, 1000))
-                    .then(function () {
-                        // the event started has been detected
-                    }, function (error) {
-                        // the event started has NOT been detected
-                        assert.isFalse(true,"the event started has NOT been detected for test " + test.name);
-                    })
-                );
+                // execute before each test
             },
 
             afterEach: function (test) {
-                // executes after each test
-                return (command
-                // wait for the event end
-                    .then(pollUntil(function (value) {
-                        return document.getElementById('event_end').value === "1" ? true : null;
-                    }, null, 40000, 1000))
-                    .then(function () {
-                        // the event end has been detected
-                    }, function (error) {
-                        // the event end has NOT been detected
-                        assert.isFalse(true,"the event end has NOT been detected for test " + test.name);
-                    })
-                    //stop the player
-                    .findById("stop_button").click()
-                    .end()
-                    // clear the CSAdsPlugin events
-                    .findById("clearEvents_button").click()
-                    .end()
-                    // clear the Tracking events
-                    .findById("clear_te_button").click()
-                    .end()
-                    .findById("clear_event_html5_button").click()
-                    .end()
-                );
+                // execute after each test
             },
 
-            // Check the events in case of preroll video ad
-            "preroll": function () {
+            // Check the events at the start of an ad
+            "start": function () {
 
-                // wait for the main video progress event > 5, means the preroll ad is completed
                 return(command
+
+                        // wait for the main video to be suspended, mean the ad is started
                         .then(pollUntil(function (value) {
-                            return parseInt(document.getElementById('event_html5_progress').value) > 5 ? true : null;
+                            return parseInt(document.getElementById('event_html5_suspend').value) == 1 ? true : null;
                         }, null, 10000, 1000))
-                        .then(  function() {
+                        .then(function() {
                                 // The event pause has been detected, now get the tracking events
                                 return utils.getCounterValues(command, "#csadsplugin_events .event input");
                             },
                             function (error) {
                                 // the event play has NOT been detected
-                                assert.isFalse(true,"the event pogress has NOT been detected for test preroll");
+                                assert.isFalse(true,"the event progress has NOT been detected for test start");
                             }
                         )
                         .then(function(counters) {
                             // Check configuration
-                            assert.isDefined(suiteConfig.preroll, "Configuration is not defined for preroll test counters");
-                            assert.isDefined(suiteConfig.preroll.ExpectedtrackingEvents, "Configuration is not defined for preroll test counters");
+                            assert.isDefined(suiteConfig, "Configuration is not defined for start test");
+                            assert.isDefined(suiteConfig.startExpectedEvents, "Configuration is not defined for start test");
 
                             // Finally, check the counter values
-                            utils.compareCounters(counters, suiteConfig.preroll.ExpectedtrackingEvents);
+                            utils.compareCounters(counters, suiteConfig.startExpectedEvents);
+                        })
+                );
+            },
+
+            // check the DOM <video> element and the parameters associated with the add event
+            "checkDom": function () {
+
+                // Check the DOM <video> element has been added in the ads player container
+                command
+                    .findById("adsplayer-container")
+                        .findByTagName("video")
+                            .then(
+                                function (element) {
+                                    assert.isTrue(true,"The DOM element <video> has been created");
+                                },
+                                function () {
+                                    assert.isFalse(true,"The DOM element <video> has NOT been created");
+                                }
+                            )
+                        .end()
+                    .end();
+
+                var event_type = "";
+                command.findById("ad_dom_type").getAttribute("value").then(function(type) {event_type=type});
+                var event_id = "";
+                command.findById("ad_dom_id").getAttribute("value").then(function(id) {event_id=id});
+
+                // Check the add event parameters
+                return(command
+                    .findById("adsplayer-container")
+                        .findByTagName("video")
+                            .getAttribute("id")
+                                // Check the add event parameters (element, type)
+                                .then(
+                                    function (adsplayerContainerVideoId) {
+                                        // Check the id of DOM <video> element
+                                        assert.equal(adsplayerContainerVideoId,event_id,"unexpected id");
+                                        // Check the type
+                                        assert.equal(event_type,"video","unexpected id");
+                                    },
+                                    function() {
+                                        assert.isFalse(true,"fails to get the adsplayerContainer Video Id ");
+                                    }
+                                )
+                        .end()
+                    .end()
+                );
+            },
+
+            // Check the events at the end of an ad
+            "end": function () {
+
+                return(command
+
+                        // wait for the main video progress event > 5, means the preroll ad is completed
+                        .then(pollUntil(function (value) {
+                            return parseInt(document.getElementById('event_html5_progress').value) > 5 ? true : null;
+                        }, null, 20000, 1000))
+                        .then(function() {
+                                // The event pause has been detected, now get the tracking events
+                                return utils.getCounterValues(command, "#csadsplugin_events .event input");
+                            },
+                            function (error) {
+                                // the event play has NOT been detected
+                                assert.isFalse(true,"the event progress has NOT been detected for test end");
+                            }
+                        )
+                        .then(function(counters) {
+                            // Check configuration
+                            assert.isDefined(suiteConfig, "Configuration is not defined for end test");
+                            assert.isDefined(suiteConfig.endExpectedEvents, "Configuration is not defined for end test");
+
+                            // Finally, check the counter values
+                            utils.compareCounters(counters, suiteConfig.endExpectedEvents);
                         })
                 );
             },
