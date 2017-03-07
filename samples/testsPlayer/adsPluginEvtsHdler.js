@@ -50,6 +50,10 @@ function initAdsPluginEvtsHdler(adsPlugin){
         element.setAttribute("value", parseInt(element.getAttribute("value")) + 1);
         // Store the adPlayer element
         adPlayer = e.data.element;
+        // Update #ad_dom_id DOM element with the id of the DOM element created by the CSAdsPlugin to play the ad
+        document.querySelector('#ad_dom_id').setAttribute("value", adPlayer.getAttribute("id"));
+        // Update #ad_dom_type DOM element with the type of the DOM element created by the CSAdsPlugin to play the ad
+        document.querySelector('#ad_dom_type').setAttribute("value", e.data.type);
         // Change the listener for the pause button
         document.querySelector('#pause_button').removeEventListener("click", onMainVideoPause);
         document.querySelector('#pause_button').addEventListener("click", onAdPause);
@@ -65,6 +69,10 @@ function initAdsPluginEvtsHdler(adsPlugin){
         element.setAttribute("value", parseInt(element.getAttribute("value")) + 1);
         // Update the adPlayer element
         adPlayer = null;
+        // Clear #ad_dom_id DOM element
+        document.querySelector('#ad_dom_id').setAttribute("value","");
+        // Clear #ad_dom_type DOM element
+        document.querySelector('#ad_dom_type').setAttribute("value","");
         // Change the listener for the pause button
         document.querySelector('#pause_button').removeEventListener("click", onAdPause);
         document.querySelector('#pause_button').addEventListener("click", onMainVideoPause);

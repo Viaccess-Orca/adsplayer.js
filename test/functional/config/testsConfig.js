@@ -6,12 +6,17 @@ define(function(require) {
         return {
             // Common tests suite configuration fields
             testPageUrl : "http://cswebplayer.viaccess.fr/functionnalTests/CSAdsPlugin-Dev/samples/testsPlayer",        // url of the html page under test
-            //testPageUrl : "http://localhost:8080/samples/testsPlayer",
             streamUrl   : "http://playready.directtaps.net/smoothstreaming/SSWSS720H264/SuperSpeedway_720.ism/Manifest",// url of the main stream
                                                                                                                         // take care using one with video.currentTime = 0 at the beginning
                                                                                                                         // for the pre-roll tests
             tests : {
+                //Events test suite specific configuration fields
+                events: {
+                    "adUrl": "../ads/xml/mast/preroll.xml",
+                    "startExpectedEvents":{"start":1,"end":0,"add":1,"remove":0,"play":1,"pause":0},
+                    "endExpectedEvents":{"start":1,"end":1,"add":1,"remove":1,"play":1,"pause":1}
 
+                },
 
                 // Test suite multipleAds specific configuration fields
                 multipleAds: {
