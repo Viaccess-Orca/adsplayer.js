@@ -332,6 +332,12 @@
 
                 initHtml5VideoEvtsHdler();
 
+                /* manage exit popup */
+                var onExit = function() {
+                    return "Are you sure you wish to leave the page?";
+                };
+                window.onbeforeunload = onExit ;
+
             });
 
             document.addEventListener("beforeunload", function(event) {

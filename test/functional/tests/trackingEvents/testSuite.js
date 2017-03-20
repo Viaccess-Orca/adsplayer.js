@@ -98,6 +98,7 @@ define(function(require) {
                         // the event started has NOT been detected
                         assert.isFalse(true,"the event started has NOT been detected for test " + test.name);
                     })
+                    // wait for the play event
                     .then(pollUntil(function (value) {
                         return parseInt(document.getElementById('event_play').value) == 1 ? true : null;
                     }, null, 10000, 1000))
@@ -290,8 +291,8 @@ define(function(require) {
                         })
                         .then(function(counters) {
                             // Check configuration
-                            assert.isDefined(suiteConfig.pause, "Configuration is not defined for prerollVast30 test counters");
-                            assert.isDefined(suiteConfig.pause.ExpectedtrackingEvents, "Configuration is not defined for prerollVast30 test counters");
+                            assert.isDefined(suiteConfig.pause, "Configuration is not defined for pause test counters");
+                            assert.isDefined(suiteConfig.pause.ExpectedtrackingEvents, "Configuration is not defined for pause test counters");
 
                             // Finally, check the counter values
                             utils.compareCounters(counters, suiteConfig.pause.ExpectedtrackingEvents);
@@ -350,12 +351,44 @@ define(function(require) {
                         })
                         .then(function(counters) {
                             // Check configuration
-                            assert.isDefined(suiteConfig.mute, "Configuration is not defined for prerollVast30 test counters");
-                            assert.isDefined(suiteConfig.mute.ExpectedtrackingEvents, "Configuration is not defined for prerollVast30 test counters");
+                            assert.isDefined(suiteConfig.mute, "Configuration is not defined for mute test counters");
+                            assert.isDefined(suiteConfig.mute.ExpectedtrackingEvents, "Configuration is not defined for mute test counters");
 
                             // Finally, check the counter values
                             utils.compareCounters(counters, suiteConfig.mute.ExpectedtrackingEvents);
                         })
+                );
+            },
+
+            // Check the tracking events when a linear ad is closed
+            "closeLinear": function () {
+
+                return (command
+                        .then(pollUntil(function (value) {
+                            return parseInt(document.getElementById('te_firstQuartile').value) == 1 ? true : null;
+                        }, null, 10000, 1000))
+                        .then(function () {
+                            // the first quartile tracking event has been received
+                        },function (error) {
+                            assert.isFalse(true,"the first quartile tracking event has NOT been received");
+                        })
+                        .refresh()
+                        .dismissAlert()
+                        .then(function () {
+                            // get the tracking events
+                            return utils.getCounterValues(command, "#tracking_events .event input");
+                        })
+                        .then(function(counters) {
+                            // Check configuration
+                            assert.isDefined(suiteConfig.closeLinear, "Configuration is not defined for closeLinear test counters");
+                            assert.isDefined(suiteConfig.closeLinear.ExpectedtrackingEvents, "Configuration is not defined for closeLinear test counters");
+
+                            // Finally, check the counter values
+                            utils.compareCounters(counters, suiteConfig.closeLinear.ExpectedtrackingEvents);
+                        })
+                        // start the player
+                        .findById("play_button").click()
+                        .end()
                 );
             }
         };
