@@ -453,14 +453,20 @@ define(function(require) {
 
             // Check the tracking event on fullscreen
             "fullscreen": function () {
+                if (this.remote.session.capabilities.browserName === 'MicrosoftEdge') {
+                    this.skip('Skipped on browser Edge');
+                }
+
                 return (command
                     .then(pollUntil(function (value) {
                         // Wait until first quartile is reached
                         return parseInt(document.getElementById('te_firstQuartile').value) == 1 ? true : null;
                     }, null, 10000, 1000))
+                    // Set full screen
                     .findById("fullscreen_button")
                     .click()
                     .sleep(1000)
+                    // Escape fullscreen (not working on Chrome)
                     .type(keys.ESCAPE)
                     .end()
                     .then(function () {
@@ -485,6 +491,7 @@ define(function(require) {
                         // Wait until first quartile is reached
                         return parseInt(document.getElementById('te_firstQuartile').value) == 1 ? true : null;
                     }, null, 10000, 1000))
+                    // Click on the video
                     .findByCssSelector("#adsplayer-container #adsplayer-video")
                     .click()
                     .end()

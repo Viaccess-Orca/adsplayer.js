@@ -100,7 +100,7 @@ define(function(require) {
                     },
                     fullscreen: {
                         "adsUrl":"../ads/xml/mast/preroll-vast30.xml",
-                        "ExpectedtrackingEvents":{"creativeView":1,"start":1,"firstQuartile":1,"midpoint":"x","progress":"x","exitFullscreen":"x","fullscreen":1}
+                        "ExpectedtrackingEvents":{"creativeView":1,"start":1,"firstQuartile":1,"midpoint":"x","thirdQuartile":"x", "progress":"x","exitFullscreen":"x","fullscreen":1}
                     },
                     acceptInvitationLinear: {
                         "adsUrl":"../ads/xml/mast/preroll-vast30.xml",
