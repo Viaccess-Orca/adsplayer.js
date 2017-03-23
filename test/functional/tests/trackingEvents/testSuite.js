@@ -37,6 +37,7 @@ define(function(require) {
     var intern = require('intern');
     var registerSuite = require('intern!object');
     var assert = require('intern/chai!assert');
+    var keys = require('intern/dojo/node!leadfoot/keys');
     var pollUntil = require('intern/dojo/node!leadfoot/helpers/pollUntil');
     var config = require('test/functional/config/testsConfig');
     var utils = require('test/functional/utils/utils');
@@ -112,42 +113,46 @@ define(function(require) {
             },
 
             afterEach: function (test) {
-                // executes after each test
-                return (command
-                    // wait for at least (some tests pause the ad) one pause event.
-                    .then(pollUntil(function (value) {
-                        return parseInt(document.getElementById('event_pause').value) >= 1 ? true : null;
-                    }, null, 10000, 1000))
-                    .then(function () {
-                        // the event pause has been detected
-                    },function (error) {
-                        // the event play has NOT been detected
-                        assert.isFalse(true,"the event pause has NOT been detected for test pause");
-                    })
-                    // wait for the event end
-                    .then(pollUntil(function (value) {
-                        return parseInt(document.getElementById('event_end').value) == 1 ? true : null;
-                    }, null, 10000, 1000))
-                    .then(function () {
-                        // the event end has been detected
-                        assert.isTrue(true,"End detected");
-                    }, function (error) {
-                        // the event end has NOT been detected
-                        assert.isFalse(true,"the event end has NOT been detected for test " + test.name);
-                    })
-                    //stop the player
-                    .findById("stop_button").click()
-                    .end()
-                    // clear the CSAdsPlugin events
-                    .findById("clearEvents_button").click()
-                    .end()
-                    // clear the Tracking events
-                    .findById("clear_te_button").click()
-                    .end()
-                    // clear the html5 video events
-                    .findById("clear_event_html5_button").click()
-                    .end()
-                );
+                if (test.name === "closeLinear") {
+                    return true;
+                } else {
+                    // executes after each test
+                    return (command
+                        // wait for at least (some tests pause the ad) one pause event.
+                            .then(pollUntil(function (value) {
+                                return parseInt(document.getElementById('event_pause').value) >= 1 ? true : null;
+                            }, null, 10000, 1000))
+                            .then(function () {
+                                // the event pause has been detected
+                            },function (error) {
+                                // the event play has NOT been detected
+                                assert.isFalse(true,"the event pause has NOT been detected for test pause");
+                            })
+                            // wait for the event end
+                            .then(pollUntil(function (value) {
+                                return parseInt(document.getElementById('event_end').value) == 1 ? true : null;
+                            }, null, 10000, 1000))
+                            .then(function () {
+                                // the event end has been detected
+                                assert.isTrue(true,"End detected");
+                            }, function (error) {
+                                // the event end has NOT been detected
+                                assert.isFalse(true,"the event end has NOT been detected for test " + test.name);
+                            })
+                            //stop the player
+                            .findById("stop_button").click()
+                            .end()
+                            // clear the CSAdsPlugin events
+                            .findById("clearEvents_button").click()
+                            .end()
+                            // clear the Tracking events
+                            .findById("clear_te_button").click()
+                            .end()
+                            // clear the html5 video events
+                            .findById("clear_event_html5_button").click()
+                            .end()
+                    );
+                }
             },
 
             // Check the tracking events in case of preroll video ad
@@ -359,36 +364,142 @@ define(function(require) {
                         })
                 );
             },
-
+/*
             // Check the tracking events when a linear ad is closed
             "closeLinear": function () {
-
                 return (command
-                        .then(pollUntil(function (value) {
-                            return parseInt(document.getElementById('te_firstQuartile').value) == 1 ? true : null;
-                        }, null, 10000, 1000))
-                        .then(function () {
-                            // the first quartile tracking event has been received
-                        },function (error) {
-                            assert.isFalse(true,"the first quartile tracking event has NOT been received");
-                        })
-                        .refresh()
-                        .dismissAlert()
-                        .then(function () {
-                            // get the tracking events
-                            return utils.getCounterValues(command, "#tracking_events .event input");
-                        })
-                        .then(function(counters) {
-                            // Check configuration
-                            assert.isDefined(suiteConfig.closeLinear, "Configuration is not defined for closeLinear test counters");
-                            assert.isDefined(suiteConfig.closeLinear.ExpectedtrackingEvents, "Configuration is not defined for closeLinear test counters");
+                    .then(pollUntil(function (value) {
+                        return parseInt(document.getElementById('te_firstQuartile').value) == 1 ? true : null;
+                    }, null, 10000, 1000))
+                    .then(function () {
+                        // the first quartile tracking event has been received
+                        console.log("te_firstQuartile");
 
-                            // Finally, check the counter values
-                            utils.compareCounters(counters, suiteConfig.closeLinear.ExpectedtrackingEvents);
+                        document.addEventListener("beforeunload", function() {
+                            console.log("beforeunload");
                         })
-                        // start the player
-                        .findById("play_button").click()
-                        .end()
+                    },function (error) {
+                        assert.isFalse(true,"the first quartile tracking event has NOT been received");
+                    })
+                    .refresh()
+                    .dismissAlert()
+                    .then(function () {
+                        // get the tracking events
+                        return utils.getCounterValues(command, "#tracking_events .event input");
+                    })
+                    .then(function(counters) {
+                        // Check configuration
+                        assert.isDefined(suiteConfig.closeLinear, "Configuration is not defined for closeLinear test counters");
+                        assert.isDefined(suiteConfig.closeLinear.ExpectedtrackingEvents, "Configuration is not defined for closeLinear test counters");
+
+                        // Finally, check the counter values
+                        utils.compareCounters(counters, suiteConfig.closeLinear.ExpectedtrackingEvents);
+                    })
+                    // start the player
+                    .findById("play_button").click()
+                    .end()
+                );
+            },*/
+
+            // Check the tracking event when video is rewinded
+            // TODO: It could be smarter using the ad's scrollbar,
+            // TODO: but moveMouseTo() API seems bugged
+            "rewind": function () {
+                return (command
+                    .then(pollUntil(function (value) {
+                            // Wait until third quartile is reached
+                            return parseInt(document.getElementById('te_thirdQuartile').value) == 1 ? true : null;
+                        }, null, 10000, 1000))
+                    // Rewind
+                    .findById("goto_input")
+                    .clearValue()
+                    .type("0")
+                    .end()
+                    .findById("goto_button")
+                    .click()
+                    .end()
+                    // Go forward
+                    .sleep(500)
+                    .findById("goto_input")
+                    .clearValue()
+                    .type("50")
+                    .end()
+                    .findById("goto_button")
+                    .click()
+                    .end()
+                    // Rewind again
+                    .sleep(500)
+                    .findById("goto_input")
+                    .clearValue()
+                    .type("10")
+                    .end()
+                    .findById("goto_button")
+                    .click()
+                    .end()
+                    .then(function () {
+                        // Get the tracking events, we should have 2 "rewind" events
+                        return utils.getCounterValues(command, "#tracking_events .event input");
+                    })
+                    .then(function(counters) {
+                        // Check configuration
+                        assert.isDefined(suiteConfig.rewind, "Configuration is not defined for rewind test counters");
+                        assert.isDefined(suiteConfig.rewind.ExpectedtrackingEvents, "Configuration is not defined for rewind test counters");
+
+                        // Finally, check the counter values
+                        utils.compareCounters(counters, suiteConfig.rewind.ExpectedtrackingEvents);
+                    })
+                );
+            },
+
+            // Check the tracking event on fullscreen
+            "fullscreen": function () {
+                return (command
+                    .then(pollUntil(function (value) {
+                        // Wait until first quartile is reached
+                        return parseInt(document.getElementById('te_firstQuartile').value) == 1 ? true : null;
+                    }, null, 10000, 1000))
+                    .findById("fullscreen_button")
+                    .click()
+                    .sleep(1000)
+                    .type(keys.ESCAPE)
+                    .end()
+                    .then(function () {
+                        // Get the tracking events, we should have 2 "rewind" events
+                        return utils.getCounterValues(command, "#tracking_events .event input");
+                    })
+                    .then(function(counters) {
+                        // Check configuration
+                        assert.isDefined(suiteConfig.fullscreen, "Configuration is not defined for fullscreen test counters");
+                        assert.isDefined(suiteConfig.fullscreen.ExpectedtrackingEvents, "Configuration is not defined for fullscreen test counters");
+
+                        // Finally, check the counter values
+                        utils.compareCounters(counters, suiteConfig.fullscreen.ExpectedtrackingEvents);
+                    })
+                );
+            },
+
+            // Check the tracking event for acceptInvitationLinear
+            "acceptInvitationLinear": function () {
+                return (command
+                    .then(pollUntil(function (value) {
+                        // Wait until first quartile is reached
+                        return parseInt(document.getElementById('te_firstQuartile').value) == 1 ? true : null;
+                    }, null, 10000, 1000))
+                    .findByCssSelector("#adsplayer-container #adsplayer-video")
+                    .click()
+                    .end()
+                    .then(function () {
+                        // Get the tracking events
+                        return utils.getCounterValues(command, "#tracking_events .event input");
+                    })
+                    .then(function(counters) {
+                        // Check configuration
+                        assert.isDefined(suiteConfig.acceptInvitationLinear, "Configuration is not defined for acceptInvitationLinear test counters");
+                        assert.isDefined(suiteConfig.acceptInvitationLinear.ExpectedtrackingEvents, "Configuration is not defined for acceptInvitationLinear test counters");
+
+                        // Finally, check the counter values
+                        utils.compareCounters(counters, suiteConfig.acceptInvitationLinear.ExpectedtrackingEvents);
+                    })
                 );
             }
         };
