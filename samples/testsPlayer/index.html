@@ -415,12 +415,15 @@
             document.querySelector('#fullscreen_button').addEventListener("click",function() {
                 var adElement = document.querySelector("#" + adsPlayerContainer + " video");
                 if(adElement) {
+                    // Deal with all the implementations :C
                     if(adElement.requestFullscreen) {
                         adElement.requestFullscreen();
                     } else if(adElement.mozRequestFullScreen) {
                         adElement.mozRequestFullScreen();
-                    } else if(adElement.webkitEnterFullScreen) {
-                        adElement.webkitEnterFullScreen();
+                    } else if(adElement.webkitRequestFullscreen) {
+                        adElement.webkitRequestFullscreen();
+                    } else if(adElement.msRequestFullscreen) {
+                        adElement.msRequestFullscreen();
                     }
                 }
             });
