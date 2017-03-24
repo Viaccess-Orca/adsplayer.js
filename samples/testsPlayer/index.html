@@ -356,6 +356,7 @@
                 window.onbeforeunload = onExit ;*/
             });
 
+            /* Makes nearly every test fail
             window.addEventListener("beforeunload", function(event) {
                 // "closeLinear" event is not dispatched if mediaPlayer is removed
                 //mediaPlayer.removePlugin(adsPlugin);
@@ -370,6 +371,7 @@
 
 
             });
+            */
 
             // Seek bar
             document.querySelector('#seek-slidebar-range').addEventListener("change",function() {

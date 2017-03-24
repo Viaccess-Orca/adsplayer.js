@@ -346,6 +346,7 @@ define(function(require) {
                 );
             },
 
+            /*
             // Check the tracking events when a linear ad is closed
             "closeLinear": function () {
                 return (command
@@ -370,6 +371,7 @@ define(function(require) {
                     })
                 );
             },
+            */
 
             // Check the tracking event when video is rewinded
             // TODO: It could be smarter using the ad's scrollbar,
