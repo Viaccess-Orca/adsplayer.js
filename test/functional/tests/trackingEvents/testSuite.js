@@ -113,46 +113,42 @@ define(function(require) {
             },
 
             afterEach: function (test) {
-                if (test.name === "closeLinear") {
-                    return true;
-                } else {
-                    // executes after each test
-                    return (command
-                        // wait for at least (some tests pause the ad) one pause event.
-                            .then(pollUntil(function (value) {
-                                return parseInt(document.getElementById('event_pause').value) >= 1 ? true : null;
-                            }, null, 10000, 1000))
-                            .then(function () {
-                                // the event pause has been detected
-                            },function (error) {
-                                // the event play has NOT been detected
-                                assert.isFalse(true,"the event pause has NOT been detected for test pause");
-                            })
-                            // wait for the event end
-                            .then(pollUntil(function (value) {
-                                return parseInt(document.getElementById('event_end').value) == 1 ? true : null;
-                            }, null, 10000, 1000))
-                            .then(function () {
-                                // the event end has been detected
-                                assert.isTrue(true,"End detected");
-                            }, function (error) {
-                                // the event end has NOT been detected
-                                assert.isFalse(true,"the event end has NOT been detected for test " + test.name);
-                            })
-                            //stop the player
-                            .findById("stop_button").click()
-                            .end()
-                            // clear the CSAdsPlugin events
-                            .findById("clearEvents_button").click()
-                            .end()
-                            // clear the Tracking events
-                            .findById("clear_te_button").click()
-                            .end()
-                            // clear the html5 video events
-                            .findById("clear_event_html5_button").click()
-                            .end()
-                    );
-                }
+                // Executes after each test
+                return (command
+                    // wait for at least (some tests pause the ad) one pause event.
+                        .then(pollUntil(function (value) {
+                            return parseInt(document.getElementById('event_pause').value) >= 1 ? true : null;
+                        }, null, 10000, 1000))
+                        .then(function () {
+                            // the event pause has been detected
+                        },function (error) {
+                            // the event play has NOT been detected
+                            assert.isFalse(true,"the event pause has NOT been detected for test pause");
+                        })
+                        // wait for the event end
+                        .then(pollUntil(function (value) {
+                            return parseInt(document.getElementById('event_end').value) == 1 ? true : null;
+                        }, null, 10000, 1000))
+                        .then(function () {
+                            // the event end has been detected
+                            assert.isTrue(true,"End detected");
+                        }, function (error) {
+                            // the event end has NOT been detected
+                            assert.isFalse(true,"the event end has NOT been detected for test " + test.name);
+                        })
+                        //stop the player
+                        .findById("stop_button").click()
+                        .end()
+                        // clear the CSAdsPlugin events
+                        .findById("clearEvents_button").click()
+                        .end()
+                        // clear the Tracking events
+                        .findById("clear_te_button").click()
+                        .end()
+                        // clear the html5 video events
+                        .findById("clear_event_html5_button").click()
+                        .end()
+                );
             },
 
             // Check the tracking events in case of preroll video ad
@@ -349,27 +345,19 @@ define(function(require) {
                         })
                 );
             },
-/*
+
             // Check the tracking events when a linear ad is closed
             "closeLinear": function () {
                 return (command
                     .then(pollUntil(function (value) {
                         return parseInt(document.getElementById('te_firstQuartile').value) == 1 ? true : null;
                     }, null, 10000, 1000))
-                    .then(function () {
-                        // the first quartile tracking event has been received
-                        console.log("te_firstQuartile");
-
-                        document.addEventListener("beforeunload", function() {
-                            console.log("beforeunload");
-                        })
-                    },function (error) {
-                        assert.isFalse(true,"the first quartile tracking event has NOT been received");
-                    })
+                    // Refresh the page to trigger the event
                     .refresh()
+                    // Close the confirmation message
                     .dismissAlert()
                     .then(function () {
-                        // get the tracking events
+                        // Get the tracking events
                         return utils.getCounterValues(command, "#tracking_events .event input");
                     })
                     .then(function(counters) {
@@ -380,11 +368,8 @@ define(function(require) {
                         // Finally, check the counter values
                         utils.compareCounters(counters, suiteConfig.closeLinear.ExpectedtrackingEvents);
                     })
-                    // start the player
-                    .findById("play_button").click()
-                    .end()
                 );
-            },*/
+            },
 
             // Check the tracking event when video is rewinded
             // TODO: It could be smarter using the ad's scrollbar,

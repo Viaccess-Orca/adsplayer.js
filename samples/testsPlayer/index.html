@@ -356,9 +356,19 @@
                 window.onbeforeunload = onExit ;*/
             });
 
-            document.addEventListener("beforeunload", function(e) {
-                mediaPlayer.removePlugin(adsPlugin);
-                mediaPlayer.reset(1);
+            window.addEventListener("beforeunload", function(event) {
+                // "closeLinear" event is not dispatched if mediaPlayer is removed
+                //mediaPlayer.removePlugin(adsPlugin);
+                //mediaPlayer.reset(1);
+
+                // Display a confirmation popup
+                event = event || window.event;
+
+                var s = "Are you sure you want to leave this page?";
+                event.returnValue = s;
+                return s;
+
+
             });
 
             // Seek bar
