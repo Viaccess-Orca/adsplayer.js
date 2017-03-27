@@ -431,8 +431,9 @@ define(function(require) {
 
             // Check the tracking event on fullscreen
             "fullscreen": function () {
-                if (this.remote.session.capabilities.browserName === 'MicrosoftEdge') {
-                    this.skip('Skipped on browser Edge');
+                if (this.remote.session.capabilities.browserName === 'MicrosoftEdge' ||
+                    this.remote.session.capabilities.browserName === 'firefox') {
+                    this.skip('Skipped on browsers Edge & Firefox');
                 }
 
                 return (command
