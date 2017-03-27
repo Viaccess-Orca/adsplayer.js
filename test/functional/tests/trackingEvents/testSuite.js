@@ -348,6 +348,10 @@ define(function(require) {
 
             // Check the tracking events when a linear ad is closed
             "closeLinear": function () {
+                if (this.remote.session.capabilities.browserName === 'MicrosoftEdge') {
+                    this.skip('Skipped on browser Edge');
+                }
+
                 return (command
                     .then(pollUntil(function (value) {
                         return parseInt(document.getElementById('te_firstQuartile').value) == 1 ? true : null;
