@@ -308,9 +308,9 @@ define(function(require) {
 
                 command
                 // unmute the player
-                    .findById("mute_button")
-                    .click()
-                    .end()
+                .findById("mute_button")
+                .click()
+                .end()
 
                 // wait for the volume has changed
                 command
@@ -346,13 +346,16 @@ define(function(require) {
                 );
             },
 
-            /*
             // Check the tracking events when a linear ad is closed
             "closeLinear": function () {
                 return (command
                     .then(pollUntil(function (value) {
                         return parseInt(document.getElementById('te_firstQuartile').value) == 1 ? true : null;
                     }, null, 10000, 1000))
+                    // Enable the confirmation popup
+                    .findById("confirmation_button")
+                    .click()
+                    .end()
                     // Refresh the page to trigger the event
                     .refresh()
                     // Close the confirmation message
@@ -371,7 +374,6 @@ define(function(require) {
                     })
                 );
             },
-            */
 
             // Check the tracking event when video is rewinded
             // TODO: It could be smarter using the ad's scrollbar,

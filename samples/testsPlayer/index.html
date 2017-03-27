@@ -106,6 +106,7 @@
                 </div>
 
                 <button id="fullscreen_button">Fullscreen</button>
+                <button id="confirmation_button">Add confirmation</button>
             </div>
 
 
@@ -328,6 +329,7 @@
             var mediaPlayer = null;
             var adsPlugin = null;
             var adsPlayerContainer = "adsplayer-container";
+            var confirmationSet = false;
 
             document.addEventListener("DOMContentLoaded", function(event){
 
@@ -348,28 +350,13 @@
                 trackingEvtsHdler();
 
                 initHtml5VideoEvtsHdler();
-
-                /* manage exit popup */
-                /*var onExit = function() {
-                    return "Are you sure you wish to leave the page?";
-                };
-                window.onbeforeunload = onExit ;*/
             });
 
-            /* Makes nearly every test fail
+            // "closeLinear" event is not dispatched if mediaPlayer is removed
+            /*
             window.addEventListener("beforeunload", function(event) {
-                // "closeLinear" event is not dispatched if mediaPlayer is removed
-                //mediaPlayer.removePlugin(adsPlugin);
-                //mediaPlayer.reset(1);
-
-                // Display a confirmation popup
-                event = event || window.event;
-
-                var s = "Are you sure you want to leave this page?";
-                event.returnValue = s;
-                return s;
-
-
+                mediaPlayer.removePlugin(adsPlugin);
+                mediaPlayer.reset(1);
             });
             */
 
@@ -439,6 +426,27 @@
                     }
                 }
             });
+
+            // Confirmation popup
+            document.querySelector('#confirmation_button').addEventListener("click",function() {
+                if (!confirmationSet) {
+                    window.addEventListener("beforeunload", displayConfirmationPopup);
+                    confirmationSet = true;
+                }
+            });
+
+            function displayConfirmationPopup(event) {
+                // Remove the listener
+                window.removeEventListener("beforeunload", displayConfirmationPopup);
+                confirmationSet = false;
+
+                // Display a confirmation popup
+                event = event || window.event;
+
+                var s = "Are you sure you want to leave this page?";
+                event.returnValue = s;
+                return s;
+            }
 
         </script>
     </body>
