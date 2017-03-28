@@ -348,6 +348,7 @@ define(function(require) {
 
             // Check the tracking events when a linear ad is closed
             "closeLinear": function () {
+                // Confirmation popup is not displayed on Edge. Seems a Leadfoot issue. See CSWP-100.
                 if (this.remote.session.capabilities.browserName === 'MicrosoftEdge') {
                     this.skip('Skipped on browser Edge');
                 }
@@ -431,8 +432,9 @@ define(function(require) {
 
             // Check the tracking event on fullscreen
             "fullscreen": function () {
-                if (this.remote.session.capabilities.browserName === 'MicrosoftEdge' ||
-                    this.remote.session.capabilities.browserName === 'firefox') {
+                // May be an issue with the events in CSAdsPlayer or test page.
+                if (this.remote.session.capabilities.browserName === 'MicrosoftEdge' || // See CSWP-81.
+                    this.remote.session.capabilities.browserName === 'firefox') { // Failing only on Ubuntu. See CSWP-116.
                     this.skip('Skipped on browsers Edge & Firefox');
                 }
 
