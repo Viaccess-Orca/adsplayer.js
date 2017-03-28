@@ -433,9 +433,8 @@ define(function(require) {
             // Check the tracking event on fullscreen
             "fullscreen": function () {
                 // May be an issue with the events in CSAdsPlayer or test page.
-                if (this.remote.session.capabilities.browserName === 'MicrosoftEdge' || // See CSWP-81.
-                    this.remote.session.capabilities.browserName === 'firefox') { // Failing only on Ubuntu. See CSWP-116.
-                    this.skip('Skipped on browsers Edge & Firefox');
+                if (this.remote.session.capabilities.browserName === 'MicrosoftEdge') {
+                    this.skip('Skipped on browser Edge');
                 }
 
                 return (command
