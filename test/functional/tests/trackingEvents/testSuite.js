@@ -37,6 +37,7 @@ define(function(require) {
     var intern = require('intern');
     var registerSuite = require('intern!object');
     var assert = require('intern/chai!assert');
+    var keys = require('intern/dojo/node!leadfoot/keys');
     var pollUntil = require('intern/dojo/node!leadfoot/helpers/pollUntil');
     var config = require('test/functional/config/testsConfig');
     var utils = require('test/functional/utils/utils');
@@ -98,6 +99,7 @@ define(function(require) {
                         // the event started has NOT been detected
                         assert.isFalse(true,"the event started has NOT been detected for test " + test.name);
                     })
+                    // wait for the play event
                     .then(pollUntil(function (value) {
                         return parseInt(document.getElementById('event_play').value) == 1 ? true : null;
                     }, null, 10000, 1000))
@@ -111,47 +113,46 @@ define(function(require) {
             },
 
             afterEach: function (test) {
-                // executes after each test
+                // Executes after each test
                 return (command
                     // wait for at least (some tests pause the ad) one pause event.
-                    .then(pollUntil(function (value) {
-                        return parseInt(document.getElementById('event_pause').value) >= 1 ? true : null;
-                    }, null, 10000, 1000))
-                    .then(function () {
-                        // the event pause has been detected
-                    },function (error) {
-                        // the event play has NOT been detected
-                        assert.isFalse(true,"the event pause has NOT been detected for test pause");
-                    })
-                    // wait for the event end
-                    .then(pollUntil(function (value) {
-                        return parseInt(document.getElementById('event_end').value) == 1 ? true : null;
-                    }, null, 10000, 1000))
-                    .then(function () {
-                        // the event end has been detected
-                        assert.isTrue(true,"End detected");
-                    }, function (error) {
-                        // the event end has NOT been detected
-                        assert.isFalse(true,"the event end has NOT been detected for test " + test.name);
-                    })
-                    //stop the player
-                    .findById("stop_button").click()
-                    .end()
-                    // clear the CSAdsPlugin events
-                    .findById("clearEvents_button").click()
-                    .end()
-                    // clear the Tracking events
-                    .findById("clear_te_button").click()
-                    .end()
-                    // clear the html5 video events
-                    .findById("clear_event_html5_button").click()
-                    .end()
+                        .then(pollUntil(function (value) {
+                            return parseInt(document.getElementById('event_pause').value) >= 1 ? true : null;
+                        }, null, 10000, 1000))
+                        .then(function () {
+                            // the event pause has been detected
+                        },function (error) {
+                            // the event play has NOT been detected
+                            assert.isFalse(true,"the event pause has NOT been detected for test pause");
+                        })
+                        // wait for the event end
+                        .then(pollUntil(function (value) {
+                            return parseInt(document.getElementById('event_end').value) == 1 ? true : null;
+                        }, null, 10000, 1000))
+                        .then(function () {
+                            // the event end has been detected
+                            assert.isTrue(true,"End detected");
+                        }, function (error) {
+                            // the event end has NOT been detected
+                            assert.isFalse(true,"the event end has NOT been detected for test " + test.name);
+                        })
+                        //stop the player
+                        .findById("stop_button").click()
+                        .end()
+                        // clear the CSAdsPlugin events
+                        .findById("clearEvents_button").click()
+                        .end()
+                        // clear the Tracking events
+                        .findById("clear_te_button").click()
+                        .end()
+                        // clear the html5 video events
+                        .findById("clear_event_html5_button").click()
+                        .end()
                 );
             },
 
             // Check the tracking events in case of preroll video ad
             "preroll": function () {
-
                 // wait for the pause event
                 return(command
                     .then(pollUntil(function (value) {
@@ -179,7 +180,6 @@ define(function(require) {
 
             // Check the tracking events in case of preroll image ad
             "prerollImage": function () {
-
                 // wait for the pause event
                 return(command
                     .then(pollUntil(function (value) {
@@ -206,7 +206,6 @@ define(function(require) {
 
             // Check the tracking events in case of preroll video VAST30 ad
             "prerollVast30": function () {
-
                 // wait for the pause event
                 return(command
                     .then(pollUntil(function (value) {
@@ -232,70 +231,58 @@ define(function(require) {
 
             // Check the tracking events when the ad is paused and resumed
             "pause": function () {
-
                 // wait for the ad current time > 0 , pause test may fail if video current time = 0 because tracking event "resume" is not sent in this case
-                command
-                    .then(pollUntil(function (value) {
-                        return document.getElementById('adsplayer-container').getElementsByTagName('video')[0].currentTime > 0 ? true : null;
+                return command
+                    .then(pollUntil(function () {
+                        // Wait until first quartile is reached
+                        return parseInt(document.getElementById('te_firstQuartile').value) === 1 ? true : null;
                     }, null, 10000, 1000))
-                    .then(function () {
-                        // ad current time > 0
-                    },function (error) {
-                        // the event has NOT been detected
-                        assert.isFalse(true,"ad current time = 0 for test " + test.name);
-                    });
-
-
-                // pause the player and wait for the pause event
-                command
                     .findById("pause_button")
+                    // Pause the ad
                     .click()
-                    .end()
-                    .then(pollUntil(function (value) {
-                        return parseInt(document.getElementById('event_pause').value) == 1 ? true : null;
+                    .then(pollUntil(function () {
+                        return parseInt(document.getElementById('event_pause').value) === 1 ? true : null;
                     }, null, 10000, 1000))
                     .then(function () {
-                        // the event pause has been detected
-                    },function (error) {
+                        // The event pause has been detected
+                        return true;
+                    },function () {
                         // the event pause has NOT been detected
                         assert.isFalse(true,"the event pause has NOT been detected for test pause");
-                    });
-
-                // resume the player and wait for the play event
-                command
-                    .findById("pause_button")
+                    })
+                    .sleep(500)
+                    // Resume the ad
                     .click()
                     .end()
-                    .then(pollUntil(function (value) {
-                        return parseInt(document.getElementById('event_play').value) == 2 ? true : null;
+                    .then(pollUntil(function () {
+                        return parseInt(document.getElementById('event_play').value) === 2 ? true : null;
                     }, null, 10000, 1000))
                     .then(function () {
-                        // the event pause has been detected, now get the tracking events
-                    },function (error) {
+                        // The event play has been detected
+                        return true;
+                    },function () {
                         // the event play has NOT been detected
                         assert.isFalse(true,"the event play has NOT been detected for test pause");
-                    });
+                    })
+                    // Wait for the end of the ad
+                    .then(pollUntil(function () {
+                        return parseInt(document.getElementById('event_pause').value) === 2 ? true : null;
+                    }, null, 10000, 1000))
+                    .then(function () {
+                        // The last event pause has been detected, now get the tracking events
+                        return utils.getCounterValues(command, "#tracking_events .event input");
+                    },function () {
+                        // The last event pause has NOT been detected
+                        assert.isFalse(true,"the event pause has NOT been detected for test pause");
+                    })
+                    .then(function(counters) {
+                        // Check configuration
+                        assert.isDefined(suiteConfig.pause, "Configuration is not defined for pause test counters");
+                        assert.isDefined(suiteConfig.pause.ExpectedtrackingEvents, "Configuration is not defined for pause test counters");
 
-                // wait for the pause event
-                return(command
-                        .then(pollUntil(function (value) {
-                            return parseInt(document.getElementById('event_pause').value) == 2 ? true : null;
-                        }, null, 10000, 1000))
-                        .then(function () {
-                            // the event pause has been detected, now get the tracking events
-                            return utils.getCounterValues(command, "#tracking_events .event input");
-                        },function (error) {
-                            // the event play has NOT been detected
-                            assert.isFalse(true,"the event pause has NOT been detected for test pause");
-                        })
-                        .then(function(counters) {
-                            // Check configuration
-                            assert.isDefined(suiteConfig.pause, "Configuration is not defined for prerollVast30 test counters");
-                            assert.isDefined(suiteConfig.pause.ExpectedtrackingEvents, "Configuration is not defined for prerollVast30 test counters");
-
-                            // Finally, check the counter values
-                            utils.compareCounters(counters, suiteConfig.pause.ExpectedtrackingEvents);
-                        })
+                        // Finally, check the counter values
+                        utils.compareCounters(counters, suiteConfig.pause.ExpectedtrackingEvents);
+                    }
                 );
             },
 
@@ -321,9 +308,9 @@ define(function(require) {
 
                 command
                 // unmute the player
-                    .findById("mute_button")
-                    .click()
-                    .end()
+                .findById("mute_button")
+                .click()
+                .end()
 
                 // wait for the volume has changed
                 command
@@ -350,12 +337,155 @@ define(function(require) {
                         })
                         .then(function(counters) {
                             // Check configuration
-                            assert.isDefined(suiteConfig.mute, "Configuration is not defined for prerollVast30 test counters");
-                            assert.isDefined(suiteConfig.mute.ExpectedtrackingEvents, "Configuration is not defined for prerollVast30 test counters");
+                            assert.isDefined(suiteConfig.mute, "Configuration is not defined for mute test counters");
+                            assert.isDefined(suiteConfig.mute.ExpectedtrackingEvents, "Configuration is not defined for mute test counters");
 
                             // Finally, check the counter values
                             utils.compareCounters(counters, suiteConfig.mute.ExpectedtrackingEvents);
                         })
+                );
+            },
+
+            // Check the tracking events when a linear ad is closed
+            "closeLinear": function () {
+                if (this.remote.session.capabilities.browserName === 'MicrosoftEdge') {
+                    this.skip('Skipped on browser Edge');
+                }
+
+                return (command
+                    .then(pollUntil(function (value) {
+                        return parseInt(document.getElementById('te_firstQuartile').value) == 1 ? true : null;
+                    }, null, 10000, 1000))
+                    // Enable the confirmation popup
+                    .findById("confirmation_button")
+                    .click()
+                    .end()
+                    // Refresh the page to trigger the event
+                    .refresh()
+                    // Close the confirmation message
+                    .dismissAlert()
+                    .then(function () {
+                        // Get the tracking events
+                        return utils.getCounterValues(command, "#tracking_events .event input");
+                    })
+                    .then(function(counters) {
+                        // Check configuration
+                        assert.isDefined(suiteConfig.closeLinear, "Configuration is not defined for closeLinear test counters");
+                        assert.isDefined(suiteConfig.closeLinear.ExpectedtrackingEvents, "Configuration is not defined for closeLinear test counters");
+
+                        // Finally, check the counter values
+                        utils.compareCounters(counters, suiteConfig.closeLinear.ExpectedtrackingEvents);
+                    })
+                );
+            },
+
+            // Check the tracking event when video is rewinded
+            // TODO: It could be smarter using the ad's scrollbar,
+            // TODO: but moveMouseTo() API seems bugged
+            "rewind": function () {
+                return (command
+                    .then(pollUntil(function (value) {
+                            // Wait until third quartile is reached
+                            return parseInt(document.getElementById('te_thirdQuartile').value) == 1 ? true : null;
+                        }, null, 10000, 1000))
+                    // Rewind
+                    .findById("goto_input")
+                    .clearValue()
+                    .type("0")
+                    .end()
+                    .findById("goto_button")
+                    .click()
+                    .end()
+                    // Go forward
+                    .sleep(500)
+                    .findById("goto_input")
+                    .clearValue()
+                    .type("50")
+                    .end()
+                    .findById("goto_button")
+                    .click()
+                    .end()
+                    // Rewind again
+                    .sleep(500)
+                    .findById("goto_input")
+                    .clearValue()
+                    .type("10")
+                    .end()
+                    .findById("goto_button")
+                    .click()
+                    .end()
+                    .then(function () {
+                        // Get the tracking events, we should have 2 "rewind" events
+                        return utils.getCounterValues(command, "#tracking_events .event input");
+                    })
+                    .then(function(counters) {
+                        // Check configuration
+                        assert.isDefined(suiteConfig.rewind, "Configuration is not defined for rewind test counters");
+                        assert.isDefined(suiteConfig.rewind.ExpectedtrackingEvents, "Configuration is not defined for rewind test counters");
+
+                        // Finally, check the counter values
+                        utils.compareCounters(counters, suiteConfig.rewind.ExpectedtrackingEvents);
+                    })
+                );
+            },
+
+            // Check the tracking event on fullscreen
+            "fullscreen": function () {
+                if (this.remote.session.capabilities.browserName === 'MicrosoftEdge' ||
+                    this.remote.session.capabilities.browserName === 'firefox') {
+                    this.skip('Skipped on browsers Edge & Firefox');
+                }
+
+                return (command
+                    .then(pollUntil(function (value) {
+                        // Wait until first quartile is reached
+                        return parseInt(document.getElementById('te_firstQuartile').value) == 1 ? true : null;
+                    }, null, 10000, 1000))
+                    // Set full screen
+                    .findById("fullscreen_button")
+                    .click()
+                    .sleep(1000)
+                    // Escape fullscreen (not working on Chrome)
+                    .type(keys.ESCAPE)
+                    .end()
+                    .then(function () {
+                        // Get the tracking events, we should have 2 "rewind" events
+                        return utils.getCounterValues(command, "#tracking_events .event input");
+                    })
+                    .then(function(counters) {
+                        // Check configuration
+                        assert.isDefined(suiteConfig.fullscreen, "Configuration is not defined for fullscreen test counters");
+                        assert.isDefined(suiteConfig.fullscreen.ExpectedtrackingEvents, "Configuration is not defined for fullscreen test counters");
+
+                        // Finally, check the counter values
+                        utils.compareCounters(counters, suiteConfig.fullscreen.ExpectedtrackingEvents);
+                    })
+                );
+            },
+
+            // Check the tracking event for acceptInvitationLinear
+            "acceptInvitationLinear": function () {
+                return (command
+                    .then(pollUntil(function (value) {
+                        // Wait until first quartile is reached
+                        return parseInt(document.getElementById('te_firstQuartile').value) == 1 ? true : null;
+                    }, null, 10000, 1000))
+                    // Click on the video
+                    .findByCssSelector("#adsplayer-container #adsplayer-video")
+                    .click()
+                    .end()
+                    .then(function () {
+                        // Get the tracking events
+                        return utils.getCounterValues(command, "#tracking_events .event input");
+                    })
+                    .then(function(counters) {
+                        // Check configuration
+                        assert.isDefined(suiteConfig.acceptInvitationLinear, "Configuration is not defined for acceptInvitationLinear test counters");
+                        assert.isDefined(suiteConfig.acceptInvitationLinear.ExpectedtrackingEvents, "Configuration is not defined for acceptInvitationLinear test counters");
+
+                        // Finally, check the counter values
+                        utils.compareCounters(counters, suiteConfig.acceptInvitationLinear.ExpectedtrackingEvents);
+                    })
                 );
             }
         };

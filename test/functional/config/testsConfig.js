@@ -5,7 +5,7 @@ define(function(require) {
     var _createInstance = function() {
         return {
             // Common tests suite configuration fields
-            testPageUrl : "http://cswebplayer.viaccess.fr/functionnalTests/CSAdsPlugin-Dev/samples/testsPlayer",        // url of the html page under test
+            testPageUrl : "http://cswebplayer.viaccess.fr/functionnalTests/CSAdsPlugin-Dev/samples/testsPlayer", 
             streamUrl   : "http://playready.directtaps.net/smoothstreaming/SSWSS720H264/SuperSpeedway_720.ism/Manifest",// url of the main stream
                                                                                                                         // take care using one with video.currentTime = 0 at the beginning
                                                                                                                         // for the pre-roll tests
@@ -79,31 +79,31 @@ define(function(require) {
                         "ExpectedtrackingEvents":{} },
 
                     prerollVast30: {"adsUrl":"../ads/xml/mast/preroll-vast30.xml",
-                        "ExpectedtrackingEvents":{"creativeView":1,"start":1,"firstQuartile":1,"midpoint":1,"thirdQuartile":1,"complete":1,"progress":3,"rewind":'x'} },
+                        "ExpectedtrackingEvents":{"creativeView":1,"start":1,"firstQuartile":1,"midpoint":1,"thirdQuartile":1,"complete":1,"progress":3,"rewind":0} },
 
                     pause: {
                         "adsUrl":"../ads/xml/mast/preroll-vast30.xml",
-                        "ExpectedtrackingEvents":{"creativeView":1,"start":1,"firstQuartile":1,"midpoint":1,"thirdQuartile":1,"complete":1,"pause":1,"resume":1,"progress":3,"rewind":'x'}
+                        "ExpectedtrackingEvents":{"creativeView":1,"start":1,"firstQuartile":1,"midpoint":1,"thirdQuartile":1,"complete":1,"pause":1,"resume":1,"progress":3,"rewind":0}
                     },
                     mute: {
                         "adsUrl":"../ads/xml/mast/preroll-vast30.xml",
-                        "ExpectedtrackingEvents":{"creativeView":1,"start":1,"firstQuartile":1,"midpoint":1,"thirdQuartile":1,"complete":1,"mute":1,"unmute":1,"progress":3,"rewind":'x'}
+                        "ExpectedtrackingEvents":{"creativeView":1,"start":1,"firstQuartile":1,"midpoint":1,"thirdQuartile":1,"complete":1,"mute":1,"unmute":1,"progress":3,"rewind":0}
                     },
                     closeLinear: {
                         "adsUrl":"../ads/xml/mast/preroll-vast30.xml",
-                        "ExpectedtrackingEvents":{"creativeView":1,"start":1,"closeLinear":1,"progress":'x',"midpoint":'x', "firstQuartile":'x',"rewind":'x'}
+                        "ExpectedtrackingEvents":{"creativeView":1,"start":1,"closeLinear":1,"progress":'x',"midpoint":'x', "firstQuartile":'x',"rewind":0}
                     },
                     rewind: {
                         "adsUrl":"../ads/xml/mast/preroll-vast30.xml",
-                        "ExpectedtrackingEvents":{"creativeView":1,"start":1,"firstQuartile":1,"midpoint":1,"thirdQuartile":1,"complete":1,"rewind":4,"progress":3}
+                        "ExpectedtrackingEvents":{"creativeView":1,"start":1,"firstQuartile":1,"midpoint":1,"thirdQuartile":1,"rewind":2,"progress":"x"}
                     },
                     fullscreen: {
                         "adsUrl":"../ads/xml/mast/preroll-vast30.xml",
-                        "ExpectedtrackingEvents":{"creativeView":1,"start":1,"firstQuartile":1,"midpoint":1,"thirdQuartile":1,"complete":1,"progress":3,"exitFullscreen":1,"fullscreen":1,"rewind":'x'}
+                        "ExpectedtrackingEvents":{"creativeView":1,"start":1,"firstQuartile":1,"midpoint":"x","thirdQuartile":"x", "progress":"x","exitFullscreen":"x","fullscreen":1}
                     },
                     acceptInvitationLinear: {
                         "adsUrl":"../ads/xml/mast/preroll-vast30.xml",
-                        "ExpectedtrackingEvents":{"creativeView":1,"start":1,"firstQuartile":1,"midpoint":1,"thirdQuartile":1,"complete":1,"progress":3,"acceptInvitationLinear":1,"rewind":'x'}
+                        "ExpectedtrackingEvents":{"creativeView":1,"start":1,"firstQuartile":1,"midpoint":"x","progress":"x","acceptInvitationLinear":1}
                     }
                 },
 

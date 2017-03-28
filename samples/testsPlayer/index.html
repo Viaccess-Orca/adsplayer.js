@@ -86,12 +86,29 @@
         <div>
             <br>
             <input id="stream_toplay" type="text" size="100" value="http://playready.directtaps.net/smoothstreaming/SSWSS720H264/SuperSpeedway_720.ism/Manifest"> </input><br>
-            <input id="ad_toplay" type="text" size="100" value="../ads/xml/mast/preroll.xml"> </input><br>
+            <input id="ad_toplay" type="text" size="100" value="../ads/xml/mast/preroll-vast30.xml"> </input><br>
             <br>
             <button id="play_button" >Play</button>
             <button id="pause_button" >Pause</button>
             <button id="stop_button" >Stop</button>
             <button id="mute_button" >Mute</button><br>
+
+            <div>
+                <h4>CSAdsPlugin controls</h4>
+                <div id="seek-slidebar">
+                    <div> 0% <input id="seek-slidebar-range" type="range" min="0" max="100" value="100" step="1" /> 100% </div>
+                    <div id="seekRangeDisplayTime">00:00:00</div>
+                </div>
+
+                <div>
+                    <input id="goto_input" type="number" min="0" max="100"> </input> %
+                    <button id="goto_button">Go</button>
+                </div>
+
+                <button id="fullscreen_button">Fullscreen</button>
+                <button id="confirmation_button">Add confirmation</button>
+            </div>
+
 
             <h4>HTML5 video Events</h4>
 
@@ -272,7 +289,7 @@
                 </div>
                 <div class="event">
                     <div class="event_title">fullscreen</div>
-                    <input id="te_fullscrhttp://localhost/csadsplugin/samples/testsPlayer/een" eventId="fullscreen" type="number" value="0" disabled> </input>
+                    <input id="te_fullscreen" eventId="fullscreen" type="number" value="0" disabled> </input>
                 </div>
                 <div class="event">
                     <div class="event_title">exitFullscreen</div>
@@ -311,10 +328,12 @@
 
             var mediaPlayer = null;
             var adsPlugin = null;
+            var adsPlayerContainer = "adsplayer-container";
+            var confirmationSet = false;
 
             document.addEventListener("DOMContentLoaded", function(event){
 
-                adsPlugin = new adsplayer.AdsPlayer(document.getElementById('adsplayer-container'));
+                adsPlugin = new adsplayer.AdsPlayer(document.getElementById(adsPlayerContainer));
 
                 initAdsPluginEvtsHdler(adsPlugin);
 
@@ -331,13 +350,103 @@
                 trackingEvtsHdler();
 
                 initHtml5VideoEvtsHdler();
-
             });
 
-            document.addEventListener("beforeunload", function(event) {
+            // "closeLinear" event is not dispatched if mediaPlayer is removed
+            /*
+            window.addEventListener("beforeunload", function(event) {
                 mediaPlayer.removePlugin(adsPlugin);
                 mediaPlayer.reset(1);
             });
+            */
+
+            // Seek bar
+            document.querySelector('#seek-slidebar-range').addEventListener("change",function() {
+                goTo(document.querySelector('#seek-slidebar-range').value);
+            });
+
+            // Go to button
+            document.querySelector('#goto_button').addEventListener("click",function() {
+                var percentage = document.querySelector("#goto_input").value;
+                if (percentage) {
+                    goTo(percentage);
+                }
+            });
+
+            function goTo(percentage) {
+                var seekTime = 0;
+
+                var adElement = document.querySelector("#" + adsPlayerContainer + " video");
+                if (adElement) {
+                    seekTime = (percentage * adElement.duration) / 100;
+                    adElement.currentTime = seekTime;
+                }
+
+                displaySeekedTime(seekTime);
+            }
+
+            function displaySeekedTime(time) {
+                var seekedTimeDisplayed = "00:00:00";
+
+                if(time > 0) {
+                    var hours = Math.floor(time / 3600) + "";
+                    var minutes = Math.floor((time - (hours * 3600)) / 60) + "";
+                    var seconds = parseInt(time - hours * 3600 - minutes * 60) + "";
+
+                    if (hours.length === 1) {
+                        hours = "0" + hours;
+                    }
+
+                    if (minutes.length === 1) {
+                        minutes = "0" + minutes;
+                    }
+
+                    if (seconds.length === 1) {
+                        seconds = "0" + seconds;
+                    }
+
+                    seekedTimeDisplayed = hours + ":" + minutes + ":" + seconds;
+                }
+                document.getElementById("seekRangeDisplayTime").innerHTML = seekedTimeDisplayed;
+            }
+
+            // Fullscreen
+            document.querySelector('#fullscreen_button').addEventListener("click",function() {
+                var adElement = document.querySelector("#" + adsPlayerContainer + " video");
+                if(adElement) {
+                    // Deal with all the implementations :C
+                    if(adElement.requestFullscreen) {
+                        adElement.requestFullscreen();
+                    } else if(adElement.mozRequestFullScreen) {
+                        adElement.mozRequestFullScreen();
+                    } else if(adElement.webkitRequestFullscreen) {
+                        adElement.webkitRequestFullscreen();
+                    } else if(adElement.msRequestFullscreen) {
+                        adElement.msRequestFullscreen();
+                    }
+                }
+            });
+
+            // Confirmation popup
+            document.querySelector('#confirmation_button').addEventListener("click",function() {
+                if (!confirmationSet) {
+                    window.addEventListener("beforeunload", displayConfirmationPopup);
+                    confirmationSet = true;
+                }
+            });
+
+            function displayConfirmationPopup(event) {
+                // Remove the listener
+                window.removeEventListener("beforeunload", displayConfirmationPopup);
+                confirmationSet = false;
+
+                // Display a confirmation popup
+                event = event || window.event;
+
+                var s = "Are you sure you want to leave this page?";
+                event.returnValue = s;
+                return s;
+            }
 
         </script>
     </body>
