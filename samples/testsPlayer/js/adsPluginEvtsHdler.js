@@ -27,19 +27,17 @@
  * WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-var adPlayer = null;
-
 function initAdsPluginEvtsHdler(adsPlugin){
 
     // hide the video player and update the number of start event
-    adsPlugin.addEventListener('start', function(e) {
+    adsPlugin.addEventListener('start', function() {
         document.getElementById('videoplayer-container').style.display = 'none' ;
         var element = document.getElementById('event_start');
         element.setAttribute("value", parseInt(element.getAttribute("value")) + 1);
     });
 
     // show the video player and update the number of end event
-    adsPlugin.addEventListener('end', function(e) {
+    adsPlugin.addEventListener('end', function() {
         document.getElementById('videoplayer-container').style.display = 'block';
         var element = document.getElementById('event_end');
         element.setAttribute("value", parseInt(element.getAttribute("value")) + 1);
@@ -48,12 +46,14 @@ function initAdsPluginEvtsHdler(adsPlugin){
     adsPlugin.addEventListener('addElement', function(e) {
         var element = document.getElementById('event_add');
         element.setAttribute("value", parseInt(element.getAttribute("value")) + 1);
+
         // Store the adPlayer element
         adPlayer = e.data.element;
+
         // Update #ad_dom_id DOM element with the id of the DOM element created by the CSAdsPlugin to play the ad
-        document.querySelector('#ad_dom_id').setAttribute("value", adPlayer.getAttribute("id"));
+        document.querySelector('#ad_dom_id').innerHTML = adPlayer.getAttribute("id");
         // Update #ad_dom_type DOM element with the type of the DOM element created by the CSAdsPlugin to play the ad
-        document.querySelector('#ad_dom_type').setAttribute("value", e.data.type);
+        document.querySelector('#ad_dom_type').innerHTML = e.data.type;
         // Change the listener for the pause button
         document.querySelector('#pause_button').removeEventListener("click", onMainVideoPause);
         document.querySelector('#pause_button').addEventListener("click", onAdPause);
@@ -64,7 +64,7 @@ function initAdsPluginEvtsHdler(adsPlugin){
         updateHtml5VideoEvtsHdler(adPlayer);
     });
 
-    adsPlugin.addEventListener('removeElement', function(e) {
+    adsPlugin.addEventListener('removeElement', function() {
         var element = document.getElementById('event_remove');
         element.setAttribute("value", parseInt(element.getAttribute("value")) + 1);
         // Update the adPlayer element
@@ -83,12 +83,12 @@ function initAdsPluginEvtsHdler(adsPlugin){
         updateHtml5VideoEvtsHdler(null);
     });
 
-    adsPlugin.addEventListener('play', function(e) {
+    adsPlugin.addEventListener('play', function() {
         var element = document.getElementById('event_play');
         element.setAttribute("value", parseInt(element.getAttribute("value")) + 1);
     });
 
-    adsPlugin.addEventListener('pause', function(e) {
+    adsPlugin.addEventListener('pause', function() {
         var element = document.getElementById('event_pause');
         element.setAttribute("value", parseInt(element.getAttribute("value")) + 1);
     });

@@ -1,0 +1,47 @@
+body {
+    font-family: "Segoe UI";
+}
+
+#seek-slidebar, #goto_section {
+    display: flex;
+    margin-bottom: 10px;
+}
+
+#seek-slidebar > *, #goto_section > *{
+    margin-right: 10px;
+}
+
+.events_list, .event {
+    display: flex;
+}
+
+.events_list, .section_info {
+    flex-wrap: wrap;
+    width: 700px;
+    margin-bottom: 10px;
+}
+
+.section_info .section_info_line {
+    display: flex;
+}
+
+.section_info .section_info_line .section_info_label {
+    min-width: 50px;
+}
+
+.event {
+    margin-bottom: 5px;
+    width: 33%;
+}
+
+.event .event_title {
+    min-width: 160px;
+}
+
+.event input {
+    width: 30px;
+}
+
+.event .input-text {
+    width: 100px;
+}

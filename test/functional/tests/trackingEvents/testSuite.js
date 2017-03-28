@@ -150,7 +150,7 @@ define(function(require) {
                         .end()
                 );
             },
-/*
+
             // Check the tracking events in case of preroll video ad
             "preroll": function () {
                 // wait for the pause event
@@ -378,7 +378,7 @@ define(function(require) {
                         utils.compareCounters(counters, suiteConfig.closeLinear.ExpectedtrackingEvents);
                     })
                 );
-            },*/
+            },
 
             // Check the tracking event when video is rewinded
             // TODO: It could be smarter using the ad's scrollbar,
@@ -433,8 +433,9 @@ define(function(require) {
             // Check the tracking event on fullscreen
             "fullscreen": function () {
                 // May be an issue with the events in CSAdsPlayer or test page.
-                if (this.remote.session.capabilities.browserName === 'MicrosoftEdge') {
-                    this.skip('Skipped on browser Edge');
+                if (this.remote.session.capabilities.browserName === 'MicrosoftEdge' || // See CSWP-81.
+                    this.remote.session.capabilities.browserName === 'firefox') { // Failing only on Ubuntu. See CSWP-116.
+                    this.skip('Skipped on browsers Edge & Firefox');
                 }
 
                 return (command
@@ -462,7 +463,7 @@ define(function(require) {
                         utils.compareCounters(counters, suiteConfig.fullscreen.ExpectedtrackingEvents);
                     })
                 );
-            }/*,
+            },
 
             // Check the tracking event for acceptInvitationLinear
             "acceptInvitationLinear": function () {
@@ -488,7 +489,7 @@ define(function(require) {
                         utils.compareCounters(counters, suiteConfig.acceptInvitationLinear.ExpectedtrackingEvents);
                     })
                 );
-            }*/
+            }
         };
     });
 });
