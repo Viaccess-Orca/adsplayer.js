@@ -43,39 +43,12 @@
         <script src="../hasplayer.min.js"></script>
 
 		<!-- index.html handlers-->
-        <script src="adsPluginEvtsHdler.js"></script>
-        <script src="buttonsHdler.js"></script>
-        <script src="trackingEvtsHdler.js"></script>
-        <script src="html5VideoEvtsHdler.js"></script>
+        <script src="js/adsPluginEvtsHdler.js"></script>
+        <script src="js/buttonsHdler.js"></script>
+        <script src="js/trackingEvtsHdler.js"></script>
+        <script src="js/html5VideoEvtsHdler.js"></script>
 
-        <style>
-            .events_list, .event {
-                display: flex;
-            }
-
-            .events_list {
-                flex-wrap: wrap;
-                width: 700px;
-                margin-bottom: 10px;
-            }
-
-            .event {
-                margin-bottom: 5px;
-                width: 33%;
-            }
-
-            .event .event_title {
-                min-width: 155px;
-            }
-
-            .event input {
-                width: 30px;
-            }
-
-            .event .input-text {
-                width: 100px;
-            }
-        </style>
+        <link rel="stylesheet" type="text/css" href="css/style.css" />
     </head>
 
     <body>
@@ -96,12 +69,15 @@
             <div>
                 <h4>CSAdsPlugin controls</h4>
                 <div id="seek-slidebar">
-                    <div> 0% <input id="seek-slidebar-range" type="range" min="0" max="100" value="100" step="1" /> 100% </div>
+                    <span>0%</span>
+                    <input id="seek-slidebar-range" type="range" min="0" max="100" value="100" step="1" />
+                    <span>100%</span>
                     <div id="seekRangeDisplayTime">00:00:00</div>
                 </div>
 
-                <div>
-                    <input id="goto_input" type="number" min="0" max="100"> </input> %
+                <div id="goto_section">
+                    <input id="goto_input" type="number" min="0" max="100"> </input>
+                    <span>%</span>
                     <button id="goto_button">Go</button>
                 </div>
 
@@ -210,6 +186,19 @@
 
             <h4>CSAdsPlugin Events</h4>
 
+            <div class="section_info">
+                <div class="section_info_line">
+                    <label class="section_info_label">ID: </label>
+                    <label class="section_info_value" id="ad_dom_id">-</label>
+                </div>
+                <div class="section_info_line">
+                    <label class="section_info_label">Type: </label>
+                    <label class="section_info_value" id="ad_dom_type" >-</label>
+                </div>
+
+
+            </div>
+
             <div id="csadsplugin_events" class="events_list">
                 <div class="event">
                     <div class="event_title">start</div>
@@ -222,8 +211,6 @@
                 <div class="event">
                     <div class="event_title">add</div>
                     <input id="event_add" eventId="add" type="number" value="0" disabled> </input>
-                    <input class="input-text" id="ad_dom_id" type="text" size="100" value="" disabled> </input>
-                    <input class="input-text" id="ad_dom_type" type="text" size="100" value="" disabled> </input>
                 </div>
                 <div class="event">
                     <div class="event_title">remove</div>
@@ -326,10 +313,11 @@
 
         <script>
 
-            var mediaPlayer = null;
-            var adsPlugin = null;
-            var adsPlayerContainer = "adsplayer-container";
-            var confirmationSet = false;
+            var mediaPlayer = null,
+                adsPlugin = null,
+                adsPlayerContainer = "adsplayer-container",
+                adPlayer = null,
+                confirmationSet = false;
 
             document.addEventListener("DOMContentLoaded", function(event){
 
@@ -359,95 +347,6 @@
                 mediaPlayer.reset(1);
             });
             */
-
-            // Seek bar
-            document.querySelector('#seek-slidebar-range').addEventListener("change",function() {
-                goTo(document.querySelector('#seek-slidebar-range').value);
-            });
-
-            // Go to button
-            document.querySelector('#goto_button').addEventListener("click",function() {
-                var percentage = document.querySelector("#goto_input").value;
-                if (percentage) {
-                    goTo(percentage);
-                }
-            });
-
-            function goTo(percentage) {
-                var seekTime = 0;
-
-                var adElement = document.querySelector("#" + adsPlayerContainer + " video");
-                if (adElement) {
-                    seekTime = (percentage * adElement.duration) / 100;
-                    adElement.currentTime = seekTime;
-                }
-
-                displaySeekedTime(seekTime);
-            }
-
-            function displaySeekedTime(time) {
-                var seekedTimeDisplayed = "00:00:00";
-
-                if(time > 0) {
-                    var hours = Math.floor(time / 3600) + "";
-                    var minutes = Math.floor((time - (hours * 3600)) / 60) + "";
-                    var seconds = parseInt(time - hours * 3600 - minutes * 60) + "";
-
-                    if (hours.length === 1) {
-                        hours = "0" + hours;
-                    }
-
-                    if (minutes.length === 1) {
-                        minutes = "0" + minutes;
-                    }
-
-                    if (seconds.length === 1) {
-                        seconds = "0" + seconds;
-                    }
-
-                    seekedTimeDisplayed = hours + ":" + minutes + ":" + seconds;
-                }
-                document.getElementById("seekRangeDisplayTime").innerHTML = seekedTimeDisplayed;
-            }
-
-            // Fullscreen
-            document.querySelector('#fullscreen_button').addEventListener("click",function() {
-                var adElement = document.querySelector("#" + adsPlayerContainer + " video");
-                if(adElement) {
-                    // Deal with all the implementations :C
-                    if(adElement.requestFullscreen) {
-                        adElement.requestFullscreen();
-                    } else if(adElement.mozRequestFullScreen) {
-                        adElement.mozRequestFullScreen();
-                    } else if(adElement.webkitRequestFullscreen) {
-                        adElement.webkitRequestFullscreen();
-                    } else if(adElement.msRequestFullscreen) {
-                        adElement.msRequestFullscreen();
-                    }
-                }
-            });
-
-            // Confirmation popup
-            document.querySelector('#confirmation_button').addEventListener("click",function() {
-                if (!confirmationSet) {
-                    window.addEventListener("beforeunload", displayConfirmationPopup);
-                    confirmationSet = true;
-                }
-            });
-
-            function displayConfirmationPopup(event) {
-                // Remove the listener
-                window.removeEventListener("beforeunload", displayConfirmationPopup);
-                confirmationSet = false;
-
-                // Display a confirmation popup
-                event = event || window.event;
-
-                var s = "Are you sure you want to leave this page?";
-                event.returnValue = s;
-                return s;
-            }
-
         </script>
     </body>
 </html>
