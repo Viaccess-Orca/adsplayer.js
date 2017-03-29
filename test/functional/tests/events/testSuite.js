@@ -150,9 +150,9 @@ define(function(require) {
                     .end();
 
                 var event_type = "";
-                command.findById("ad_dom_type").getAttribute("value").then(function(type) {event_type=type});
+                command.findById("ad_dom_type").getVisibleText().then(function(type) {event_type=type});
                 var event_id = "";
-                command.findById("ad_dom_id").getAttribute("value").then(function(id) {event_id=id});
+                command.findById("ad_dom_id").getVisibleText().then(function(id) {event_id=id});
 
                 // Check the add event parameters
                 return(command
