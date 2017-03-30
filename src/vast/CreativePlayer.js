@@ -112,8 +112,41 @@ class CreativePlayer {
     }
 
     _onMediaTimeupdate () {
+        this._evaluateTimeOffset();
 
         //this._debug.log("Media timeupdate: " + this._mediaPlayer.getCurrentTime());
+    }
+
+    _evaluateTimeOffset() {
+        if (!this.currentCreative ||
+            this.skipOffsetSent) {
+            return false;
+        }
+
+        if (this.currentCreative.skipoffsetInSeconds &&
+            !isNaN(this.currentCreative.skipoffsetInSeconds) &&
+            this._mediaPlayer.getCurrentTime() > this.currentCreative.skipoffsetInSeconds) {
+
+            // Time offset has been reached
+            this._eventBus.dispatchEvent({
+                type: 'skipOffset',
+                data: {}
+            });
+            this.skipOffsetSent = true;
+        } else if (this.currentCreative.skipoffsetPercent &&
+            !isNaN(this.currentCreative.skipoffsetPercent)) {
+
+            // Calculate the time offset according to ad duration
+            var offset = this._mediaPlayer.getDuration() * this.currentCreative.skipoffsetPercent;
+
+            if (this._mediaPlayer.getCurrentTime() > offset) {
+                this._eventBus.dispatchEvent({
+                    type: 'skipOffset',
+                    data: {}
+                });
+                this.skipOffsetSent = true;
+            }
+        }
     }
 
     _onAdClick (creative) {
@@ -151,6 +184,8 @@ class CreativePlayer {
             return false;
         }
 
+        this.skipOffsetSent = false;
+        this.currentCreative = creative;
         mediaFile = creative.mediaFiles[0];
 
         // Video or image media ?
@@ -272,7 +307,7 @@ class CreativePlayer {
         this._mediaPlayer.removeEventListener('ended', this._onMediaEndedListener);
         this._mediaPlayer.stop();
 
-        // Notify a media element has been created and appended into document
+        // Notify a media element has been removed from document and destroyed
         this._eventBus.dispatchEvent({
             type: 'removeElement',
             data: {
@@ -282,6 +317,8 @@ class CreativePlayer {
         });
 
         this._adPlayerContainer.removeChild(this._mediaPlayer.getElement());
+
+        this.currentCreative = null;
 
         // Reset the media player
         this._mediaPlayer.reset();

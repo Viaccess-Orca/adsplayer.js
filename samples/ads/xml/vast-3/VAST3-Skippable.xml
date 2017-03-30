@@ -2,8 +2,8 @@
 <VAST version="3.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="vast3_draft.xsd">
     <Ad id="preroll-1" sequence="1">
         <InLine>
-            <AdSystem version="2.0">Alex_Vast</AdSystem>
-            <AdTitle></AdTitle>
+            <AdSystem version="2.0">Ad 1</AdSystem>
+            <AdTitle>Skippable ad</AdTitle>
             <Impression id="DART"><![CDATA[http://qa.jwplayer.com/~alex/pixel.gif?2]]></Impression>
             <Creatives>
                 <Creative>
@@ -19,12 +19,12 @@
     </Ad>
     <Ad id="preroll-2" sequence="2">
         <InLine>
-            <AdSystem version="1.0">cswebplayer ads server</AdSystem>
-            <AdTitle>Unitary test ad</AdTitle>
+            <AdSystem version="1.0">Ad 2</AdSystem>
+            <AdTitle>Non-skippable ad</AdTitle>
             <Impression id="DART"><![CDATA[http://localhost/log?impression]]></Impression>
             <Creatives>
                 <Creative>
-                    <Linear>
+                    <Linear skipoffset="50%">
                         <Duration>00:00:04</Duration>
                         <MediaFiles>
                             <MediaFile id="1" delivery="progressive" type="video/mp4" bitrate="0" width="640" height="360" scalable="false" maintainAspectRatio="false" codec="avc1" apiFramework="thisisanapiframework"><![CDATA[../../media/vo_ad_4.mp4]]></MediaFile>

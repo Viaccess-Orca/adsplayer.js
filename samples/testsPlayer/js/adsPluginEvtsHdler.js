@@ -52,33 +52,46 @@ function initAdsPluginEvtsHdler(adsPlugin){
 
         // Update #ad_dom_id DOM element with the id of the DOM element created by the CSAdsPlugin to play the ad
         document.querySelector('#ad_dom_id').innerHTML = adPlayer.getAttribute("id");
+
         // Update #ad_dom_type DOM element with the type of the DOM element created by the CSAdsPlugin to play the ad
         document.querySelector('#ad_dom_type').innerHTML = e.data.type;
+
         // Change the listener for the pause button
         document.querySelector('#pause_button').removeEventListener("click", onMainVideoPause);
         document.querySelector('#pause_button').addEventListener("click", onAdPause);
+
         // Change the listener for the mute button
         document.querySelector('#mute_button').removeEventListener("click", onMainVideoMute);
         document.querySelector('#mute_button').addEventListener("click", onAdMute);
+
         // Change the listener for the HTML5 video events
         updateHtml5VideoEvtsHdler(adPlayer);
+
+        // Disable the "skip" button
+        document.querySelector("#skip_button").disabled = true;
     });
 
     adsPlugin.addEventListener('removeElement', function() {
         var element = document.getElementById('event_remove');
         element.setAttribute("value", parseInt(element.getAttribute("value")) + 1);
+
         // Update the adPlayer element
         adPlayer = null;
+
         // Clear #ad_dom_id DOM element
         document.querySelector('#ad_dom_id').setAttribute("value","");
+
         // Clear #ad_dom_type DOM element
         document.querySelector('#ad_dom_type').setAttribute("value","");
+
         // Change the listener for the pause button
         document.querySelector('#pause_button').removeEventListener("click", onAdPause);
         document.querySelector('#pause_button').addEventListener("click", onMainVideoPause);
+
         // Change the listener for the mute button
         document.querySelector('#mute_button').removeEventListener("click", onAdMute);
         document.querySelector('#mute_button').addEventListener("click", onMainVideoMute);
+
         // Change the listener for the HTML5 video events
         updateHtml5VideoEvtsHdler(null);
     });
@@ -91,6 +104,11 @@ function initAdsPluginEvtsHdler(adsPlugin){
     adsPlugin.addEventListener('pause', function() {
         var element = document.getElementById('event_pause');
         element.setAttribute("value", parseInt(element.getAttribute("value")) + 1);
+    });
+
+    adsPlugin.addEventListener('skipOffset', function() {
+        // Enable the "skip" button
+        document.querySelector("#skip_button").disabled = false;
     });
 
     // clear events button

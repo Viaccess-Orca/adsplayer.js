@@ -49,7 +49,7 @@ function initButtonsHdler() {
     document.querySelector('#pause_button').addEventListener("click", onMainVideoPause);
 
     // Skip button
-    document.querySelector('#skip_button').addEventListener("click", onMainVideoSkip);
+    document.querySelector('#skip_button').addEventListener("click", onSkip);
 
     // mute button
     document.querySelector('#mute_button').addEventListener("click", onMainVideoMute);

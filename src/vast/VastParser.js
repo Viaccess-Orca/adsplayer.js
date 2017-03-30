@@ -152,10 +152,10 @@ class VastParser {
         if (offsetValue) {
             if (offsetValue.indexOf("%") == -1) {
                 /* convert HH:MM:SS ( or HH:MM:SS.mmm) in seconds */
-                linear.offsetInSeconds = new Date('1970-01-01T' + offsetValue + 'Z').getTime() / 1000;
+                linear.skipoffsetInSeconds = new Date('1970-01-01T' + offsetValue + 'Z').getTime() / 1000;
             }
             else {
-                linear.offsetPercent = offsetValue.substring(0, offsetValue.indexOf("%")) / 100;
+                linear.skipoffsetPercent = offsetValue.substring(0, offsetValue.indexOf("%")) / 100;
             }
         }
 
