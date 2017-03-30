@@ -148,7 +148,7 @@ class VastParser {
             iconsNodes,
             i;
 
-        var offsetValue = linearNode.getAttribute('offset');
+        var offsetValue = linearNode.getAttribute('skipoffset');
         if (offsetValue) {
             if (offsetValue.indexOf("%") == -1) {
                 /* convert HH:MM:SS ( or HH:MM:SS.mmm) in seconds */
