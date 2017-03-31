@@ -129,6 +129,18 @@ class AdPlayer {
             }
         }
 
+        _skipCreative() {
+            this._debug.info("skipCreative ");
+
+            // Stop the current creative media
+            this._stopCreative();
+
+            this._resetCreative();
+
+            // Play next creative
+            this._playNextCreative();
+        }
+
     ///////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////// PUBLIC /////////////////////////////////////////////
 
@@ -190,6 +202,14 @@ class AdPlayer {
         }
 
         this._creativePlayer.reset();
+    }
+
+    skip() {
+        if (!this._creativePlayer) {
+            return;
+        }
+
+        this._skipCreative();
     }
 }
 

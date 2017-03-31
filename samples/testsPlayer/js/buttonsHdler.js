@@ -121,8 +121,8 @@ function onMainVideoMute(e) {
 }
 
 function onSkip() {
-    if (adPlayer) {
-
+    if (adsPlugin) {
+        adsPlugin.skip();
     }
 }
 

@@ -94,6 +94,9 @@ function initAdsPluginEvtsHdler(adsPlugin){
 
         // Change the listener for the HTML5 video events
         updateHtml5VideoEvtsHdler(null);
+
+        // Disable the "skip" button
+        document.querySelector("#skip_button").disabled = true;
     });
 
     adsPlugin.addEventListener('play', function() {

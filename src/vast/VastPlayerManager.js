@@ -82,6 +82,15 @@ class VastPlayerManager {
 
     }
 
+    _skipAd () {
+        this._debug.log("(VastPlayerManager) _skipAd");
+
+        if (this._adPlayer) {
+            this._adPlayer.skip();
+        }
+
+    }
+
     _stopAd () {
         this._debug.log("(VastPlayerManager) _stopAd");
 
@@ -255,6 +264,10 @@ class VastPlayerManager {
 
     stop() {
         this._stopAd();
+    }
+
+    skip() {
+        this._skipAd();
     }
 
     reset() {
