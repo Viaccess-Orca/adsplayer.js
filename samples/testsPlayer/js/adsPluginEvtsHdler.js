@@ -109,9 +109,17 @@ function initAdsPluginEvtsHdler(adsPlugin){
         element.setAttribute("value", parseInt(element.getAttribute("value")) + 1);
     });
 
-    adsPlugin.addEventListener('skipOffset', function() {
+    adsPlugin.addEventListener('skippable', function() {
+        var element = document.getElementById('event_skippable');
+        element.setAttribute("value", parseInt(element.getAttribute("value")) + 1);
+
         // Enable the "skip" button
         document.querySelector("#skip_button").disabled = false;
+    });
+
+    adsPlugin.addEventListener('skip', function() {
+        var element = document.getElementById('event_skip');
+        element.setAttribute("value", parseInt(element.getAttribute("value")) + 1);
     });
 
     // clear events button
@@ -122,6 +130,8 @@ function initAdsPluginEvtsHdler(adsPlugin){
         document.getElementById('event_remove').setAttribute("value", 0);
         document.getElementById('event_play').setAttribute("value", 0);
         document.getElementById('event_pause').setAttribute("value", 0);
+        document.getElementById('event_skippable').setAttribute("value", 0);
+        document.getElementById('event_skip').setAttribute("value", 0);
     });
 }
 

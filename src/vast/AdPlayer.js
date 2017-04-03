@@ -139,6 +139,12 @@ class AdPlayer {
 
             // Play next creative
             this._playNextCreative();
+
+            // Notify the creative has skipped
+            this._eventBus.dispatchEvent({
+                type: 'skip',
+                data: {}
+            });
         }
 
     ///////////////////////////////////////////////////////////////////////////////////////////////

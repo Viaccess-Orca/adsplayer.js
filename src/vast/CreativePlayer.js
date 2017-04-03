@@ -129,7 +129,7 @@ class CreativePlayer {
 
             // Time offset has been reached
             this._eventBus.dispatchEvent({
-                type: 'skipOffset',
+                type: 'skippable',
                 data: {}
             });
             this.skipOffsetSent = true;
@@ -141,7 +141,7 @@ class CreativePlayer {
 
             if (this._mediaPlayer.getCurrentTime() > offset) {
                 this._eventBus.dispatchEvent({
-                    type: 'skipOffset',
+                    type: 'skippable',
                     data: {}
                 });
                 this.skipOffsetSent = true;
