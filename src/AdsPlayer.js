@@ -220,6 +220,16 @@ class AdsPlayer {
     }
 
     /**
+     * Skip the playback of the current ad.
+     * @method skip
+     * @access public
+     * @memberof AdsPlayer#
+     */
+    skip() {
+        this._adsPlayerController.skip();
+    }
+
+    /**
     * Registers a listener on the specified event.
     * The possible event types are:
     * <li>'error' (see [error]{@link AdsPlayer#event:error} event specification)

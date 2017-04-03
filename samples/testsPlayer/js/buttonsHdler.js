@@ -48,6 +48,9 @@ function initButtonsHdler() {
     // pause button
     document.querySelector('#pause_button').addEventListener("click", onMainVideoPause);
 
+    // Skip button
+    document.querySelector('#skip_button').addEventListener("click", onSkip);
+
     // mute button
     document.querySelector('#mute_button').addEventListener("click", onMainVideoMute);
 
@@ -114,6 +117,12 @@ function onMainVideoMute(e) {
     } else {
         document.querySelector('#mute_button').innerHTML = "Unmute";
         mediaPlayer.setMute(true);
+    }
+}
+
+function onSkip() {
+    if (adsPlugin) {
+        adsPlugin.skip();
     }
 }
 

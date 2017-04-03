@@ -152,8 +152,8 @@ Creative.TYPE = {
 */
 class Linear {
     constructor () {
-        this.skipoffsetInSeconds = 0;       // [Optional] Time value that identifies when skip controls are made available to the end user.
-        this.skipoffsetPercent = 0;         // [Optional] Time value that identifies when skip controls are made available to the end user.
+        this.skipoffsetInSeconds = null;       // [Optional] Time value that identifies when skip controls are made available to the end user.
+        this.skipoffsetPercent = null;         // [Optional] Time value that identifies when skip controls are made available to the end user.
         this.adParameters = null;           // [Optional] AdParameters element
         this.duration = 0;                  // [Required] Duration in standard time format, hh:mm:ss
         this.mediaFiles = [];               // [Required] MediaFile elements

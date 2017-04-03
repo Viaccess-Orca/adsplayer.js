@@ -82,6 +82,15 @@ class VastPlayerManager {
 
     }
 
+    _skipAd () {
+        this._debug.log("(VastPlayerManager) _skipAd");
+
+        if (this._adPlayer) {
+            this._adPlayer.skip();
+        }
+
+    }
+
     _stopAd () {
         this._debug.log("(VastPlayerManager) _stopAd");
 
@@ -97,9 +106,10 @@ class VastPlayerManager {
 
         this._debug.log("(VastPlayerManager) _playAd(" + vastIndex + "," + adIndex + ")");
 
-        this._adPlayer = new AdPlayer(this._vasts[vastIndex].ads[adIndex], this._adPlayerContainer,this._mainVideo,this._vasts[vastIndex].baseUrl);
+        this._adPlayer = new AdPlayer(this._vasts[vastIndex].ads[adIndex], this._adPlayerContainer, this._mainVideo, this._vasts[vastIndex].baseUrl);
 
         this._eventBus.addEventListener('adEnd', this._onAdEndListener);
+
         this._adPlayer.start();
     }
 
@@ -254,6 +264,10 @@ class VastPlayerManager {
 
     stop() {
         this._stopAd();
+    }
+
+    skip() {
+        this._skipAd();
     }
 
     reset() {

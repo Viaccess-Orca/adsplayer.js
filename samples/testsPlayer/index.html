@@ -59,12 +59,13 @@
         <div>
             <br>
             <input id="stream_toplay" type="text" size="100" value="http://playready.directtaps.net/smoothstreaming/SSWSS720H264/SuperSpeedway_720.ism/Manifest"> </input><br>
-            <input id="ad_toplay" type="text" size="100" value="../ads/xml/mast/preroll-vast30.xml"> </input><br>
+            <input id="ad_toplay" type="text" size="100" value="../ads/xml/mast/preroll-vast30-skippable.xml"> </input><br>
             <br>
-            <button id="play_button" >Play</button>
-            <button id="pause_button" >Pause</button>
-            <button id="stop_button" >Stop</button>
-            <button id="mute_button" >Mute</button><br>
+            <button id="play_button">Play</button>
+            <button id="pause_button">Pause</button>
+            <button id="stop_button">Stop</button>
+            <button id="skip_button" disabled>Skip</button>
+            <button id="mute_button">Mute</button><br>
 
             <div>
                 <h4>CSAdsPlugin controls</h4>
@@ -223,6 +224,15 @@
                 <div class="event">
                     <div class="event_title">pause</div>
                     <input id="event_pause" eventId="pause" type="number" value="0" disabled> </input>
+                </div>
+                <div class="event">
+                    <div class="event_title">skippable</div>
+                    <input id="event_skippable" eventId="skippable" type="number" value="0" disabled> </input>
+                </div>
+
+                <div class="event">
+                    <div class="event_title">skip</div>
+                    <input id="event_skip" eventId="skip" type="number" value="0" disabled> </input>
                 </div>
             </div>
             <button id="clearEvents_button" >Clear all</button><br>
