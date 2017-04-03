@@ -66,6 +66,9 @@ jsonAdsDescription = '[ { "name": "No ad insertion",                            
                         { "name": "Mast Preroll VAST30 double trigger",                                   \
                         "url" : "../../samples/ads/xml/mast/preroll-vast30-doubleVastsInTrigger.xml"},    \
                                                                                                           \
+                        { "name": "Mast Preroll VAST30 skippable",                                         \
+                        "url" : "../../samples/ads/xml/mast/preroll-vast30-skippable.xml"},               \
+                                                                                                          \
                         { "name": "Vmap Preroll",                                                         \
                           "url" : "../../samples/ads/xml/vmap/preroll.xml"},                              \
                                                                                                           \

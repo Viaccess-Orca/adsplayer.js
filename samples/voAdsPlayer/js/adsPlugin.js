@@ -37,6 +37,7 @@ class AdsPlugin {
         this.adsPlayer.addEventListener('play', this.onAdsPlayerPlayPause.bind(this));
         this.adsPlayer.addEventListener('pause', this.onAdsPlayerPlayPause.bind(this));
         this.adsPlayer.addEventListener('click', this.onAdsPlayerClick.bind(this));
+        this.adsPlayer.addEventListener('skippable', this.onAdsPlayerSkippable.bind(this));
 
         this.adsMode=false;
 
@@ -65,10 +66,21 @@ class AdsPlugin {
 
     onAdsPlayerAddElement(e) {
         console.log("onAdsPlayerAddElement - " + e.type + " / " + e.data.type);
+
+        // Disable the "skip" button
+        document.querySelector("#skip_button").disabled = true;
     }
 
     onAdsPlayerRemoveElement(e) {
         console.log("onAdsPlayerRemoveElement - " + e.type + " / " + e.data.type);
+
+        // Disable the "skip" button
+        document.querySelector("#skip_button").disabled = true;
+    }
+
+    onAdsPlayerSkippable() {
+        // Enable the "skip" button
+        document.querySelector("#skip_button").disabled = false;
     }
 
     getPlugin(){
