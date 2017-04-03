@@ -102,6 +102,7 @@
     </table>
     <button id="play_button" >Play</button>
     <button id="stop_button" >Stop</button>
+    <button id="skip_button" disabled>Skip</button>
 
     <div id="terminal-id-container" style="position:absolute;right:10px;bottom:0;">
         <p style="align:center;font-size:small" id="terminal-id"></p>
@@ -265,6 +266,13 @@
             console.log("adsplayer - stop ");
             //webplayer.stop();
             adsPlugin.getPlugin().stop();
+        });
+
+        // Skip button
+        document.querySelector('#skip_button').addEventListener("click",function() {
+            console.log("adsplayer - skip ");
+
+            adsPlugin.getPlugin().skip();
         });
 
         // Set the name of the hidden property and the change event for visibility
