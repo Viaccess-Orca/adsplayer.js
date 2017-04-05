@@ -9,6 +9,32 @@
                 <Creative>
                     <Linear skipoffset="00:00:02">
                         <Duration>00:00:06</Duration>
+                        <TrackingEvents>
+                            <!-- OK -->
+                            <Tracking event="complete">http://cswebplayer.viaccess.fr/adsserver/js?event=complete</Tracking>
+                            <Tracking event="creativeView">http://cswebplayer.viaccess.fr/adsserver/js?event=creativeView</Tracking>
+                            <Tracking event="start">http://cswebplayer.viaccess.fr/adsserver/js?event=start</Tracking>
+                            <Tracking event="midpoint">http://cswebplayer.viaccess.fr/adsserver/js?event=midpoint</Tracking>
+                            <Tracking event="firstQuartile">http://cswebplayer.viaccess.fr/adsserver/js?event=firstQuartile</Tracking>
+                            <Tracking event="thirdQuartile">http://cswebplayer.viaccess.fr/adsserver/js?event=thirdQuartile</Tracking>
+                            <Tracking event="mute">http://cswebplayer.viaccess.fr/adsserver/js?event=mute</Tracking>
+                            <Tracking event="unmute">http://cswebplayer.viaccess.fr/adsserver/js?event=unmute</Tracking>
+                            <Tracking event="pause">http://cswebplayer.viaccess.fr/adsserver/js?event=pause</Tracking>
+                            <Tracking event="resume">http://cswebplayer.viaccess.fr/adsserver/js?event=resume</Tracking>
+                            <Tracking event="fullscreen">http://cswebplayer.viaccess.fr/adsserver/js?event=fullscreen</Tracking>
+                            <Tracking event="progress" offset="00:00:10">http://cswebplayer.viaccess.fr/adsserver/js?event=progress</Tracking>
+                            <Tracking event="progress" offset="30%"><![CDATA[http://cswebplayer.viaccess.fr/adsserver/js?event=progress]]></Tracking>
+                            <Tracking event="progress" offset="00:00:03">http://cswebplayer.viaccess.fr/adsserver/js?event=progress</Tracking>
+                            <Tracking event="progress" offset="00:00:06.123">http://cswebplayer.viaccess.fr/adsserver/js?event=progress</Tracking>
+                            <Tracking event="rewind">http://cswebplayer.viaccess.fr/adsserver/js?event=rewind</Tracking>
+                            <Tracking event="exitFullscreen">http://cswebplayer.viaccess.fr/adsserver/js?event=exitFullscreen</Tracking>
+                            <Tracking event="closeLinear">http://cswebplayer.viaccess.fr/adsserver/js?event=closeLinear</Tracking>
+                            <Tracking event="acceptInvitationLinear">http://cswebplayer.viaccess.fr/adsserver/js?event=acceptInvitationLinear</Tracking>
+                            <Tracking event="skip">http://cswebplayer.viaccess.fr/adsserver/js?event=skip</Tracking>
+                            <!-- Nok -->
+                            <Tracking event="expand">http://cswebplayer.viaccess.fr/adsserver/js?event=expand</Tracking>
+                            <Tracking event="collapse">http://cswebplayer.viaccess.fr/adsserver/js?event=collapse</Tracking>
+                        </TrackingEvents>
                         <MediaFiles>
                             <MediaFile id="1" delivery="progressive" type="video/mp4" bitrate="0" width="640" height="360"><![CDATA[../../media/vo_ad_2.mp4]]></MediaFile>
                         </MediaFiles>
@@ -26,6 +52,32 @@
                 <Creative>
                     <Linear skipoffset="50%">
                         <Duration>00:00:04</Duration>
+                        <TrackingEvents>
+                            <!-- OK -->
+                            <Tracking event="complete">http://cswebplayer.viaccess.fr/adsserver/js?event=complete</Tracking>
+                            <Tracking event="creativeView">http://cswebplayer.viaccess.fr/adsserver/js?event=creativeView</Tracking>
+                            <Tracking event="start">http://cswebplayer.viaccess.fr/adsserver/js?event=start</Tracking>
+                            <Tracking event="midpoint">http://cswebplayer.viaccess.fr/adsserver/js?event=midpoint</Tracking>
+                            <Tracking event="firstQuartile">http://cswebplayer.viaccess.fr/adsserver/js?event=firstQuartile</Tracking>
+                            <Tracking event="thirdQuartile">http://cswebplayer.viaccess.fr/adsserver/js?event=thirdQuartile</Tracking>
+                            <Tracking event="mute">http://cswebplayer.viaccess.fr/adsserver/js?event=mute</Tracking>
+                            <Tracking event="unmute">http://cswebplayer.viaccess.fr/adsserver/js?event=unmute</Tracking>
+                            <Tracking event="pause">http://cswebplayer.viaccess.fr/adsserver/js?event=pause</Tracking>
+                            <Tracking event="resume">http://cswebplayer.viaccess.fr/adsserver/js?event=resume</Tracking>
+                            <Tracking event="fullscreen">http://cswebplayer.viaccess.fr/adsserver/js?event=fullscreen</Tracking>
+                            <Tracking event="progress" offset="00:00:10">http://cswebplayer.viaccess.fr/adsserver/js?event=progress</Tracking>
+                            <Tracking event="progress" offset="30%"><![CDATA[http://cswebplayer.viaccess.fr/adsserver/js?event=progress]]></Tracking>
+                            <Tracking event="progress" offset="00:00:03">http://cswebplayer.viaccess.fr/adsserver/js?event=progress</Tracking>
+                            <Tracking event="progress" offset="00:00:06.123">http://cswebplayer.viaccess.fr/adsserver/js?event=progress</Tracking>
+                            <Tracking event="rewind">http://cswebplayer.viaccess.fr/adsserver/js?event=rewind</Tracking>
+                            <Tracking event="exitFullscreen">http://cswebplayer.viaccess.fr/adsserver/js?event=exitFullscreen</Tracking>
+                            <Tracking event="closeLinear">http://cswebplayer.viaccess.fr/adsserver/js?event=closeLinear</Tracking>
+                            <Tracking event="acceptInvitationLinear">http://cswebplayer.viaccess.fr/adsserver/js?event=acceptInvitationLinear</Tracking>
+                            <Tracking event="skip">http://cswebplayer.viaccess.fr/adsserver/js?event=skip</Tracking>
+                            <!-- Nok -->
+                            <Tracking event="expand">http://cswebplayer.viaccess.fr/adsserver/js?event=expand</Tracking>
+                            <Tracking event="collapse">http://cswebplayer.viaccess.fr/adsserver/js?event=collapse</Tracking>
+                        </TrackingEvents>
                         <MediaFiles>
                             <MediaFile id="1" delivery="progressive" type="video/mp4" bitrate="0" width="640" height="360" scalable="false" maintainAspectRatio="false" codec="avc1" apiFramework="thisisanapiframework"><![CDATA[../../media/vo_ad_4.mp4]]></MediaFile>
                         </MediaFiles>

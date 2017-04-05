@@ -132,6 +132,12 @@ class AdPlayer {
         _skipCreative() {
             this._debug.info("skipCreative ");
 
+            // Notify the creative was skipped
+            this._eventBus.dispatchEvent({
+                type: 'skip',
+                data: {}
+            });
+
             // Stop the current creative media
             this._stopCreative();
 
@@ -139,12 +145,6 @@ class AdPlayer {
 
             // Play next creative
             this._playNextCreative();
-
-            // Notify the creative has skipped
-            this._eventBus.dispatchEvent({
-                type: 'skip',
-                data: {}
-            });
         }
 
     ///////////////////////////////////////////////////////////////////////////////////////////////
