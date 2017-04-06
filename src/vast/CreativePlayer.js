@@ -117,35 +117,56 @@ class CreativePlayer {
         //this._debug.log("Media timeupdate: " + this._mediaPlayer.getCurrentTime());
     }
 
+    _initTimeOffset() {
+        if (!this.currentCreative) {
+            return;
+        }
+
+        if (this.currentCreative.skipoffsetInSeconds &&
+            !isNaN(this.currentCreative.skipoffsetInSeconds)) {
+            this.timeOffset = this.currentCreative.skipoffsetInSeconds;
+        } else if (this.currentCreative.skipoffsetPercent &&
+            !isNaN(this.currentCreative.skipoffsetPercent)) {
+            // Calculate the time offset according to ad duration
+            this.timeOffset = this._mediaPlayer.getDuration() * this.currentCreative.skipoffsetPercent;
+        } else {
+            this.timeOffset = -1;
+        }
+
+        if (this.timeOffset !== -1) {
+        // Send time offset event with remaining time
+            this._eventBus.dispatchEvent({
+                type: 'skippable',
+                data: {
+                    "remainingTime": this.timeOffset
+                }
+            });
+        }
+    }
+
     _evaluateTimeOffset() {
+        if (this.timeOffset === null) {
+            this._initTimeOffset();
+        }
+
         if (!this.currentCreative ||
+            this.timeOffset === -1 ||
             this.skipOffsetSent) {
             return false;
         }
 
-        if (this.currentCreative.skipoffsetInSeconds &&
-            !isNaN(this.currentCreative.skipoffsetInSeconds) &&
-            this._mediaPlayer.getCurrentTime() > this.currentCreative.skipoffsetInSeconds) {
+        if (this.timeOffset &&
+            !isNaN(this.timeOffset) &&
+            this._mediaPlayer.getCurrentTime() > this.timeOffset) {
 
             // Time offset has been reached
             this._eventBus.dispatchEvent({
                 type: 'skippable',
-                data: {}
+                data: {
+                    "remainingTime": 0
+                }
             });
             this.skipOffsetSent = true;
-        } else if (this.currentCreative.skipoffsetPercent &&
-            !isNaN(this.currentCreative.skipoffsetPercent)) {
-
-            // Calculate the time offset according to ad duration
-            var offset = this._mediaPlayer.getDuration() * this.currentCreative.skipoffsetPercent;
-
-            if (this._mediaPlayer.getCurrentTime() > offset) {
-                this._eventBus.dispatchEvent({
-                    type: 'skippable',
-                    data: {}
-                });
-                this.skipOffsetSent = true;
-            }
         }
     }
 
@@ -184,6 +205,7 @@ class CreativePlayer {
             return false;
         }
 
+        this.timeOffset = null;
         this.skipOffsetSent = false;
         this.currentCreative = creative;
         mediaFile = creative.mediaFiles[0];

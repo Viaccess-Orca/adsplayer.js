@@ -68,7 +68,7 @@ function initAdsPluginEvtsHdler(adsPlugin){
         updateHtml5VideoEvtsHdler(adPlayer);
 
         // Disable the "skip" button
-        document.querySelector("#skip_button").disabled = true;
+        allowSkip(false);
     });
 
     adsPlugin.addEventListener('removeElement', function() {
@@ -96,7 +96,7 @@ function initAdsPluginEvtsHdler(adsPlugin){
         updateHtml5VideoEvtsHdler(null);
 
         // Disable the "skip" button
-        document.querySelector("#skip_button").disabled = true;
+        allowSkip(false);
     });
 
     adsPlugin.addEventListener('play', function() {
@@ -109,12 +109,42 @@ function initAdsPluginEvtsHdler(adsPlugin){
         element.setAttribute("value", parseInt(element.getAttribute("value")) + 1);
     });
 
-    adsPlugin.addEventListener('skippable', function() {
-        var element = document.getElementById('event_skippable');
-        element.setAttribute("value", parseInt(element.getAttribute("value")) + 1);
+    adsPlugin.addEventListener('skippable', function(event) {
+        // Get the remaining time until ad is skippable
+        var remainingTime = 0;
+        if(event.data) {
+            remainingTime = event.data.remainingTime;
+        }
 
-        // Enable the "skip" button
-        document.querySelector("#skip_button").disabled = false;
+        if(isNaN(remainingTime) ||
+                remainingTime === 0) {
+            // Let's skip
+            allowSkip(true);
+        } else {
+            // Update the skip button text
+            remainingTime = Math.floor(remainingTime);
+            document.querySelector("#skip_button").innerText = "Skip in " + remainingTime;
+
+            // Decrement the counter
+            remainingTime--;
+
+            // Create a countdown for skip button
+            var countdown = setInterval(function() {
+                if (remainingTime === 0) {
+                    // When the countdown is over, auto-destroy
+                    clearInterval(countdown);
+
+                    // Important: There is no need to allow the skip button here, as another
+                    // "skippable" event will be sent by the adsPluggin when remainingTime = 0
+                } else {
+                    // Update the skip button text
+                    document.querySelector("#skip_button").innerText = "Skip in " + remainingTime;
+
+                    // Decrement the counter
+                    remainingTime--;
+                }
+            }, 1000)
+        }
     });
 
     adsPlugin.addEventListener('skip', function() {
@@ -160,5 +190,22 @@ function onAdMute(e) {
     } else {
         document.querySelector('#mute_button').innerHTML = "Unmute";
         adPlayer.muted = true;
+    }
+}
+
+function allowSkip(allow) {
+    var skipButton = document.querySelector("#skip_button");
+    skipButton.innerText = "Skip";
+
+    if (allow) {
+        // Increment the "skippable" event counter
+        var element = document.getElementById('event_skippable');
+        element.setAttribute("value", parseInt(element.getAttribute("value")) + 1);
+
+        // Enable the button
+        skipButton.disabled = false;
+    } else {
+        // Disable the button
+        skipButton.disabled = true;
     }
 }
