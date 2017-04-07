@@ -489,6 +489,32 @@ define(function(require) {
                         utils.compareCounters(counters, suiteConfig.acceptInvitationLinear.ExpectedtrackingEvents);
                     })
                 );
+            },
+
+            // Check the tracking event for skip
+            "skip": function () {
+                return (command
+                    .then(pollUntil(function (value) {
+                        // Wait until "skippable" event is fired
+                        return parseInt(document.getElementById('event_skippable').value) == 1 ? true : null;
+                    }, null, 10000, 1000))
+                    // Skip the add
+                    .findByCssSelector("#skip_button")
+                    .click()
+                    .end()
+                    .then(function () {
+                        // Get the tracking events
+                        return utils.getCounterValues(command, "#tracking_events .event input");
+                    })
+                    .then(function(counters) {
+                        // Check configuration
+                        assert.isDefined(suiteConfig.skip, "Configuration is not defined for skip test counters");
+                        assert.isDefined(suiteConfig.skip.ExpectedtrackingEvents, "Configuration is not defined for skip test counters");
+
+                        // Finally, check the counter values
+                        utils.compareCounters(counters, suiteConfig.skip.ExpectedtrackingEvents);
+                    })
+                );
             }
         };
     });

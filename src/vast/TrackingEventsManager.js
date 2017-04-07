@@ -33,6 +33,7 @@
 */
 
 import Debug from '../Debug';
+import EventBus from '../EventBus';
 
 class TrackingEventsManager {
 
@@ -191,6 +192,10 @@ class TrackingEventsManager {
                         trackingEvent.oneShot = false;
                         this._addEventListener(window, 'beforeunload', trackingEvent);
                         break;
+                    case 'skip':
+                        trackingEvent.oneShot = false;
+                        this._addEventListener(this._eventBus, 'skip', trackingEvent);
+                        break;
                     default:
                         break;
                 }
@@ -215,6 +220,7 @@ class TrackingEventsManager {
         this._mute = -1;
         this._unmute = -1;
         this._debug = Debug.getInstance();
+        this._eventBus = EventBus.getInstance();
         this._eventListeners = [];
     }
 

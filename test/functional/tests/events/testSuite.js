@@ -112,12 +112,12 @@ define(function(require) {
                             return parseInt(document.getElementById('event_html5_suspend').value) == 1 ? true : null;
                         }, null, 10000, 1000))
                         .then(function() {
-                                // The event pause has been detected, now get the tracking events
+                                // The event suspend has been detected, now get the tracking events
                                 return utils.getCounterValues(command, "#csadsplugin_events .event input");
                             },
                             function (error) {
-                                // the event play has NOT been detected
-                                assert.isFalse(true,"the event progress has NOT been detected for test start");
+                                // the event suspend has NOT been detected
+                                assert.isFalse(true,"the event suspend has NOT been detected for test start");
                             }
                         )
                         .then(function(counters) {
@@ -186,11 +186,11 @@ define(function(require) {
                             return parseInt(document.getElementById('event_html5_progress').value) > 5 ? true : null;
                         }, null, 20000, 1000))
                         .then(function() {
-                                // The event pause has been detected, now get the tracking events
+                                // The event progress is more than 5, now get the tracking events
                                 return utils.getCounterValues(command, "#csadsplugin_events .event input");
                             },
                             function (error) {
-                                // the event play has NOT been detected
+                                // the event progress never went over 5
                                 assert.isFalse(true,"the event progress has NOT been detected for test end");
                             }
                         )
