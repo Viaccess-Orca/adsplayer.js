@@ -92,7 +92,7 @@ class AdsPlugin {
         } else {
             // Update the skip button text
             remainingTime = Math.floor(remainingTime);
-            document.querySelector("#skip_button").innerText = "Skip in " + remainingTime;
+            document.querySelector("#skip_button").innerText = "Skip in " + remainingTime + " s.";
 
             // Decrement the counter
             remainingTime--;
@@ -107,7 +107,7 @@ class AdsPlugin {
                     // "skippable" event will be sent by the adsPluggin when remainingTime = 0
                 } else {
                     // Update the skip button text
-                    document.querySelector("#skip_button").innerText = "Skip in " + remainingTime;
+                    document.querySelector("#skip_button").innerText = "Skip in " + remainingTime + " s.";
 
                     // Decrement the counter
                     remainingTime--;
