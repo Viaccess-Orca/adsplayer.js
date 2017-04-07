@@ -220,6 +220,16 @@ class AdsPlayer {
     }
 
     /**
+     * Skip the playback of the current ad.
+     * @method skip
+     * @access public
+     * @memberof AdsPlayer#
+     */
+    skip() {
+        this._adsPlayerController.skip();
+    }
+
+    /**
     * Registers a listener on the specified event.
     * The possible event types are:
     * <li>'error' (see [error]{@link AdsPlayer#event:error} event specification)
@@ -355,6 +365,25 @@ class AdsPlayer {
 * @param {object} event - the event
 * @param {object} event.type - the event type ('pause')
 */
+
+/**
+ * The 'skippable' event is fired to tell when the 'skip' action will be allowed.
+ * If no data or remainingTime, 'skip' action should be immediately allowed.
+ *
+ * @event AdsPlayer#skippable
+ * @param {object} event - the event
+ * @param {object} event.type - the event type ('skippable')
+ * @param {object} event.data - the event data
+ * @param {integer} event.data.remainingTime - the time in seconds until skip is allowed
+ */
+
+/**
+ * The 'skip' event is fired when an ad is skipped.
+ *
+ * @event AdsPlayer#skip
+ * @param {object} event - the event
+ * @param {object} event.type - the event type ('skip')
+ */
 
 /**
 * The 'click' event is fired when a click has been performed on the ad component.

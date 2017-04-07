@@ -411,7 +411,7 @@ class AdsPlayerController {
 
     /**
      * Plays/resumes the playback of the current ad.
-     * @method reset
+     * @method play
      * @access public
      * @memberof AdsPlayerController#
      */
@@ -426,7 +426,7 @@ class AdsPlayerController {
 
     /**
      * Pauses the playback of the current ad.
-     * @method reset
+     * @method pause
      * @access public
      * @memberof AdsPlayerController#
      */
@@ -436,6 +436,21 @@ class AdsPlayerController {
         // Stop the ad player
         if (this._vastPlayerManager) {
             this._vastPlayerManager.pause();
+        }
+    }
+
+    /**
+     * Skip the playback of the current ad.
+     * @method skip
+     * @access public
+     * @memberof AdsPlayerController#
+     */
+    skip () {
+
+        this._debug.log("skip");
+        // Skip the ad player
+        if (this._vastPlayerManager) {
+            this._vastPlayerManager.skip();
         }
     }
 }

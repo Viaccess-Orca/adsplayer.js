@@ -48,10 +48,49 @@ function initButtonsHdler() {
     // pause button
     document.querySelector('#pause_button').addEventListener("click", onMainVideoPause);
 
+    // Skip button
+    document.querySelector('#skip_button').addEventListener("click", onSkip);
+
     // mute button
     document.querySelector('#mute_button').addEventListener("click", onMainVideoMute);
-}
 
+    // Seek bar
+    document.querySelector('#seek-slidebar-range').addEventListener("change",function() {
+        goTo(document.querySelector('#seek-slidebar-range').value);
+    });
+
+    // Go to button
+    document.querySelector('#goto_button').addEventListener("click",function() {
+        var percentage = document.querySelector("#goto_input").value;
+        if (percentage) {
+            goTo(percentage);
+        }
+    });
+
+    // Fullscreen
+    document.querySelector('#fullscreen_button').addEventListener("click",function() {
+        if(adPlayer) {
+            // Deal with all the implementations :C
+            if(adPlayer.requestFullscreen) {
+                adPlayer.requestFullscreen();
+            } else if(adPlayer.mozRequestFullScreen) {
+                adPlayer.mozRequestFullScreen();
+            } else if(adPlayer.webkitRequestFullscreen) {
+                adPlayer.webkitRequestFullscreen();
+            } else if(adPlayer.msRequestFullscreen) {
+                adPlayer.msRequestFullscreen();
+            }
+        }
+    });
+
+    // Confirmation popup
+    document.querySelector('#confirmation_button').addEventListener("click",function() {
+        if (!confirmationSet) {
+            window.addEventListener("beforeunload", displayConfirmationPopup);
+            confirmationSet = true;
+        }
+    });
+}
 
 function onMainVideoPause(e) {
     if (mediaPlayer == null) {
@@ -79,4 +118,59 @@ function onMainVideoMute(e) {
         document.querySelector('#mute_button').innerHTML = "Unmute";
         mediaPlayer.setMute(true);
     }
+}
+
+function onSkip() {
+    if (adsPlugin) {
+        adsPlugin.skip();
+    }
+}
+
+function goTo(percentage) {
+    var seekTime = 0;
+
+    if (adPlayer) {
+        seekTime = (percentage * adPlayer.duration) / 100;
+        adPlayer.currentTime = seekTime;
+    }
+
+    displaySeekedTime(seekTime);
+}
+
+function displaySeekedTime(time) {
+    var seekedTimeDisplayed = "00:00:00";
+
+    if(time > 0) {
+        var hours = Math.floor(time / 3600) + "";
+        var minutes = Math.floor((time - (hours * 3600)) / 60) + "";
+        var seconds = parseInt(time - hours * 3600 - minutes * 60) + "";
+
+        if (hours.length === 1) {
+            hours = "0" + hours;
+        }
+
+        if (minutes.length === 1) {
+            minutes = "0" + minutes;
+        }
+
+        if (seconds.length === 1) {
+            seconds = "0" + seconds;
+        }
+
+        seekedTimeDisplayed = hours + ":" + minutes + ":" + seconds;
+    }
+    document.getElementById("seekRangeDisplayTime").innerHTML = seekedTimeDisplayed;
+}
+
+function displayConfirmationPopup(event) {
+    // Remove the listener
+    window.removeEventListener("beforeunload", displayConfirmationPopup);
+    confirmationSet = false;
+
+    // Display a confirmation popup
+    event = event || window.event;
+
+    var s = "Are you sure you want to leave this page?";
+    event.returnValue = s;
+    return s;
 }

@@ -37,6 +37,7 @@ class AdsPlugin {
         this.adsPlayer.addEventListener('play', this.onAdsPlayerPlayPause.bind(this));
         this.adsPlayer.addEventListener('pause', this.onAdsPlayerPlayPause.bind(this));
         this.adsPlayer.addEventListener('click', this.onAdsPlayerClick.bind(this));
+        this.adsPlayer.addEventListener('skippable', this.onAdsPlayerSkippable.bind(this));
 
         this.adsMode=false;
 
@@ -65,10 +66,54 @@ class AdsPlugin {
 
     onAdsPlayerAddElement(e) {
         console.log("onAdsPlayerAddElement - " + e.type + " / " + e.data.type);
+
+        // Disable the "skip" button
+        this.allowSkip(false);
     }
 
     onAdsPlayerRemoveElement(e) {
         console.log("onAdsPlayerRemoveElement - " + e.type + " / " + e.data.type);
+
+        // Disable the "skip" button
+        this.allowSkip(false);
+    }
+
+    onAdsPlayerSkippable(event) {
+        // Get the remaining time until ad is skippable
+        var remainingTime = 0;
+        if(event.data) {
+            remainingTime = event.data.remainingTime;
+        }
+
+        if(isNaN(remainingTime) ||
+            remainingTime === 0) {
+            // Let's skip
+            this.allowSkip(true);
+        } else {
+            // Update the skip button text
+            remainingTime = Math.floor(remainingTime);
+            document.querySelector("#skip_button").innerText = "Skip in " + remainingTime + " s.";
+
+            // Decrement the counter
+            remainingTime--;
+
+            // Create a countdown for skip button
+            var countdown = setInterval(function() {
+                if (remainingTime === 0) {
+                    // When the countdown is over, auto-destroy
+                    clearInterval(countdown);
+
+                    // Important: There is no need to allow the skip button here, as another
+                    // "skippable" event will be sent by the adsPluggin when remainingTime = 0
+                } else {
+                    // Update the skip button text
+                    document.querySelector("#skip_button").innerText = "Skip in " + remainingTime + " s.";
+
+                    // Decrement the counter
+                    remainingTime--;
+                }
+            }, 1000)
+        }
     }
 
     getPlugin(){
@@ -77,5 +122,18 @@ class AdsPlugin {
 
     getAdsMode(){
         return this.adsMode;
+    }
+
+    allowSkip(allow) {
+        var skipButton = document.querySelector("#skip_button");
+        skipButton.innerText = "Skip";
+
+        if (allow) {
+            // Enable the button
+            skipButton.disabled = false;
+        } else {
+            // Disable the button
+            skipButton.disabled = true;
+        }
     }
 }

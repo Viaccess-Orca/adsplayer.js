@@ -40,38 +40,15 @@
         <!-- endsources -->
 
         <!-- uses cswebplayer-->
-        <script src="../hasplayer.min.js"></script>
+        <script src="../cswebplayer.min.js"></script>
 
 		<!-- index.html handlers-->
-        <script src="adsPluginEvtsHdler.js"></script>
-        <script src="buttonsHdler.js"></script>
-        <script src="trackingEvtsHdler.js"></script>
-        <script src="html5VideoEvtsHdler.js"></script>
+        <script src="js/adsPluginEvtsHdler.js"></script>
+        <script src="js/buttonsHdler.js"></script>
+        <script src="js/trackingEvtsHdler.js"></script>
+        <script src="js/html5VideoEvtsHdler.js"></script>
 
-        <style>
-            .events_list, .event {
-                display: flex;
-            }
-
-            .events_list {
-                flex-wrap: wrap;
-                width: 700px;
-                margin-bottom: 10px;
-            }
-
-            .event {
-                margin-bottom: 5px;
-                width: 33%;
-            }
-
-            .event .event_title {
-                min-width: 155px;
-            }
-
-            .event input {
-                width: 30px;
-            }
-        </style>
+        <link rel="stylesheet" type="text/css" href="css/style.css" />
     </head>
 
     <body>
@@ -82,12 +59,33 @@
         <div>
             <br>
             <input id="stream_toplay" type="text" size="100" value="http://playready.directtaps.net/smoothstreaming/SSWSS720H264/SuperSpeedway_720.ism/Manifest"> </input><br>
-            <input id="ad_toplay" type="text" size="100" value="../ads/xml/mast/preroll.xml"> </input><br>
+            <input id="ad_toplay" type="text" size="100" value="../ads/xml/mast/preroll-vast30-skippable.xml"> </input><br>
             <br>
-            <button id="play_button" >Play</button>
-            <button id="pause_button" >Pause</button>
-            <button id="stop_button" >Stop</button>
-            <button id="mute_button" >Mute</button><br>
+            <button id="play_button">Play</button>
+            <button id="pause_button">Pause</button>
+            <button id="stop_button">Stop</button>
+            <button id="skip_button" disabled>Skip</button>
+            <button id="mute_button">Mute</button><br>
+
+            <div>
+                <h4>CSAdsPlugin controls</h4>
+                <div id="seek-slidebar">
+                    <span>0%</span>
+                    <input id="seek-slidebar-range" type="range" min="0" max="100" value="100" step="1" />
+                    <span>100%</span>
+                    <div id="seekRangeDisplayTime">00:00:00</div>
+                </div>
+
+                <div id="goto_section">
+                    <input id="goto_input" type="number" min="0" max="100"> </input>
+                    <span>%</span>
+                    <button id="goto_button">Go</button>
+                </div>
+
+                <button id="fullscreen_button">Fullscreen</button>
+                <button id="confirmation_button">Add confirmation</button>
+            </div>
+
 
             <h4>HTML5 video Events</h4>
 
@@ -189,30 +187,52 @@
 
             <h4>CSAdsPlugin Events</h4>
 
-            <div class="events_list">
+            <div class="section_info">
+                <div class="section_info_line">
+                    <label class="section_info_label">ID: </label>
+                    <label class="section_info_value" id="ad_dom_id">-</label>
+                </div>
+                <div class="section_info_line">
+                    <label class="section_info_label">Type: </label>
+                    <label class="section_info_value" id="ad_dom_type" >-</label>
+                </div>
+
+
+            </div>
+
+            <div id="csadsplugin_events" class="events_list">
                 <div class="event">
                     <div class="event_title">start</div>
-                    <input id="event_start" type="number" value="0" disabled> </input>
+                    <input id="event_start" eventId="start" type="number" value="0" disabled> </input>
                 </div>
                 <div class="event">
                     <div class="event_title">stop</div>
-                    <input id="event_end" type="number" value="0" disabled> </input>
+                    <input id="event_end" eventId="end" type="number" value="0" disabled> </input>
                 </div>
                 <div class="event">
                     <div class="event_title">add</div>
-                    <input id="event_add" type="number" value="0" disabled> </input>
+                    <input id="event_add" eventId="add" type="number" value="0" disabled> </input>
                 </div>
                 <div class="event">
                     <div class="event_title">remove</div>
-                    <input id="event_remove" type="number" value="0" disabled> </input>
+                    <input id="event_remove" eventId="remove" type="number" value="0" disabled> </input>
                 </div>
                 <div class="event">
                     <div class="event_title">play</div>
-                    <input id="event_play" type="number" value="0" disabled> </input>
+                    <input id="event_play" eventId="play" type="number" value="0" disabled> </input>
                 </div>
                 <div class="event">
                     <div class="event_title">pause</div>
-                    <input id="event_pause" type="number" value="0" disabled> </input>
+                    <input id="event_pause" eventId="pause" type="number" value="0" disabled> </input>
+                </div>
+                <div class="event">
+                    <div class="event_title">skippable</div>
+                    <input id="event_skippable" eventId="skippable" type="number" value="0" disabled> </input>
+                </div>
+
+                <div class="event">
+                    <div class="event_title">skip</div>
+                    <input id="event_skip" eventId="skip" type="number" value="0" disabled> </input>
                 </div>
             </div>
             <button id="clearEvents_button" >Clear all</button><br>
@@ -303,12 +323,15 @@
 
         <script>
 
-            var mediaPlayer = null;
-            var adsPlugin = null;
+            var mediaPlayer = null,
+                adsPlugin = null,
+                adsPlayerContainer = "adsplayer-container",
+                adPlayer = null,
+                confirmationSet = false;
 
             document.addEventListener("DOMContentLoaded", function(event){
 
-                adsPlugin = new adsplayer.AdsPlayer(document.getElementById('adsplayer-container'));
+                adsPlugin = new adsplayer.AdsPlayer(document.getElementById(adsPlayerContainer));
 
                 initAdsPluginEvtsHdler(adsPlugin);
 
@@ -325,14 +348,15 @@
                 trackingEvtsHdler();
 
                 initHtml5VideoEvtsHdler();
-
             });
 
-            document.addEventListener("beforeunload", function(event) {
+            // "closeLinear" event is not dispatched if mediaPlayer is removed
+            /*
+            window.addEventListener("beforeunload", function(event) {
                 mediaPlayer.removePlugin(adsPlugin);
                 mediaPlayer.reset(1);
             });
-
+            */
         </script>
     </body>
 </html>

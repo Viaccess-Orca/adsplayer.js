@@ -152,8 +152,8 @@ Creative.TYPE = {
 */
 class Linear {
     constructor () {
-        this.skipoffsetInSeconds = 0;       // [Optional] Time value that identifies when skip controls are made available to the end user.
-        this.skipoffsetPercent = 0;         // [Optional] Time value that identifies when skip controls are made available to the end user.
+        this.skipoffsetInSeconds = null;       // [Optional] Time value that identifies when skip controls are made available to the end user.
+        this.skipoffsetPercent = null;         // [Optional] Time value that identifies when skip controls are made available to the end user.
         this.adParameters = null;           // [Optional] AdParameters element
         this.duration = 0;                  // [Required] Duration in standard time format, hh:mm:ss
         this.mediaFiles = [];               // [Required] MediaFile elements
@@ -227,8 +227,8 @@ class TrackingEvent {
     constructor () {
         this.uri = '';                      // [Optional] URI to track various events during playback
         this.event = '';                    // [Required] The name of the event to track for the Linear element
-        this.offsetInSeconds = '';          // [Optional] Required in "Progess" event, not use with other events
-        this.offsetPercent = '';            // [Optional] Required in "Progess" event, not use with other events
+        this.offsetInSeconds = '';          // [Optional] Required in "Progress" event, not use with other events
+        this.offsetPercent = '';            // [Optional] Required in "Progress" event, not use with other events
     }
 }
 
