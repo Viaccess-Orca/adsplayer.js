@@ -96,26 +96,9 @@ jsonStreamsDescription = '[{ "name" : "custom",                                 
               "url" : "http://playready.directtaps.net/smoothstreaming/SSWSS720H264/SuperSpeedway_720.ism/Manifest",  \
               "licenser" : { "url" : "", "drm" : "none"} },                                                           \
                                                                                                                       \
-            { "name" : "vod MSS multi audio",                                                                         \
-              "url" : "http://harmonic2.e2e.purpledrm.com.edgesuite.net/Content/SS/Live/Channel(Tvaas-4A-Euronews).isml/Manifest",  \
-              "licenser" : { "url" : "", "drm" : "none"} },                                                           \
-                                                                                                                      \
-            { "name" : "vod MSS multi subtitle",                                                                      \
-              "url" : "https://d2q16vxo4u6ubi.cloudfront.net/mss/Microsoft/Elephants+Dream+H.264+720p/ElephantsDream.ism/Manifest",  \
-              "licenser" : { "url" : "", "drm" : "none"} },                                                           \
-                                                                                                                      \
             { "name" : "live MSS ",                                                                                   \
               "url" : "http://harmonic2.e2e.purpledrm.com.edgesuite.net/Content/SS/Live/Channel(Tvaas-MB-Gulli).isml/Manifest",  \
               "licenser" : { "url" : "", "drm" : "none"} },                                                           \
-                                                                                                                      \
-            { "name" : "live MSS multi subtitle",                                                                      \
-              "url" : "http://harmonic2.e2e.purpledrm.com.edgesuite.net/Content/SS/Live/Channel(Tvaas-1S2A-sita-teletext).isml/Manifest",  \
-              "licenser" : { "url" : "", "drm" : "none"} },                                                           \
-                                                                                                                      \
-            { "name" : "vod MSS/PR multi audio",                                                                      \
-              "url" : "http://harmonic2.e2e.purpledrm.com.edgesuite.net/Content/SS/Live/Channel(Tvaas-MA-Euronews).isml/Manifest", \
-              "licenser" : [{ "url" : "http://proxy.e2e.purpledrm.com:9001/license?env=tvaas-test", "drm" : "com.widevine.alpha" }, \
-                            { "url" : "http://proxy.e2e.purpledrm.com:9001/license?env=tvaas-test", "drm" : "com.microsoft.playready" }]} ,\
                                                                                                                       \
             { "name" : "DASH common init",                                                                            \
               "url" : "http://rdmedia.bbc.co.uk/dash/ondemand/bbb/2/client_manifest-common_init.mpd",                 \

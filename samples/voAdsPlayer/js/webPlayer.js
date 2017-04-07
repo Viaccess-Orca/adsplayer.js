@@ -64,7 +64,7 @@ class WebPlayer {
     play(stream,ad) {
 
         var stream = {
-            url : "http://playready.directtaps.net/smoothstreaming/SSWSS720H264/SuperSpeedway_720.ism/Manifest",
+            url : stream.getUrl(),
             protData : null,
             adsUrl : ad.getUrl()
         };

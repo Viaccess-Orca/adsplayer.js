@@ -17,6 +17,8 @@
 <!-- endsources -->
 
 <script type="text/javascript" src="json/config.json"></script>
+<script type="text/javascript" src="js/streamSelector.js"></script>
+<script type="text/javascript" src="js/stream.js"></script>
 <script type="text/javascript" src="js/adSelector.js"></script>
 <script type="text/javascript" src="js/ad.js"></script>
 <script type="text/javascript" src="js/adsPlugin.js"></script>
@@ -45,6 +47,18 @@
     <div id="adsplayer-container" width="700" height="300" controls> </div>
     <table>
         <tr>
+            <td><label>Stream choice</label></td>
+            <td>
+                <select id="stream_type" >
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td><label>Stream url</label></td>
+            <td><input type="text" id="stream" name="stream" size="100" value=""></input>
+            </td>
+        </tr>
+        <tr>
             <td><label>Ad choice</label></td>
             <td><select id="ad_type"></td>
         </tr>
@@ -68,10 +82,15 @@
 	var webplayer;
 
     document.addEventListener("DOMContentLoaded", function(event) {
-
+        var streamSelector  = new StreamSelector(jsonStreamsDescription);
         var adSelector      = new AdSelector(jsonAdsDescription);
         var adsPlugin       = new AdsPlugin();
         webplayer       	= new WebPlayer(adsPlugin.getPlugin());
+
+        // select a stream
+        document.querySelector('#stream_type').addEventListener("change",function(e) {
+            streamSelector.onSelect(this);
+        });
 
         // select an ad
         document.querySelector('#ad_type').addEventListener("change",function(e) {
@@ -80,9 +99,10 @@
 
         // play button
         document.querySelector('#play_button').addEventListener("click",function(e) {
+            var selectedStream = streamSelector.getSelected();
             var selectedAd  = adSelector.getSelected();
 
-            webplayer.play(null, selectedAd);
+            webplayer.play(selectedStream, selectedAd);
         });
 
         // stop button
