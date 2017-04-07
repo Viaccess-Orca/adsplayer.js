@@ -1,4 +1,4 @@
-### Release Notes CSAdsPlugin-1.x.x (xx/04/2017)
+### Release Notes CSAdsPlugin-1.1.0 (07/04/2017)
 * CSWP-7: VAST3.0 : Support for Skippable Linear Ads
 
 ### Release Notes CSAdsPlugin-1.0.1 (06/03/2017)
