@@ -203,7 +203,7 @@ define(function(require) {
                             utils.compareCounters(counters, suiteConfig.endExpectedEvents);
                         })
                 );
-            },
+            }
         };
     });
 });

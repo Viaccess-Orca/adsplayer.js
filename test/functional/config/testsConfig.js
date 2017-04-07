@@ -5,7 +5,8 @@ define(function(require) {
     var _createInstance = function() {
         return {
             // Common tests suite configuration fields
-            testPageUrl : "http://cswebplayer.viaccess.fr/functionnalTests/CSAdsPlugin-Adrien/samples/testsPlayer",
+            //testPageUrl : "http://cswebplayer.viaccess.fr/functionnalTests/CSAdsPlugin-Adrien/samples/testsPlayer",
+            testPageUrl : "http://localhost:8080/samples/testsPlayer/",
             streamUrl   : "http://playready.directtaps.net/smoothstreaming/SSWSS720H264/SuperSpeedway_720.ism/Manifest",// url of the main stream
                                                                                                                         // take care using one with video.currentTime = 0 at the beginning
                                                                                                                         // for the pre-roll tests
@@ -106,7 +107,7 @@ define(function(require) {
                         "ExpectedtrackingEvents":{"creativeView":1,"start":1,"firstQuartile":1,"midpoint":"x","progress":"x","acceptInvitationLinear":1}
                     },
                     skip: {
-                        "adsUrl":"../ads/xml/mast/preroll-vast30-skippable.xml",
+                        "adsUrl":"../ads/xml/mast/preroll-vast30-skippable-double.xml",
                         "ExpectedtrackingEvents":{"creativeView":2,"start":2,"firstQuartile":1,"midpoint":"x","progress":"x","skip":1}
                     }
                 },
@@ -148,6 +149,53 @@ define(function(require) {
                             }
                         ],
                         timeOffset: 120.5
+                    }
+                },
+
+                // Skip test suite specific configuration fields
+                skip: {
+                    noSkip: {
+                        "adsUrl": "../ads/xml/mast/preroll-vast30-skippable-double.xml",
+                        "expectedEvents": {
+                            "start": 1,
+                            "end": 1,
+                            "add": 2,
+                            "remove": 2,
+                            "play": 2,
+                            "pause": 2,
+                            "skippable": 2,
+                            "skip": 0
+                        }
+                    },
+
+                    skipPercent: {
+                        "adsUrl": "../ads/xml/mast/preroll-vast30-skippable-percent.xml",
+                        "skipOffset": 1.5,
+                        "expectedEvents": {
+                            "start": 1,
+                            "end": 1,
+                            "add": 1,
+                            "remove": 1,
+                            "play": 1,
+                            "pause": 0,
+                            "skippable": 1,
+                            "skip": 1
+                        }
+                    },
+
+                    skipTimestamp: {
+                        "adsUrl": "../ads/xml/mast/preroll-vast30-skippable-timestamp.xml",
+                        "skipOffset": 2.5,
+                        "expectedEvents": {
+                            "start": 1,
+                            "end": 1,
+                            "add": 1,
+                            "remove": 1,
+                            "play": 1,
+                            "pause": 0,
+                            "skippable": 1,
+                            "skip": 1
+                        }
                     }
                 }
             }

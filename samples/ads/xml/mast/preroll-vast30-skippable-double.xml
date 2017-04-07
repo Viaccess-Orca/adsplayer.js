@@ -9,7 +9,7 @@
 				<!-- This 'resets' the trigger for the next clip-->
 			</endConditions>
 			<sources>
-				<source uri="../vast-3/VAST3-Skippable.xml" format="VAST">
+				<source uri="../vast-3/VAST3-Skippable-double.xml" format="VAST">
                     <sources />
                     <targets>
                         <target region="VideoArea" type="Linear"/>
