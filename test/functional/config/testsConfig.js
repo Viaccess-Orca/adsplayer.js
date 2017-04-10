@@ -5,8 +5,8 @@ define(function(require) {
     var _createInstance = function() {
         return {
             // Common tests suite configuration fields
-            //testPageUrl : "http://cswebplayer.viaccess.fr/functionnalTests/CSAdsPlugin-Adrien/samples/testsPlayer",
-            testPageUrl : "http://localhost:8080/samples/testsPlayer/",
+            testPageUrl : "http://cswebplayer.viaccess.fr/functionnalTests/CSAdsPlugin-Adrien/samples/testsPlayer",
+            //testPageUrl : "http://localhost:8080/samples/testsPlayer/",
             streamUrl   : "http://playready.directtaps.net/smoothstreaming/SSWSS720H264/SuperSpeedway_720.ism/Manifest",// url of the main stream
                                                                                                                         // take care using one with video.currentTime = 0 at the beginning
                                                                                                                         // for the pre-roll tests
@@ -195,6 +195,36 @@ define(function(require) {
                             "pause": 0,
                             "skippable": 1,
                             "skip": 1
+                        }
+                    },
+
+                    vmap: {
+                        "adsUrl": "../ads/xml/vmap/preroll-skippable-double.xml",
+                        "skipOffset": 2.5,
+                        "expectedEvents": {
+                            "start": 1,
+                            "end": 1,
+                            "add": 2,
+                            "remove": 2,
+                            "play": 2,
+                            "pause": 1,
+                            "skippable": 2,
+                            "skip": 1
+                        }
+                    },
+
+                    doubleSkip: {
+                        "adsUrl": "../ads/xml/vmap/preroll-skippable-double.xml",
+                        "skipOffsets": [2.5, 1.5],
+                        "expectedEvents": {
+                            "start": 1,
+                            "end": 1,
+                            "add": 2,
+                            "remove": 2,
+                            "play": 2,
+                            "pause": 0,
+                            "skippable": 2,
+                            "skip": 2
                         }
                     }
                 }

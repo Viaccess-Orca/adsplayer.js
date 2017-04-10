@@ -50,7 +50,7 @@
             <Impression id="DART"><![CDATA[http://localhost/log?impression]]></Impression>
             <Creatives>
                 <Creative>
-                    <Linear skipoffset="50%">
+                    <Linear skipoffset="20%">
                         <Duration>00:00:04</Duration>
                         <TrackingEvents>
                             <!-- OK -->

@@ -257,6 +257,90 @@ define(function(require) {
                         utils.compareCounters(counters, suiteConfig.skipTimestamp.expectedEvents);
                     })
                 );
+            },
+
+            // Play a vmap skippable ad file
+            "vmap": function () {
+                return(command
+                    // Wait for "Skip" button to be allowed
+                    .sleep(suiteConfig.vmap.skipOffset * 1000)
+                    // Skip
+                    .findByCssSelector("#skip_button")
+                    .click()
+                    .end()
+                    // Check that the ad video element is still here (double ad)
+                    .findAllByCssSelector("#adsplayer-container video")
+                    .then(
+                        function(elements) {
+                            assert.strictEqual(elements.length, 1, "1 ad video element should still be defined");
+                        }
+                    )
+                    .end()
+                    // Wait for the ad end event
+                    .then(pollUntil(function () {
+                        return document.getElementById('event_end').value === "1" ? true : null;
+                    }, null, 10000, 1000))
+                    .then(function() {
+                            // The ads are over, get the counter values
+                            return utils.getCounterValues(command, "#csadsplugin_events .event input");
+                        }
+                    )
+                    .then(function(counters) {
+                        // Check configuration
+                        assert.isDefined(suiteConfig.vmap, "Configuration is not defined for vmap test");
+                        assert.isDefined(suiteConfig.vmap.expectedEvents, "Configuration is not defined for vmap test");
+
+                        // Finally, check the counter values
+                        utils.compareCounters(counters, suiteConfig.vmap.expectedEvents);
+                    })
+                );
+            },
+
+            // Skip 2 ad file
+            "doubleSkip": function () {
+                return(command
+                    // Wait for "Skip" button to be allowed
+                    .sleep(suiteConfig.doubleSkip.skipOffsets[0] * 1000)
+                    // Skip once
+                    .findByCssSelector("#skip_button")
+                    .click()
+                    .end()
+                    // Check that the ad video element is still here (double ad)
+                    .findAllByCssSelector("#adsplayer-container video")
+                    .then(
+                        function(elements) {
+                            assert.strictEqual(elements.length, 1, "1 ad video element should still be defined");
+                        }
+                    )
+                    .end()
+                    // Wait for "Skip" button to be allowed again
+                    .sleep(suiteConfig.doubleSkip.skipOffsets[1] * 1000)
+                    // Skip twice
+                    .findByCssSelector("#skip_button")
+                    .click()
+                    .end()
+                    // Check that the ad video element was removed
+                    .findAllByCssSelector("#adsplayer-container video")
+                    .then(
+                        function(elements) {
+                            assert.strictEqual(elements.length, 0, "No ad video elements should now be defined");
+                        }
+                    )
+                    .end()
+                    .then(function() {
+                            // Get the counter values
+                            return utils.getCounterValues(command, "#csadsplugin_events .event input");
+                        }
+                    )
+                    .then(function(counters) {
+                        // Check configuration
+                        assert.isDefined(suiteConfig.doubleSkip, "Configuration is not defined for doubleSkip test");
+                        assert.isDefined(suiteConfig.doubleSkip.expectedEvents, "Configuration is not defined for doubleSkip test");
+
+                        // Finally, check the counter values
+                        utils.compareCounters(counters, suiteConfig.doubleSkip.expectedEvents);
+                    })
+                );
             }
         };
     });
