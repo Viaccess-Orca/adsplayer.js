@@ -25,7 +25,8 @@ define(function(require) {
             'test/functional/tests/events/testSuite',
             'test/functional/tests/multipleAds/testSuite',
             'test/functional/tests/trackingEvents/testSuite',
-            'test/functional/tests/vmap/testSuite'
+            'test/functional/tests/vmap/testSuite',
+            'test/functional/tests/skip/testSuite'
         ],
 
         // The amount of time, in milliseconds, an asynchronous test can run before it is considered timed out. By default this value is 30 seconds.
