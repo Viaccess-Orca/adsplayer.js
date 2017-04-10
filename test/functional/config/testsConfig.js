@@ -170,7 +170,7 @@ define(function(require) {
 
                     skipPercent: {
                         "adsUrl": "../ads/xml/mast/preroll-vast30-skippable-percent.xml",
-                        "skipOffset": 1.5,
+                        "skipOffset": 3,
                         "expectedEvents": {
                             "start": 1,
                             "end": 1,
@@ -185,7 +185,7 @@ define(function(require) {
 
                     skipTimestamp: {
                         "adsUrl": "../ads/xml/mast/preroll-vast30-skippable-timestamp.xml",
-                        "skipOffset": 2.5,
+                        "skipOffset": 4,
                         "expectedEvents": {
                             "start": 1,
                             "end": 1,
@@ -200,7 +200,7 @@ define(function(require) {
 
                     vmap: {
                         "adsUrl": "../ads/xml/vmap/preroll-skippable-double.xml",
-                        "skipOffset": 2.5,
+                        "skipOffset": 4,
                         "expectedEvents": {
                             "start": 1,
                             "end": 1,
@@ -215,7 +215,7 @@ define(function(require) {
 
                     doubleSkip: {
                         "adsUrl": "../ads/xml/vmap/preroll-skippable-double.xml",
-                        "skipOffsets": [2.5, 1.5],
+                        "skipOffsets": [4, 3],
                         "expectedEvents": {
                             "start": 1,
                             "end": 1,

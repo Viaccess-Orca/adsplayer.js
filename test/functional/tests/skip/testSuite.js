@@ -172,21 +172,17 @@ define(function(require) {
             // Play a skippable ad file with percent, and skip
             "skipPercent": function () {
                 return(command
-                    // Try to skip
-                    .findByCssSelector("#skip_button")
-                    .click()
-                    .end()
-                    // Check that the ad video element is still here
-                    .findAllByCssSelector("#adsplayer-container video")
+                    // Check that skip button is disabled
+                    .findAllByCssSelector("#skip_button[disabled]")
                     .then(
                         function(elements) {
-                            assert.strictEqual(elements.length, 1, "1 ad video element should still be defined");
+                            assert.strictEqual(elements.length, 1, "1 disabled skip button should be defined");
                         }
                     )
                     .end()
                     // Wait for "Skip" button to be allowed
                     .sleep(suiteConfig.skipPercent.skipOffset * 1000)
-                    // Try to skip again
+                    // Try skip again
                     .findByCssSelector("#skip_button")
                     .click()
                     .end()
@@ -217,18 +213,14 @@ define(function(require) {
             // Play a skippable ad file with timestamp, and skip
             "skipTimestamp": function () {
                 return(command
-                    // Try to skip
-                    .findByCssSelector("#skip_button")
-                    .click()
-                    .end()
-                    // Check that the ad video element is still here
-                    .findAllByCssSelector("#adsplayer-container video")
-                    .then(
-                        function(elements) {
-                            assert.strictEqual(elements.length, 1, "1 ad video element should still be defined");
-                        }
-                    )
-                    .end()
+                     // Check that skip button is disabled
+                     .findAllByCssSelector("#skip_button[disabled]")
+                     .then(
+                         function(elements) {
+                            assert.strictEqual(elements.length, 1, "1 disabled skip button should be defined");
+                         }
+                     )
+                     .end()
                     // Wait for "Skip" button to be allowed
                     .sleep(suiteConfig.skipTimestamp.skipOffset * 1000)
                     // Try to skip again
