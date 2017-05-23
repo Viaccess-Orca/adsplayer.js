@@ -51,6 +51,8 @@ class AdBreak {
         this.alreadyProcessed = false;
         this.vasts = [];
         this.activated = false;
+        this.repeatAfter = "";
+        this.repeatTime = null;
     }
 }
 

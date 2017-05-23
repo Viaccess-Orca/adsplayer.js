@@ -76,6 +76,7 @@ class VmapParser {
         adBreak.id = triggerNode.getAttribute('breakId');
         adBreak.breakType = triggerNode.getAttribute('breakType');
         adBreak.timeOffset = triggerNode.getAttribute('timeOffset');
+        adBreak.repeatAfter = triggerNode.getAttribute('repeatAfter');
 
         if (adSourceNode) {
             // Create an array for genericity purpose, even if VMAP allows only one source

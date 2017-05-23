@@ -64,18 +64,24 @@ jsonAdsDescription = '[ { "name": "No ad insertion",                            
                           "url" : "../../samples/ads/xml/mast/preroll-vast30-adPods.xml"},                \
                                                                                                           \
                         { "name": "Mast Preroll VAST30 double trigger",                                   \
-                        "url" : "../../samples/ads/xml/mast/preroll-vast30-doubleVastsInTrigger.xml"},    \
+                          "url" : "../../samples/ads/xml/mast/preroll-vast30-doubleVastsInTrigger.xml"},  \
                                                                                                           \
-                        { "name": "Mast Preroll VAST30 skippable",                                         \
-                        "url" : "../../samples/ads/xml/mast/preroll-vast30-skippable.xml"},               \
+                        { "name": "Mast Preroll VAST30 skippable",                                        \
+                          "url" : "../../samples/ads/xml/mast/preroll-vast30-skippable.xml"},             \
                                                                                                           \
                         { "name": "Vmap Preroll",                                                         \
                           "url" : "../../samples/ads/xml/vmap/preroll.xml"},                              \
                                                                                                           \
-                        { "name": "Vmap Miroll percent",                                                  \
+                        { "name": "Vmap Preroll - Repeat after",                                          \
+                          "url" : "../../samples/ads/xml/vmap/preroll-repeat.xml"},                       \
+                                                                                                          \
+                        { "name": "Vmap Midroll percent",                                                 \
                           "url" : "../../samples/ads/xml/vmap/midroll-percent.xml"},                      \
                                                                                                           \
-                        { "name": "Vmap Miroll timestamp",                                                \
+                        { "name": "Vmap Midroll percent - Repeat after",                                  \
+                          "url" : "../../samples/ads/xml/vmap/midroll-percent-repeat.xml"},               \
+                                                                                                          \
+                        { "name": "Vmap Midroll timestamp",                                               \
                           "url" : "../../samples/ads/xml/vmap/midroll-timestamp.xml"},                    \
                                                                                                           \
                         { "name": "Vmap Postroll",                                                        \
