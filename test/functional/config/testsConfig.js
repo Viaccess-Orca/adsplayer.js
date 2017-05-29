@@ -112,7 +112,7 @@ define(function(require) {
                 },
 
                 vmap: {
-                    marginOfError: 0.5,
+                    marginOfError: 1,
                     preroll: {
                         mastUrl: "../ads/xml/vmap/preroll.xml",
                         ads: [
@@ -148,6 +148,24 @@ define(function(require) {
                             }
                         ],
                         timeOffset: 120.5
+                    },
+                    prerollRepeat: {
+                        mastUrl: "../ads/xml/vmap/preroll-repeat.xml",
+                        ads: [
+                            {
+                                media: vast01[0]
+                            }
+                        ],
+                        timeOffsets: [0, 8, 16]
+                    },
+                    midrollRepeat: {
+                        mastUrl: "../ads/xml/vmap/midroll-percent-repeat.xml",
+                        ads: [
+                            {
+                                media: vast01[0]
+                            }
+                        ],
+                        timeOffsets: [3.6, 14.1, 24.6]
                     }
                 }
             }
