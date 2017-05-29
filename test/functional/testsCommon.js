@@ -22,9 +22,9 @@ define(function(require) {
 
         // Functional test suite(s) to run in each browser once non-functional tests are completed
         functionalSuites: [
-            //'test/functional/tests/events/testSuite',
-            //'test/functional/tests/multipleAds/testSuite',
-            //'test/functional/tests/trackingEvents/testSuite',
+            'test/functional/tests/events/testSuite',
+            'test/functional/tests/multipleAds/testSuite',
+            'test/functional/tests/trackingEvents/testSuite',
             'test/functional/tests/vmap/testSuite'
         ],
 
