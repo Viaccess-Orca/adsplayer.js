@@ -22,6 +22,7 @@ define({
 			'max-duration': 70,
 			'command-timeout': 70,
 		    'idle-timeout': 70,
+			'acceptSslCerts': true,
 			'acceptInsecureCerts': true,
 			'ensureCleanSession' : true,
 			'ie.ensureCleanSession' : true,
