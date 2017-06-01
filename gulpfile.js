@@ -21,8 +21,10 @@ var gulp = require('gulp'),
     uglify = require('gulp-uglify'),
     zip = require('gulp-zip'),
     // custom import
-    pkg = require('./package.json');
+    pkg = require('./package.json'),
+    ts = require("gulp-typescript");
 
+var tsProject = ts.createProject("tsconfig.json");
 
 var sources = {
     main: './src/AdsPlayer.js',
@@ -176,7 +178,15 @@ gulp.task('watch', function () {
     bundle_js(bundler, outName, false);
 });
 
-gulp.task('build', ['clean', 'package-info', 'lint'], function() {
+gulp.task("compile-typescript", function () {
+    return tsProject.src()
+        .pipe(tsProject())
+        .js.pipe(gulp.dest(function (file) {  //generate the js file in the same directory
+            return file.base;
+        }));
+});
+
+gulp.task('build', ['package-info', 'lint'], function() {
 
     return bundle_js(browserify(browserifyArgs), outName, true);
 });
@@ -234,7 +244,7 @@ gulp.task('version', function() {
 });
 
 gulp.task('default', function(cb) {
-    runSequence('build', ['build-samples', 'doc'],
+    runSequence('clean','compile-typescript','build', ['build-samples', 'doc'],
         'releases-notes',
         'zip',
         'version',
