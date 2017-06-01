@@ -109,7 +109,8 @@ define(function(require) {
 
                         // wait for the main video to be suspended, mean the ad is started
                         .then(pollUntil(function (value) {
-                            return parseInt(document.getElementById('event_html5_suspend').value) == 1 ? true : null;
+                        	// on chrome/Win10 2 suspend event are received
+                            return parseInt(document.getElementById('event_html5_suspend').value) >= 1 ? true : null;
                         }, null, 10000, 1000))
                         .then(function() {
                                 // The event suspend has been detected, now get the tracking events
