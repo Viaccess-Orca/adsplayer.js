@@ -82,7 +82,7 @@ class VastParser {
 
         let numberOfClickTracking = videoClicksNode.getElementsByTagName('ClickTracking').length;
         let clickTrackingNodes = xmldom.getElements(videoClicksNode, 'ClickTracking');
-        if (clickTrackingNodes) {
+        if (clickTrackingNodes.length !== 0) {
             for (let i = 0; i < numberOfClickTracking; i++){
                 videoClicks.clickTracking[i] = new vast.Click();
                 videoClicks.clickTracking[i].id = clickTrackingNodes[i].getAttribute('id');
@@ -93,7 +93,7 @@ class VastParser {
 
         let numberOfCustomClick = videoClicksNode.getElementsByTagName('CustomClick').length;
         let customClickNodes = xmldom.getElements(videoClicksNode, 'CustomClick');
-        if (customClickNodes) {
+        if (customClickNodes.length !== 0) {
             for (let i = 0; i < numberOfCustomClick; i++){
                 videoClicks.customClick[i] = new vast.Click();
                 videoClicks.customClick[i].id = customClickNodes[i].getAttribute('id');
@@ -252,7 +252,7 @@ class VastParser {
 
         let numberOfClickTracking = NonlinearNode.getElementsByTagName('NonLinearClickTracking').length;
         let clickTrackingNodes = xmldom.getElements(NonlinearNode, 'NonLinearClickTracking');
-        if (clickTrackingNodes) {
+        if (clickTrackingNodes.length !== 0) {
             for (let i = 0; i < numberOfClickTracking; i++){
                 nonlinear.nonLinearClickTracking[i] = new vast.Click();
                 nonlinear.nonLinearClickTracking[i].id = clickTrackingNodes[i].getAttribute('id');
@@ -316,7 +316,7 @@ class VastParser {
 
         nonLinearAdsNode = xmldom.getElement(creativeNode, 'NonLinearAds');
         if (nonLinearAdsNode) {
-            this._debug.warn("(VastParser) VAST/Ad/InLine/Creatives/Creative/NonLinearAds found ");
+            this._debug.log("(VastParser) VAST/Ad/InLine/Creatives/Creative/NonLinearAds found ");
             creative.nonLinearAds = this._getNonLinearAds(nonLinearAdsNode);
         }
 
@@ -384,7 +384,7 @@ class VastParser {
         inLine.error = xmldom.getChildNodeTextValue(inLineNode, 'Error');
 
         impressionNodes = xmldom.getElements(inLineNode, 'Impression');
-        if (impressionNodes !== null) {
+        if (impressionNodes.length !== 0) {
             inLine.impressions = this._getImpressions(impressionNodes);
         }
 
@@ -439,7 +439,7 @@ class VastParser {
         var numberOfAds = vastNode.getElementsByTagName('Ad').length;
         var adNodes = xmldom.getElements(vastNode, 'Ad');
 
-        if (adNodes === null) {
+        if (adNodes.length === 0) {
             return vast_;
         }
 
