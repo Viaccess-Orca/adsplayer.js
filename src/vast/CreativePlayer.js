@@ -363,7 +363,15 @@ class CreativePlayer {
     ///////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////// PUBLIC /////////////////////////////////////////////
 
-    constructor() {
+    /**
+     * Initializes the creative player.
+     * @method init
+     * @access public
+     * @memberof CreativePlayer#
+     * @param {Object} creative - the creative element to play
+     * @param {String} baseUrl - the base URL for media files
+     */
+    constructor(adPlayerContainer, mainVideo) {
         this._adPlayerContainer = null;
         this._mediaPlayer = null;
         this._trackingEventsManager = null;
@@ -376,17 +384,7 @@ class CreativePlayer {
         this._onMediaErrorListener = this._onMediaError.bind(this);
         this._onMediaTimeupdateListener = this._onMediaTimeupdate.bind(this);
         this._onMediaEndedListener = this._onMediaEnded.bind(this);
-    }
 
-    /**
-     * Initializes the creative player.
-     * @method init
-     * @access public
-     * @memberof CreativePlayer#
-     * @param {Object} creative - the creative element to play
-     * @param {String} baseUrl - the base URL for media files
-     */
-    init (adPlayerContainer, mainVideo) {
         this._adPlayerContainer = adPlayerContainer;
         this._mainVideo = mainVideo;
         this._mainVideo.addEventListener('volumechange', this._onMainVideoVolumeChange.bind(this));

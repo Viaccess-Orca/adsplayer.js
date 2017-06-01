@@ -28,10 +28,11 @@
 */
 
 /**
-* The VastPlayerManager manages the sequencing of playing creatives of a single VAST.
-* It takes as input the list of Vast objects as returned by the VAST parser.
-* For each Vast, the VastPlayerManager plays sequentially all contained Creatives,
-* with the help of a CreativePlayer.
+ * The VastPlayerManager manages the sequencing of VASTs of a single trigger,
+ * and inside a single VAST, manages the sequencing of creatives .
+ * It takes as input the list of Vast objects as returned by the VAST parser.
+ * For each Vast, the VastPlayerManager plays sequentially all contained Creatives,
+ * with the help of a AdPlayer.
 */
 
 

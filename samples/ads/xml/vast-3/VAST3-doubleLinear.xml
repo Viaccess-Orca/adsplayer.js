@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<VAST version="3.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="vast3_draft.xsd">
+    <Ad id="preroll-1" sequence="1">
+        <InLine>
+            <AdSystem version="3.0">Ad 1</AdSystem>
+            <AdTitle>Double creative</AdTitle>
+            <Impression id="DART"><![CDATA[http://qa.jwplayer.com/~alex/pixel.gif?2]]></Impression>
+            <Creatives>
+                <Creative>
+                    <Linear>
+                        <Duration>00:00:06</Duration>
+                        <MediaFiles>
+                            <MediaFile id="1" delivery="progressive" type="video/mp4" bitrate="0" width="640" height="360"><![CDATA[../../media/vo_ad_2.mp4]]></MediaFile>
+                        </MediaFiles>
+                    </Linear>
+                </Creative>
+                <Creative>
+                    <Linear>
+                        <Duration>00:00:04</Duration>
+                        <MediaFiles>
+                            <MediaFile id="1" delivery="progressive" type="video/mp4" bitrate="0" width="640" height="360" scalable="false" maintainAspectRatio="false" codec="avc1" apiFramework="thisisanapiframework"><![CDATA[../../media/vo_ad_4.mp4]]></MediaFile>
+                        </MediaFiles>
+                    </Linear>
+                </Creative>
+            </Creatives>
+        </InLine>
+    </Ad>
+</VAST>
