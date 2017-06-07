@@ -91,8 +91,12 @@ jsonAdsDescription = '[ { "name": "No ad insertion",                            
                           "url" : "../../samples/ads/xml/vmap/preroll-double-vast2.xml"},                 \
                                                                                                           \
                         { "name": "Vmap Preroll1 Preroll2",                                               \
-                        "url" : "../../samples/ads/xml/vmap/preroll1-preroll2.xml"}                       \
-                          ]';
+                          "url" : "../../samples/ads/xml/vmap/preroll1-preroll2.xml"},                    \
+                                                                                                          \
+                        { "name": "Vmap Nonlinear",                                                      \
+                          "url" : "../../samples/ads/xml/vmap/preroll-nonLinear.xml"}                      \
+                        ]';
+
 
 jsonStreamsDescription = '[{ "name" : "custom",                                                                       \
               "url" : "",                                                                                             \
