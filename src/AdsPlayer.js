@@ -94,8 +94,7 @@ class AdsPlayer {
     * @param {function} callback - the callback function to invoke when initialization is done
     */
     init (player, callback) {
-        this._adsPlayerController = new AdsPlayerController();
-        this._adsPlayerController.init(player, this._adsPlayerContainer);
+        this._adsPlayerController = new AdsPlayerController(player, this._adsPlayerContainer);
         this._eventBus.addEventListener('error', this.onErrorListener);
         this._eventBus.addEventListener('warning', this.onWarningListener);
 

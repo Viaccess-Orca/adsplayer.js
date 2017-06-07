@@ -240,8 +240,7 @@ class LinearCreativePlayer {
 
         // Add tracking events
         if (creative.trackingEvents) {
-            this._trackingEventsManager = new TrackingEventsManager();
-            this._trackingEventsManager.init(creative.trackingEvents, this._mediaPlayer);
+            this._trackingEventsManager = new TrackingEventsManager(creative.trackingEvents, this._mediaPlayer);
             this._trackingEventsManager.start();
         }
 

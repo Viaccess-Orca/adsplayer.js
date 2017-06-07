@@ -201,8 +201,7 @@ class AdsPlayerController {
 
         // Play the trigger
         this._debug.log('Start playing trigger ' + trigger.id);
-        this._vastPlayerManager = new VastPlayerManager();
-        this._vastPlayerManager.init(trigger.vasts, this._adsPlayerContainer, this._mainVideo);
+        this._vastPlayerManager = new VastPlayerManager(trigger.vasts, this._adsPlayerContainer, this._mainVideo);
         this._vastPlayerManager.start();
     }
 
@@ -275,11 +274,19 @@ class AdsPlayerController {
     ///////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////// PUBLIC /////////////////////////////////////////////
 
-    constructor () {
+    /**
+     * Initialize the Ads Player Controller.
+     * @method constructor
+     * @access public
+     * @memberof AdsPlayerController#
+     * @param {Object} mainVideo - the HTML5 video element used by the main media player
+     * @param {Object} adsPlayerContainer - The container to create the HTML5 video/image elements used to play and render the ads media
+     */
+    constructor (player, adsPlayerContainer) {
 
-        this._mainPlayer = null;
-        this._mainVideo = null;
-        this._adsPlayerContainer = null;
+        this._mainPlayer = player;
+        this._mainVideo = player.getVideoModel().getElement();
+        this._adsPlayerContainer = adsPlayerContainer;
         this._sequence = null;
         this._fileLoaders = [];
         this._adsManagers = [];
@@ -295,20 +302,6 @@ class AdsPlayerController {
         this._onVideoTimeupdateListener = this._onVideoTimeupdate.bind(this);
         this._onVideoEndedListener = this._onVideoEnded.bind(this);
         this._onTriggerEndListener = this._onTriggerEnd.bind(this);
-    }
-
-    /**
-     * Initialize the Ads Player Controller.
-     * @method init
-     * @access public
-     * @memberof AdsPlayerController#
-     * @param {Object} mainVideo - the HTML5 video element used by the main media player
-     * @param {Object} adsPlayerContainer - The container to create the HTML5 video/image elements used to play and render the ads media
-     */
-    init (player, adsPlayerContainer) {
-        this._mainPlayer = player;
-        this._mainVideo = player.getVideoModel().getElement();
-        this._adsPlayerContainer = adsPlayerContainer;
 
         // Add <video> event listener
         this._mainVideo.addEventListener('playing', this._onVideoPlayingListener);
@@ -318,7 +311,6 @@ class AdsPlayerController {
 
         this._debug.setLevel(4);
     }
-
 
     /**
      * Load/open a sequence file.

@@ -219,10 +219,11 @@ class VastPlayerManager {
      * @param {Object} adPlayerContainer - the HTML DOM container for ads player components
      * @param {Object} mainVideo - the HTML DOM container for video player components
      */
-    constructor(){
+    constructor(vasts, adPlayerContainer, mainVideo){
 
-        this._vasts = [];
-        this._adPlayerContainer = null;
+        this._vasts = vasts;
+        this._adPlayerContainer = adPlayerContainer;
+        this._mainVideo = mainVideo;
         this._vastIndex = 0;
         this._adIndex = 0;
         this._isAdPods = false;
@@ -231,12 +232,6 @@ class VastPlayerManager {
         this._eventBus = EventBus.getInstance();
 
         this._onAdEndListener = this._onAdEnd.bind(this);
-    }
-
-    init(vasts, adPlayerContainer, mainVideo){
-        this._vasts = vasts;
-        this._adPlayerContainer = adPlayerContainer;
-        this._mainVideo = mainVideo;
     }
 
     start() {

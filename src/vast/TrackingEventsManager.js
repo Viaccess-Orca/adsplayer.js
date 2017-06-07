@@ -213,30 +213,23 @@ class TrackingEventsManager {
     ///////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////// PUBLIC /////////////////////////////////////////////
 
-    constructor() {
-        this._trackingEvents = null;
-        this._adMediaPlayer = null;
-        this._currentTime = -1;
-        this._mute = -1;
-        this._unmute = -1;
-        this._debug = Debug.getInstance();
-        this._eventBus = EventBus.getInstance();
-        this._eventListeners = [];
-    }
-
     /**
      * Initializes the TrackingEventsManager.
-     * @method init
+     * @method constructor
      * @access public
      * @memberof TrackingEventsManager#
      * @param {Array} trackingEvents - the array of tracking events to manage
      * @param {Object} adMediaPlayer - the ad media player
      */
-    init (trackingEvents, adMediaPlayer) {
+    constructor(trackingEvents, adMediaPlayer) {
         this._trackingEvents = trackingEvents;
         this._adMediaPlayer = adMediaPlayer;
+        this._currentTime = -1;
         this._mute = (this._adMediaPlayer.getVolume() === 0);
         this._unmute = (this._adMediaPlayer.getVolume() > 0);
+        this._debug = Debug.getInstance();
+        this._eventBus = EventBus.getInstance();
+        this._eventListeners = [];
     }
 
     start () {
