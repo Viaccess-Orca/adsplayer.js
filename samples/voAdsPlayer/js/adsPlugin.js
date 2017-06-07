@@ -48,7 +48,13 @@ class AdsPlugin {
     onAdsPlayerToggle(e) {
         console.log("onAdsPlayerToggle - " + e.type);
         this.adsMode = (e.type === 'start');
-        document.getElementById('videoplayer-container').style.display = this.adsMode ? 'none' : 'block';
+        if (this.adsMode) {
+            document.getElementById('videoplayer-container').style.display = 'none';
+            document.getElementById('adsplayer-container').style.display = 'block';
+        } else {
+            document.getElementById('videoplayer-container').style.display = 'block';
+            document.getElementById('adsplayer-container').style.display = 'none';
+        }
     }
 
     onAdsPlayerPlayPause(e) {

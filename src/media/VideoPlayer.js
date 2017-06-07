@@ -69,6 +69,7 @@ class VideoPlayer {
             this._video = document.createElement('video');
             this._video.autoplay = false;
             this._video.id = 'adsplayer-video';
+            this._video.style.width = "100%";
         }
 
         // Check if input format is supported
