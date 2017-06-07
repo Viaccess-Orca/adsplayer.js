@@ -7,7 +7,7 @@
             <Creatives>
                 <Creative sequence="1" AdID="">
                     <NonLinearAds>
-                        <NonLinear width="50" height="10">
+                        <NonLinear width="150" height="75">
                             <StaticResource creativeType="image/png">
                                 <![CDATA[../../media/vo_logo.png]]>
                             </StaticResource>
