@@ -10,12 +10,12 @@
  *
  */
 
-import CreativePlayer from './CreativePlayer';
+import LinearCreativePlayer from './LinearCreativePlayer';
 import Debug from '../Debug';
 import EventBus from '../EventBus';
 import NonLinearCreativePlayer from './NonLinearCreativePlayer';
 
-class AdPlayer {
+class CreativesPlayer {
 
         _sendImpressions (impressions){
             let impression;
@@ -108,16 +108,16 @@ class AdPlayer {
             if (creative.linear) {
                 this._debug.info("Play Linear Ad, duration = " + creative.linear.duration);
                 this._eventBus.addEventListener('creativeEnd', this._onCreativeEndListener);
-                this._creativePlayer = new CreativePlayer(this._adPlayerContainer, this._mainVideo);
+                this._creativePlayer = new LinearCreativePlayer(this._adPlayerContainer, this._mainVideo);
                 if (!this._creativePlayer.load(creative.linear, this._baseUrl)) {
                     this._playNextCreative();
                 }
             } else {
                 // then non-linear if it exists
-                if (creative.nonlinear) {
+                if (creative.nonLinearAds) {
                     this._debug.info("Play Non-Linear Ad");
                     this._eventBus.addEventListener('creativeEnd', this._onCreativeEndListener);
-                    this._creativePlayer = new NonLinearCreativePlayer();
+                    this._creativePlayer = new NonLinearCreativePlayer(this._adPlayerContainer, this._mainVideo);
                     if (!this._creativePlayer.load(creative.nonLinearAds, this._baseUrl)) {
                         this._playNextCreative();
                     }
@@ -227,4 +227,4 @@ class AdPlayer {
     }
 }
 
-export default AdPlayer;
+export default CreativesPlayer;

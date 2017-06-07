@@ -41,7 +41,7 @@ import ImagePlayer from '../media/ImagePlayer';
 import Debug from '../Debug';
 import EventBus from '../EventBus';
 
-class CreativePlayer {
+class LinearCreativePlayer {
 
     ///////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////// PRIVATE ////////////////////////////////////////////
@@ -260,8 +260,15 @@ class CreativePlayer {
             }
         });
 
-        // Add the media player DOM element
+        // Add the ad DOM container
         this._adPlayerContainer.appendChild(this._mediaPlayer.getElement());
+
+        // Size and position the ad DOM container
+        this._adPlayerContainer.style.position = "absolute";
+        this._adPlayerContainer.style.top = "0%";
+        this._adPlayerContainer.style.left = "0%";
+        this._adPlayerContainer.style.height = "100%";
+        this._adPlayerContainer.style.width = "100%";
 
         // Listener for click
         if (creative.videoClicks) {
@@ -388,6 +395,7 @@ class CreativePlayer {
         this._adPlayerContainer = adPlayerContainer;
         this._mainVideo = mainVideo;
         this._mainVideo.addEventListener('volumechange', this._onMainVideoVolumeChange.bind(this));
+
     }
 
     load (creative, baseUrl) {
@@ -411,4 +419,4 @@ class CreativePlayer {
     }
 }
 
-export default CreativePlayer;
+export default LinearCreativePlayer;
