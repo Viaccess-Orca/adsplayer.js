@@ -1,16 +1,17 @@
-# adsplayer.js
+# CSAdsPlugin.js
 
-adsplayer.js is a plugin/module for hasplayer.js [https://github.com/Orange-OpenSource/hasplayer.js] that handles ad-insertion when playing streams with hasplayer.js player.
-adsplayer.js v1.0.0 is compatible with MAST file format for describing the list of ad-insertion triggers, and with VAST format for ads playing description.
-When opening a new stream with hasplayer.js, the adsplayer.js plugin handles ad-insertion in the cast a MAST description is provided.
+CSAdsPlugin.js is a plugin for CSWebPlayer.js that handles ad-insertion when playing streams with CSWebPlayer.js player.
+CSAdsPlugin.js supports MAST and VMAP file format for describing the list of ad-insertion triggers.
+VAST 2.0 & 3.0 formats are supported for ads playing description (Linear and Non-Linear ads).
 
-The adsplayer.js plugin takes charge of:
-* MAST and VAST files downloading
+The CSAdsPlugin.js plugin takes charge of:
+* MAST, VMAP and VAST files downloading
 * detecting ad-insertion triggers
-* pausing and then resuming the MediaPlayer video when playing ad(s)
-* opening and playing ad media files, by the help of &lt;video&gt; and &lt;img&gt; HTML components, created by the plugin and appended in the DOM container provided to the plugin
+* pausing and then resuming the MediaPlayer video when playing a Linear ad
+* opening and playing ad media files, by the help of <video> and <img> HTML components, created by the plugin and appended in the Ad DOM container provided to the plugin
+* sizing and positionning the Ad DOM container
 
-The application that uses hasplayer.js in conjunction with adsplayer.js has to take charge of:
+The application that uses CSWebPlayer.js in conjunction with CSAdsPlugin.js has to take charge of:
 * hiding/showing adsplayer.js components according to the events raised by the plugin
 * opening the web page when a click on the playing ad has been detected by the plugin
 * pausing/resuming the plugin (for example when application visibility changes)
@@ -54,7 +55,9 @@ adsPlayer.addEventListener("end", function (e) {
     // Ad(s) playback has ended => hide ad(s) player container and show main video
 });
 adsPlayer.addEventListener("addElement", function (e) {
-    // a DOM element for playing an ad has been created and will be appended in the ads player container. The element can be either a &lt;video&gt; or an &lt;img&gt; element
+    // a DOM element for playing an ad has been created and will be appended in the ads player container.
+    The element can be either a video or an image element.
+    => size ad player container according to main video
 });
 adsPlayer.addEventListener("removeElement", function (e) {
     // the DOM element for playing an ad is being removed from the ads player container and deleted

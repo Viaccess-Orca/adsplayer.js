@@ -28,11 +28,57 @@
  * WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-class NonLinearCreativePlayer {
-    constructor() {
+import ImagePlayer from '../media/ImagePlayer';
+import EventBus from '../EventBus';
+import Debug from '../Debug';
 
+class NonLinearCreativePlayer {
+
+    private _debug: Debug;
+    private _eventBus: EventBus;
+    private _mediaPlayer: ImagePlayer;
+
+    constructor(private _adPlayerContainer: any, private mainVideo: HTMLVideoElement) {
+        this._debug = Debug.getInstance();
+        this._eventBus = EventBus.getInstance();
     }
 
+    load(nonLinearAds: any, baseURl: string) : boolean {
+
+        this._mediaPlayer = new ImagePlayer();
+        this._mediaPlayer.load(baseURl,[{"type": nonLinearAds.nonLinear[0].staticResource.creativeType,
+                                         "uri":  nonLinearAds.nonLinear[0].staticResource.uri}]);
+
+
+        let image : HTMLImageElement = this._mediaPlayer.getElement();
+        image.style.height = nonLinearAds.nonLinear[0].height+"px";
+        image.style.width = nonLinearAds.nonLinear[0].width+"px";
+
+        // Add the image to the DOM element
+        this._adPlayerContainer.appendChild(image);
+
+        // Position image related to the parent positioned div
+        let wImage : number = parseInt(nonLinearAds.nonLinear[0].width);
+        this._adPlayerContainer.style.position= "absolute";
+        this._adPlayerContainer.style.bottom="5%";
+        this._adPlayerContainer.style.left="calc(50% - " + wImage/2 +"px)";
+
+        return true;
+    }
+
+    play () {
+        //Nothing to do in case of non linear creative
+    }
+
+    pause () {
+        //Nothing to do in case of non linear creative
+    }
+
+    stop () {
+    }
+
+    reset () {
+    }
 }
 
 export default NonLinearCreativePlayer;
