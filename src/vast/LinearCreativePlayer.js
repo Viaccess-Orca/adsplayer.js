@@ -104,6 +104,9 @@ class LinearCreativePlayer {
 
         this._debug.log("creative media ended");
 
+        // Resume main video
+        this._resumeMainVideo();
+
         // Notify the creative has ended
         this._eventBus.dispatchEvent({
             type: 'creativeEnd',
@@ -190,6 +193,35 @@ class LinearCreativePlayer {
         // ClickTracking
         // if (this.videoClicks.clickTracking) {
         // }
+    }
+
+    _pauseMainVideo () {
+        this._debug.log("(LinearCreativePlayer) Pause main video 1");
+        // in case of pre-roll ad, the main video may not be started yet
+        if (!this._mainVideo.paused) {
+            this._mainVideo.pause();
+        } else {
+            // then add a listener on playing to pause when it occurs
+            this._mainVideo.addEventListener("playing", this._onMainVideoPlayListener);
+        }
+    }
+
+    _onMainVideoPlay () {
+        this._debug.log("(LinearCreativePlayer) Pause main video 2");
+        this._mainVideo.pause();
+    }
+
+    _resumeMainVideo () {
+        this._debug.log("(LinearCreativePlayer) Resume main video");
+        this._mainVideo.removeEventListener("playing", this._onMainVideoPlayListener);
+
+        if ((this._mainVideo.paused) && (!this._mainVideo.ended)) {
+            this._mainVideo.play();
+        } else {
+            console.err("main video NOT resumed");
+        }
+
+
     }
 
     _load (creative, baseUrl) {
@@ -279,6 +311,9 @@ class LinearCreativePlayer {
 
         // Align media volume to main video volume
         this._onMainVideoVolumeChange();
+
+        // Pause main video
+        this._pauseMainVideo();
 
         // Start playing the media
         this._play();
@@ -390,6 +425,7 @@ class LinearCreativePlayer {
         this._onMediaErrorListener = this._onMediaError.bind(this);
         this._onMediaTimeupdateListener = this._onMediaTimeupdate.bind(this);
         this._onMediaEndedListener = this._onMediaEnded.bind(this);
+        this._onMainVideoPlayListener = this._onMainVideoPlay.bind(this);
 
         this._adPlayerContainer = adPlayerContainer;
         this._mainVideo = mainVideo;
