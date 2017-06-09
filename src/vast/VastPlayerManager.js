@@ -76,10 +76,9 @@ class VastPlayerManager {
     _resetAd () {
         this._debug.log("(VastPlayerManager) _resetAd");
 
-        if (this._adPlayer) {
-            this._adPlayer.reset();
+        if (this._creativesPlayer) {
+            this._creativesPlayer.reset();
         }
-
     }
 
     _skipAd () {
