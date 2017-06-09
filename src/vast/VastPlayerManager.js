@@ -44,9 +44,9 @@ class VastPlayerManager {
     ///////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////// PRIVATE ////////////////////////////////////////////
 
-    _onAdEnd() {
+    _onCreativesEnd() {
 
-        this._debug.log("(VastPlayerManager) _onAdEnd");
+        this._debug.log("(VastPlayerManager) _onCreativesEnd");
 
         // Stop the current ad
         this._stopAd();
@@ -95,19 +95,19 @@ class VastPlayerManager {
 
         if (this._creativesPlayer) {
             this._creativesPlayer.stop();
-            this._eventBus.removeEventListener('adEnd', this._onAdEndListener);
+            this._eventBus.removeEventListener('creativesEnd', this._onCreativesEndListener);
             this._creativesPlayer = null;
         }
 
     }
 
-    _playAd (vastIndex,adIndex) {
+    _playCreatives (vastIndex,adIndex) {
 
-        this._debug.log("(VastPlayerManager) _playAd(" + vastIndex + "," + adIndex + ")");
+        this._debug.log("(VastPlayerManager) _playCreatives(" + vastIndex + "," + adIndex + ")");
 
         this._creativesPlayer = new CreativesPlayer(this._vasts[vastIndex].ads[adIndex], this._adPlayerContainer, this._mainVideo, this._vasts[vastIndex].baseUrl);
 
-        this._eventBus.addEventListener('adEnd', this._onAdEndListener);
+        this._eventBus.addEventListener('creativesEnd', this._onCreativesEndListener);
 
         this._creativesPlayer.start();
     }
@@ -119,13 +119,13 @@ class VastPlayerManager {
 
         if (nextAdIndex < this._vasts[currentVastIndex].ads.length) {
             // play next ad in the current vast
-            this._playAd(currentVastIndex,nextAdIndex);
+            this._playCreatives(currentVastIndex,nextAdIndex);
         } else {
             let nextVastIndex = this._getNextVastIndex();
             if (nextVastIndex < this._vasts.length) {
                 // play next ad in the current vast
                 let firstAdIndex = this._getFirstAdIndex(nextVastIndex);
-                this._playAd(nextVastIndex, firstAdIndex);
+                this._playCreatives(nextVastIndex, firstAdIndex);
             } else {
 
                 // Notify end of trigger
@@ -230,7 +230,7 @@ class VastPlayerManager {
         this._debug = Debug.getInstance();
         this._eventBus = EventBus.getInstance();
 
-        this._onAdEndListener = this._onAdEnd.bind(this);
+        this._onCreativesEndListener = this._onCreativesEnd.bind(this);
     }
 
     start() {
@@ -244,7 +244,7 @@ class VastPlayerManager {
             data: {}
         });
 
-        this._playAd(this._getFirstVastIndex(),this._getFirstAdIndex(this._getFirstVastIndex()));
+        this._playCreatives(this._getFirstVastIndex(),this._getFirstAdIndex(this._getFirstVastIndex()));
     }
 
     play() {
@@ -265,7 +265,7 @@ class VastPlayerManager {
 
     reset() {
         this._resetAd();
-        this._eventBus.removeEventListener('adEnd', this._onAdEndListener);
+        this._eventBus.removeEventListener('creativesEnd', this._onCreativesEndListener);
         this._mainVideo = null;
         this._adPlayerContainer = null;
         this._vasts = null;

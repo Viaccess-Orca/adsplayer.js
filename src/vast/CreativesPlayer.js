@@ -5,8 +5,8 @@
  * with the help of a CreativePlayer.
  *
  * Dispatch events:
- *  - "adStart" when the first creative is played
- *  - "adEnd" when all the creative are played
+ *  - "creativesStart" when the first creative is played
+ *  - "creativesEnd" when all the creative are played
  *
  */
 
@@ -84,7 +84,7 @@ class CreativesPlayer {
             } else {
                 // Notify end of trigger
                 this._eventBus.dispatchEvent({
-                    type: "adEnd",
+                    type: "creativesEnd",
                     data: {}
                 });
             }
@@ -178,7 +178,7 @@ class CreativesPlayer {
 
         // Notify an ad is starting to play
         this._eventBus.dispatchEvent({
-            type: 'adStart',
+            type: 'creativesStart',
             data: {}
         });
 
