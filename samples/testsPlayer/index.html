@@ -52,10 +52,11 @@
     </head>
 
     <body>
-        <div id="container" style="min-height: 300px">
-            <video id="videoplayer-container" width="700" height="300" controls>  </video>
-            <div id="adsplayer-container" width="700" height="300"> </div>
+        <div id="media-container" style="width:854px; height:480px; position:relative">
+            <video id="videoplayer-container" style="display:block; width:auto; height:100%;"></video>
+            <div id="adsplayer-container" style="display:none"> </div>
         </div>
+
         <div>
             <br>
             <input id="stream_toplay" type="text" size="100" value="http://playready.directtaps.net/smoothstreaming/SSWSS720H264/SuperSpeedway_720.ism/Manifest"> </input><br>
