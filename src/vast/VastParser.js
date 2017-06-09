@@ -82,7 +82,7 @@ class VastParser {
 
         let numberOfClickTracking = videoClicksNode.getElementsByTagName('ClickTracking').length;
         let clickTrackingNodes = xmldom.getElements(videoClicksNode, 'ClickTracking');
-        if (clickTrackingNodes) {
+        if (clickTrackingNodes.length !== 0) {
             for (let i = 0; i < numberOfClickTracking; i++){
                 videoClicks.clickTracking[i] = new vast.Click();
                 videoClicks.clickTracking[i].id = clickTrackingNodes[i].getAttribute('id');
@@ -93,7 +93,7 @@ class VastParser {
 
         let numberOfCustomClick = videoClicksNode.getElementsByTagName('CustomClick').length;
         let customClickNodes = xmldom.getElements(videoClicksNode, 'CustomClick');
-        if (customClickNodes) {
+        if (customClickNodes.length !== 0) {
             for (let i = 0; i < numberOfCustomClick; i++){
                 videoClicks.customClick[i] = new vast.Click();
                 videoClicks.customClick[i].id = customClickNodes[i].getAttribute('id');
@@ -229,7 +229,7 @@ class VastParser {
 
         let staticResourceNode = xmldom.getElement(NonlinearNode, 'StaticResource');
         if (staticResourceNode) {
-            nonlinear.staticResourceNode = this._getStaticResource(staticResourceNode);
+            nonlinear.staticResource = this._getStaticResource(staticResourceNode);
         }
 
         let iFrameResourceNode = xmldom.getElement(NonlinearNode, 'IFrameResource');
@@ -252,7 +252,7 @@ class VastParser {
 
         let numberOfClickTracking = NonlinearNode.getElementsByTagName('NonLinearClickTracking').length;
         let clickTrackingNodes = xmldom.getElements(NonlinearNode, 'NonLinearClickTracking');
-        if (clickTrackingNodes) {
+        if (clickTrackingNodes.length !== 0) {
             for (let i = 0; i < numberOfClickTracking; i++){
                 nonlinear.nonLinearClickTracking[i] = new vast.Click();
                 nonlinear.nonLinearClickTracking[i].id = clickTrackingNodes[i].getAttribute('id');
@@ -272,14 +272,21 @@ class VastParser {
     _getNonLinearAds (nonLinearAdsNode) {
         let nonLinearAds = new vast.NonLinearAds(),
             trackingEventsNode,
-            trackingNodes,
-            nonLinearNode;
+            trackingNodes;
 
+        let numberOfNonLinear = nonLinearAdsNode.getElementsByTagName('NonLinear').length;
+        let nonLinearNodes = xmldom.getElements(nonLinearAdsNode, 'NonLinear');
+        if (nonLinearNodes.length !== 0) {
+            for (let i = 0; i < numberOfNonLinear; i++){
+                nonLinearAds.nonLinear[i] = this._getNonLinear(nonLinearNodes[i]);
+            }
+        }
+        /*
         nonLinearNode = xmldom.getElement(nonLinearAdsNode, 'NonLinear');
         if (nonLinearNode) {
-            //this._debug.warn("(VastParser) VAST/Ad/InLine/Creatives/Creative/NonLinearAds/nonLinearNode found ");
             nonLinearAds.nonLinear = this._getNonLinear(nonLinearNode);
         }
+        */
 
         trackingEventsNode = xmldom.getElement(nonLinearAdsNode, 'TrackingEvents');
         if (trackingEventsNode) {
@@ -290,7 +297,7 @@ class VastParser {
             }
         }
 
-        return nonLinearAdsNode;
+        return nonLinearAds;
     }
 
     _getCreative (creativeNode) {
@@ -308,16 +315,17 @@ class VastParser {
         if (linearNode) {
             creative.linear = this._getLinear(linearNode);
         }
-
-        companionNode = xmldom.getElement(creativeNode, 'CompanionAds');
-        if (companionNode) {
-            this._debug.warn("(VastParser) VAST/Ad/InLine/Creatives/Creative/CompanionAds not supported ");
-        }
-
-        nonLinearAdsNode = xmldom.getElement(creativeNode, 'NonLinearAds');
-        if (nonLinearAdsNode) {
-            this._debug.warn("(VastParser) VAST/Ad/InLine/Creatives/Creative/NonLinearAds found ");
-            creative.nonLinearAds = this._getNonLinearAds(nonLinearAdsNode);
+        else {
+            companionNode = xmldom.getElement(creativeNode, 'CompanionAds');
+            if (companionNode) {
+                this._debug.warn("(VastParser) VAST/Ad/InLine/Creatives/Creative/CompanionAds not supported ");
+            }
+            else {
+                nonLinearAdsNode = xmldom.getElement(creativeNode, 'NonLinearAds');
+                if (nonLinearAdsNode) {
+                    creative.nonLinearAds = this._getNonLinearAds(nonLinearAdsNode);
+                }
+            }
         }
 
         return creative;
@@ -384,7 +392,7 @@ class VastParser {
         inLine.error = xmldom.getChildNodeTextValue(inLineNode, 'Error');
 
         impressionNodes = xmldom.getElements(inLineNode, 'Impression');
-        if (impressionNodes !== null) {
+        if (impressionNodes.length !== 0) {
             inLine.impressions = this._getImpressions(impressionNodes);
         }
 
@@ -439,7 +447,7 @@ class VastParser {
         var numberOfAds = vastNode.getElementsByTagName('Ad').length;
         var adNodes = xmldom.getElements(vastNode, 'Ad');
 
-        if (adNodes === null) {
+        if (adNodes.length === 0) {
             return vast_;
         }
 

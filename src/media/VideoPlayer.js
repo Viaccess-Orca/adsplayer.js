@@ -59,6 +59,14 @@ class VideoPlayer {
         this._debug = Debug.getInstance();
     }
 
+    // destructor
+    delete () {
+        if (!this._video) {
+            return;
+        }
+        this._video = null;
+    }
+
     load (baseUrl, mediaFiles) {
 
         // Get 'adsplayer-video' element if already declared in DOM
@@ -69,6 +77,7 @@ class VideoPlayer {
             this._video = document.createElement('video');
             this._video.autoplay = false;
             this._video.id = 'adsplayer-video';
+            this._video.style.width = "100%";
         }
 
         // Check if input format is supported
@@ -174,13 +183,6 @@ class VideoPlayer {
             return;
         }
         this._video.pause();
-    }
-
-    reset () {
-        if (!this._video) {
-            return;
-        }
-        this._video = null;
     }
 
     isEnded () {

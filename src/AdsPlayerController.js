@@ -122,13 +122,6 @@ class AdsPlayerController {
         }
     }
 
-    _onVideoPlaying () {
-        if (this._vastPlayerManager) {
-            this._debug.log("Pause main video");
-            this._mainVideo.pause();
-        }
-    }
-
     _onVideoTimeupdate () {
         // Check for mid-roll triggers
         var trigger = this._checkTriggersStart();
@@ -145,20 +138,6 @@ class AdsPlayerController {
         }
 
         this._checkTriggersEnd();
-    }
-
-    _pauseVideo () {
-        if (!this._mainVideo.paused) {
-            this._debug.log("Pause main video");
-            this._mainVideo.pause();
-        }
-    }
-
-    _resumeVideo () {
-        if (this._mainVideo.paused) {
-            this._debug.log("Resume main video");
-            this._mainVideo.play();
-        }
     }
 
     _onTriggerEnd () {
@@ -181,10 +160,6 @@ class AdsPlayerController {
             // Notifies the application ad(s) playback has ended
             this._eventBus.dispatchEvent({type: 'end', data: null});
 
-            if (!this._mainVideo.ended) {
-                // Resume the main video element
-                this._resumeVideo();
-            }
         }
     }
 
@@ -193,16 +168,12 @@ class AdsPlayerController {
             return;
         }
 
-        // Pause the main video element
-        this._pauseVideo();
-
         // Add trigger end event listener
         this._eventBus.addEventListener('triggerEnd', this._onTriggerEndListener);
 
         // Play the trigger
         this._debug.log('Start playing trigger ' + trigger.id);
-        this._vastPlayerManager = new VastPlayerManager();
-        this._vastPlayerManager.init(trigger.vasts, this._adsPlayerContainer, this._mainVideo);
+        this._vastPlayerManager = new VastPlayerManager(trigger.vasts, this._adsPlayerContainer, this._mainVideo);
         this._vastPlayerManager.start();
     }
 
@@ -275,11 +246,19 @@ class AdsPlayerController {
     ///////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////// PUBLIC /////////////////////////////////////////////
 
-    constructor () {
+    /**
+     * Initialize the Ads Player Controller.
+     * @method constructor
+     * @access public
+     * @memberof AdsPlayerController#
+     * @param {Object} mainVideo - the HTML5 video element used by the main media player
+     * @param {Object} adsPlayerContainer - The container to create the HTML5 video/image elements used to play and render the ads media
+     */
+    constructor (player, adsPlayerContainer) {
 
-        this._mainPlayer = null;
-        this._mainVideo = null;
-        this._adsPlayerContainer = null;
+        this._mainPlayer = player;
+        this._mainVideo = player.getVideoModel().getElement();
+        this._adsPlayerContainer = adsPlayerContainer;
         this._sequence = null;
         this._fileLoaders = [];
         this._adsManagers = [];
@@ -291,34 +270,17 @@ class AdsPlayerController {
         this._eventBus = EventBus.getInstance();
         this.loadingTrigger = false;
 
-        this._onVideoPlayingListener = this._onVideoPlaying.bind(this);
         this._onVideoTimeupdateListener = this._onVideoTimeupdate.bind(this);
         this._onVideoEndedListener = this._onVideoEnded.bind(this);
         this._onTriggerEndListener = this._onTriggerEnd.bind(this);
-    }
-
-    /**
-     * Initialize the Ads Player Controller.
-     * @method init
-     * @access public
-     * @memberof AdsPlayerController#
-     * @param {Object} mainVideo - the HTML5 video element used by the main media player
-     * @param {Object} adsPlayerContainer - The container to create the HTML5 video/image elements used to play and render the ads media
-     */
-    init (player, adsPlayerContainer) {
-        this._mainPlayer = player;
-        this._mainVideo = player.getVideoModel().getElement();
-        this._adsPlayerContainer = adsPlayerContainer;
 
         // Add <video> event listener
-        this._mainVideo.addEventListener('playing', this._onVideoPlayingListener);
         this._mainVideo.addEventListener('timeupdate', this._onVideoTimeupdateListener);
         this._mainVideo.addEventListener('seeking', this._onVideoTimeupdateListener);
         this._mainVideo.addEventListener('ended', this._onVideoEndedListener);
 
         this._debug.setLevel(4);
     }
-
 
     /**
      * Load/open a sequence file.
@@ -402,7 +364,6 @@ class AdsPlayerController {
         this.reset();
 
         // Remove <video> event listener
-        this._mainVideo.removeEventListener('playing', this._onVideoPlayingListener);
         this._mainVideo.removeEventListener('timeupdate', this._onVideoTimeupdateListener);
         this._mainVideo.removeEventListener('seeking', this._onVideoTimeupdateListener);
         this._mainVideo.removeEventListener('ended', this._onVideoEndedListener);

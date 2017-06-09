@@ -135,7 +135,7 @@ class Creative {
         this.apiFramework = '';             // [Optional] A string that identify an API that is needed to execute the creative.
         this.linear = null;                 // [Optional] Linear element
         this.companionAds = [];             // [Optional] Companion elements
-        this.nonLinearAds = [];             // [Optional] NonLinear elements
+        this.nonLinearAds = null;           // [Optional] NonLinearAds elements
     }
 }
 
@@ -193,7 +193,7 @@ class Companion {
  */
 class NonLinearAds {
     constructor () {
-        this.nonLinear = null;              // [Optional] Non linear element
+        this.nonLinear = [];                // [Optional] NonLinear elements
         this.trackingEvents = [];           // [Optional] TrackingEvent elements
     }
 }

@@ -5,16 +5,17 @@
  * with the help of a CreativePlayer.
  *
  * Dispatch events:
- *  - "adStart" when the first creative is played
- *  - "adEnd" when all the creative are played
+ *  - "creativesStart" when the first creative is played
+ *  - "creativesEnd" when all the creative are played
  *
  */
 
-import CreativePlayer from './CreativePlayer';
+import LinearCreativePlayer from './LinearCreativePlayer';
 import Debug from '../Debug';
 import EventBus from '../EventBus';
+import NonLinearCreativePlayer from './NonLinearCreativePlayer';
 
-class AdPlayer {
+class CreativesPlayer {
 
         _sendImpressions (impressions){
             let impression;
@@ -37,7 +38,7 @@ class AdPlayer {
 
         _onCreativeEnd (){
 
-            this._debug.info("onCreativeEnd");
+            this._debug.info("(CreativesPlayer) onCreativeEnd");
 
             // Stop the current creative media
             this._stopCreative();
@@ -48,16 +49,8 @@ class AdPlayer {
             this._playNextCreative();
         }
 
-        _pauseCreative (){
-            this._debug.info("pauseCreative ");
-            if (!this._creativePlayer) {
-                return;
-            }
-            this._creativePlayer.pause();
-        }
-
         _resumeCreative (){
-            this._debug.info("resumeCreative ");
+            this._debug.info("(CreativesPlayer) resumeCreative ");
             if (!this._creativePlayer) {
                 return;
             }
@@ -65,53 +58,21 @@ class AdPlayer {
         }
 
         _resetCreative(){
-            this._debug.info("resetCreative ");
+            this._debug.info("(CreativesPlayer) resetCreative ");
             if (!this._creativePlayer) {
                 return;
             }
-            this._creativePlayer.reset();
+            this._creativePlayer.delete();
         }
 
         _stopCreative(){
-            this._debug.info("stopCreative ");
+            this._debug.info("(CreativesPlayer) stopCreative ");
             this._eventBus.removeEventListener('creativeEnd', this._onCreativeEndListener);
 
             if (!this._creativePlayer) {
                 return;
             }
             this._creativePlayer.stop();
-        }
-
-        _playCreative(index){
-            let creative = this._ad.inLine.creatives[index],
-                linear;
-
-            this._creativeIndex = index;
-            this._debug.info("playCreative(" + this._creativeIndex + ")");
-
-            // Play Linear element
-            linear = creative.linear;
-
-            if (linear) {
-                this._debug.info("Play Linear Ad, duration = " + linear.duration);
-                this._eventBus.addEventListener('creativeEnd', this._onCreativeEndListener);
-                if (!this._creativePlayer.load(creative.linear, this._baseUrl)) {
-                    this._playNextCreative();
-                }
-            } else {
-                this._playNextCreative();
-            }
-        }
-
-        _playAd(){
-
-           this._debug.info("(AdPlayer) PlayAd id = " + this._ad.id);
-
-            // Send Impressions tracking
-            this._sendImpressions(this._ad.inLine.impressions);
-
-            // Play first Creative
-            this._playCreative(0);
         }
 
         _playNextCreative(){
@@ -123,14 +84,43 @@ class AdPlayer {
             } else {
                 // Notify end of trigger
                 this._eventBus.dispatchEvent({
-                    type: "adEnd",
+                    type: "creativesEnd",
                     data: {}
                 });
             }
         }
 
+        _playCreative(index){
+            let creative = this._ad.inLine.creatives[index];
+
+            this._creativeIndex = index;
+            this._debug.info("(CreativesPlayer) playCreative(" + this._creativeIndex + ")");
+
+            // First, play Linear element if it exists
+            if (creative.linear) {
+                this._debug.info("(CreativesPlayer) Play Linear Ad, duration = " + creative.linear.duration);
+                this._eventBus.addEventListener('creativeEnd', this._onCreativeEndListener);
+                this._creativePlayer = new LinearCreativePlayer(this._adPlayerContainer, this._mainVideo);
+                if (!this._creativePlayer.load(creative.linear, this._baseUrl)) {
+                    this._playNextCreative();
+                }
+            } else {
+                // then non-linear if it exists
+                if (creative.nonLinearAds) {
+                    this._debug.info("(CreativesPlayer) Play Non-Linear Ad");
+                    this._eventBus.addEventListener('creativeEnd', this._onCreativeEndListener);
+                    this._creativePlayer = new NonLinearCreativePlayer(this._adPlayerContainer, this._mainVideo);
+                    if (!this._creativePlayer.load(creative.nonLinearAds, this._baseUrl)) {
+                        this._playNextCreative();
+                    }
+                } else {
+                    this._playNextCreative();
+                }
+            }
+        }
+
         _skipCreative() {
-            this._debug.info("skipCreative ");
+            this._debug.info("(CreativesPlayer) skipCreative ");
 
             // Notify the creative was skipped
             this._eventBus.dispatchEvent({
@@ -146,6 +136,7 @@ class AdPlayer {
             // Play next creative
             this._playNextCreative();
         }
+
 
     ///////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////// PUBLIC /////////////////////////////////////////////
@@ -170,20 +161,32 @@ class AdPlayer {
         this._creativeIndex = -1;
         this._debug = Debug.getInstance();
         this._eventBus = EventBus.getInstance();
-        this._creativePlayer = new CreativePlayer();
         this._onCreativeEndListener = this._onCreativeEnd.bind(this);
-        this._creativePlayer.init(this._adPlayerContainer, this._mainVideo);
+    }
+
+    reset() {
+        if (!this._creativePlayer) {
+            return;
+        }
+
+        this._creativePlayer.delete();
     }
 
     start(){
 
+        this._debug.info("(CreativesPlayer) PlayAd id = " + this._ad.id);
+
         // Notify an ad is starting to play
         this._eventBus.dispatchEvent({
-            type: 'adStart',
+            type: 'creativesStart',
             data: {}
         });
 
-        this._playAd();
+        // Send Impressions tracking
+        this._sendImpressions(this._ad.inLine.impressions);
+
+        // Play first Creative
+        this._playCreative(0);
     }
 
     play() {
@@ -191,7 +194,11 @@ class AdPlayer {
     }
 
     pause() {
-        this._pauseCreative();
+        this._debug.info("(CreativesPlayer) pauseCreative ");
+        if (!this._creativePlayer) {
+            return;
+        }
+        this._creativePlayer.pause();
     }
 
     stop() {
@@ -200,14 +207,6 @@ class AdPlayer {
         }
         
         this._stopCreative();
-    }
-
-    reset() {
-        if (!this._creativePlayer) {
-            return;
-        }
-
-        this._creativePlayer.reset();
     }
 
     skip() {
@@ -219,4 +218,4 @@ class AdPlayer {
     }
 }
 
-export default AdPlayer;
+export default CreativesPlayer;
