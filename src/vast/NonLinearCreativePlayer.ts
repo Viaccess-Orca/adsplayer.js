@@ -37,10 +37,13 @@ class NonLinearCreativePlayer {
     private _debug: Debug;
     private _eventBus: EventBus;
     private _mediaPlayer: ImagePlayer;
+    private _onMainVideoPlayingListener:  () => void;
 
     constructor(private _adPlayerContainer: any, private mainVideo: HTMLVideoElement) {
         this._debug = Debug.getInstance();
         this._eventBus = EventBus.getInstance();
+
+        this._onMainVideoPlayingListener = this._onMainVideoPlaying.bind(this);
     }
 
     load(nonLinearAds: any, baseURl: string) : boolean {
@@ -60,8 +63,12 @@ class NonLinearCreativePlayer {
         // Position image related to the parent positioned div
         let wImage : number = parseInt(nonLinearAds.nonLinear[0].width);
         this._adPlayerContainer.style.position= "absolute";
+        this._adPlayerContainer.style.top="auto";
         this._adPlayerContainer.style.bottom="5%";
         this._adPlayerContainer.style.left="calc(50% - " + wImage/2 +"px)";
+
+        // Add a handler on the pay of main video
+        this.mainVideo.addEventListener('playing', this._onMainVideoPlayingListener);
 
         return true;
     }
@@ -78,6 +85,11 @@ class NonLinearCreativePlayer {
     }
 
     reset () {
+    }
+
+    _onMainVideoPlaying () {
+        this._debug.log("(NonLinearCreativePlayer) Main video is playing");
+        this._adPlayerContainer.style.display = "block";
     }
 }
 
