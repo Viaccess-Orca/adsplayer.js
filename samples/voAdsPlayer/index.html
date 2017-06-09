@@ -43,7 +43,7 @@
 
     <div id="media-container" style="width:854px; height:480px; position:relative">
         <video id="videoplayer-container" style="display:block; width:auto; height:100%;"></video>
-        <div id="adsplayer-container"> </div>
+        <div id="adsplayer-container" style="display:none"> </div>
     </div>
 
     <div id="selector-container">
@@ -62,7 +62,7 @@
         </tr>
         <tr>
             <td><label>Ad choice</label></td>
-            <td><select id="ad_type"></td>
+            <td><select id="ad_type"></select></td>
         </tr>
         <tr>
             <td><label>Ad url</label></td>
@@ -112,9 +112,11 @@
             if (count%10 == 0) { //every 10 times
                 var sec = count/10;
                 if (sec%2) { // even
-                    document.querySelector('#container').style.height = "240px";
+                    document.querySelector('#media-container').style.height = "240px";
+                    document.querySelector('#media-container').style.width = "427px";
                 } else { // odd
-                    document.querySelector('#container').style.height = "480px"
+                    document.querySelector('#media-container').style.height = "480px";
+                    document.querySelector('#media-container').style.width = "854px";
                 }
             }
 

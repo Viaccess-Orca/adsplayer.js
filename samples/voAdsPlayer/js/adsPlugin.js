@@ -47,20 +47,10 @@ class AdsPlugin {
 
     onAdsPlayerToggle(e) {
         console.log("onAdsPlayerToggle - " + e.type);
-        this.adsMode = (e.type === 'start');
-        if (this.adsMode) {
-            document.getElementById('videoplayer-container').style.display = 'none';
-            document.getElementById('adsplayer-container').style.display = 'block';
-        } else {
-            document.getElementById('videoplayer-container').style.display = 'block';
-            document.getElementById('adsplayer-container').style.display = 'none';
-        }
     }
 
     onAdsPlayerPlayPause(e) {
         console.log("onAdsPlayerPlayPause - " + e.type);
-        var play = (e.type === 'play');
-        //handleAdsPlayerPlayState(play);
     }
 
     onAdsPlayerClick(e) {

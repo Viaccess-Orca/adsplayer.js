@@ -59,6 +59,14 @@ class VideoPlayer {
         this._debug = Debug.getInstance();
     }
 
+    // destructor
+    delete () {
+        if (!this._video) {
+            return;
+        }
+        this._video = null;
+    }
+
     load (baseUrl, mediaFiles) {
 
         // Get 'adsplayer-video' element if already declared in DOM
@@ -175,13 +183,6 @@ class VideoPlayer {
             return;
         }
         this._video.pause();
-    }
-
-    reset () {
-        if (!this._video) {
-            return;
-        }
-        this._video = null;
     }
 
     isEnded () {

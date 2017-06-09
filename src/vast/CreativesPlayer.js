@@ -38,7 +38,7 @@ class CreativesPlayer {
 
         _onCreativeEnd (){
 
-            this._debug.info("onCreativeEnd");
+            this._debug.info("(CreativesPlayer) onCreativeEnd");
 
             // Stop the current creative media
             this._stopCreative();
@@ -49,16 +49,8 @@ class CreativesPlayer {
             this._playNextCreative();
         }
 
-        _pauseCreative (){
-            this._debug.info("pauseCreative ");
-            if (!this._creativePlayer) {
-                return;
-            }
-            this._creativePlayer.pause();
-        }
-
         _resumeCreative (){
-            this._debug.info("resumeCreative ");
+            this._debug.info("(CreativesPlayer) resumeCreative ");
             if (!this._creativePlayer) {
                 return;
             }
@@ -66,15 +58,15 @@ class CreativesPlayer {
         }
 
         _resetCreative(){
-            this._debug.info("resetCreative ");
+            this._debug.info("(CreativesPlayer) resetCreative ");
             if (!this._creativePlayer) {
                 return;
             }
-            this._creativePlayer.reset();
+            this._creativePlayer.delete();
         }
 
         _stopCreative(){
-            this._debug.info("stopCreative ");
+            this._debug.info("(CreativesPlayer) stopCreative ");
             this._eventBus.removeEventListener('creativeEnd', this._onCreativeEndListener);
 
             if (!this._creativePlayer) {
@@ -102,11 +94,11 @@ class CreativesPlayer {
             let creative = this._ad.inLine.creatives[index];
 
             this._creativeIndex = index;
-            this._debug.info("playCreative(" + this._creativeIndex + ")");
+            this._debug.info("(CreativesPlayer) playCreative(" + this._creativeIndex + ")");
 
             // First, play Linear element if it exists
             if (creative.linear) {
-                this._debug.info("Play Linear Ad, duration = " + creative.linear.duration);
+                this._debug.info("(CreativesPlayer) Play Linear Ad, duration = " + creative.linear.duration);
                 this._eventBus.addEventListener('creativeEnd', this._onCreativeEndListener);
                 this._creativePlayer = new LinearCreativePlayer(this._adPlayerContainer, this._mainVideo);
                 if (!this._creativePlayer.load(creative.linear, this._baseUrl)) {
@@ -115,7 +107,7 @@ class CreativesPlayer {
             } else {
                 // then non-linear if it exists
                 if (creative.nonLinearAds) {
-                    this._debug.info("Play Non-Linear Ad");
+                    this._debug.info("(CreativesPlayer) Play Non-Linear Ad");
                     this._eventBus.addEventListener('creativeEnd', this._onCreativeEndListener);
                     this._creativePlayer = new NonLinearCreativePlayer(this._adPlayerContainer, this._mainVideo);
                     if (!this._creativePlayer.load(creative.nonLinearAds, this._baseUrl)) {
@@ -128,7 +120,7 @@ class CreativesPlayer {
         }
 
         _skipCreative() {
-            this._debug.info("skipCreative ");
+            this._debug.info("(CreativesPlayer) skipCreative ");
 
             // Notify the creative was skipped
             this._eventBus.dispatchEvent({
@@ -144,17 +136,6 @@ class CreativesPlayer {
             // Play next creative
             this._playNextCreative();
         }
-
-    _playAd(){
-
-        this._debug.info("(AdPlayer) PlayAd id = " + this._ad.id);
-
-        // Send Impressions tracking
-        this._sendImpressions(this._ad.inLine.impressions);
-
-        // Play first Creative
-        this._playCreative(0);
-    }
 
 
     ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -183,7 +164,17 @@ class CreativesPlayer {
         this._onCreativeEndListener = this._onCreativeEnd.bind(this);
     }
 
+    reset() {
+        if (!this._creativePlayer) {
+            return;
+        }
+
+        this._creativePlayer.delete();
+    }
+
     start(){
+
+        this._debug.info("(CreativesPlayer) PlayAd id = " + this._ad.id);
 
         // Notify an ad is starting to play
         this._eventBus.dispatchEvent({
@@ -191,7 +182,11 @@ class CreativesPlayer {
             data: {}
         });
 
-        this._playAd();
+        // Send Impressions tracking
+        this._sendImpressions(this._ad.inLine.impressions);
+
+        // Play first Creative
+        this._playCreative(0);
     }
 
     play() {
@@ -199,7 +194,11 @@ class CreativesPlayer {
     }
 
     pause() {
-        this._pauseCreative();
+        this._debug.info("(CreativesPlayer) pauseCreative ");
+        if (!this._creativePlayer) {
+            return;
+        }
+        this._creativePlayer.pause();
     }
 
     stop() {
@@ -208,14 +207,6 @@ class CreativesPlayer {
         }
         
         this._stopCreative();
-    }
-
-    reset() {
-        if (!this._creativePlayer) {
-            return;
-        }
-
-        this._creativePlayer.reset();
     }
 
     skip() {

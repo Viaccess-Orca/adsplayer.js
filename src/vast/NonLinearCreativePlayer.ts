@@ -39,11 +39,35 @@ class NonLinearCreativePlayer {
     private _mediaPlayer: ImagePlayer;
     private _onMainVideoPlayingListener:  () => void;
 
-    constructor(private _adPlayerContainer: any, private mainVideo: HTMLVideoElement) {
+    /**
+     * Initializes the creative player.
+     * @method constructor
+     * @access public
+     * @memberof NonLinearCreativePlayer#
+     * @param {Object} adPlayerContainer
+     * @param {HTMLVideoElement} mainVideo
+     */
+    constructor(private adPlayerContainer: any, private mainVideo: HTMLVideoElement) {
         this._debug = Debug.getInstance();
         this._eventBus = EventBus.getInstance();
 
         this._onMainVideoPlayingListener = this._onMainVideoPlaying.bind(this);
+    }
+
+    /**
+     * Delete the creative player.
+     * @method delete
+     * @access public
+     * @memberof LinearCreativePlayer#
+     */
+    delete () {
+        this.stop();
+        this._debug = null;
+        this._eventBus = null;
+        this._mediaPlayer = null;
+        this._onMainVideoPlayingListener = null;
+        this.adPlayerContainer = null;
+        this.mainVideo = null;
     }
 
     load(nonLinearAds: any, baseURl: string) : boolean {
@@ -54,23 +78,43 @@ class NonLinearCreativePlayer {
 
 
         let image : HTMLImageElement = this._mediaPlayer.getElement();
-        image.style.height = nonLinearAds.nonLinear[0].height+"px";
-        image.style.width = nonLinearAds.nonLinear[0].width+"px";
+        image.style.height = "100%";
+        image.style.width = "auto";
 
         // Add the image to the DOM element
-        this._adPlayerContainer.appendChild(image);
+        this.adPlayerContainer.appendChild(image);
 
         // Position image related to the parent positioned div
         let wImage : number = parseInt(nonLinearAds.nonLinear[0].width);
-        this._adPlayerContainer.style.position= "absolute";
-        this._adPlayerContainer.style.top="auto";
-        this._adPlayerContainer.style.bottom="5%";
-        this._adPlayerContainer.style.left="calc(50% - " + wImage/2 +"px)";
+        this.adPlayerContainer.style.position= "absolute";
+        this.adPlayerContainer.style.bottom = "5%";
+        this.adPlayerContainer.style.left = "calc(50% - " + wImage/2 +"px)";
+        this.adPlayerContainer.style.height = nonLinearAds.nonLinear[0].height+"px";
+        this.adPlayerContainer.style.width = nonLinearAds.nonLinear[0].width+"px";
 
         // Add a handler on the pay of main video
         this.mainVideo.addEventListener('playing', this._onMainVideoPlayingListener);
 
         return true;
+    }
+
+    stop () {
+        if (this.mainVideo) {
+            this.mainVideo.removeEventListener('playing', this._onMainVideoPlayingListener);
+        }
+        if (this.adPlayerContainer) {
+            this.adPlayerContainer.style.bottom = "0%";
+            this.adPlayerContainer.style.left = "0%";
+            this.adPlayerContainer.style.height = "0%";
+            this.adPlayerContainer.style.width = "0%";
+            this.adPlayerContainer.style.display = "none";
+        }
+
+        if (this._mediaPlayer) {
+            this.adPlayerContainer.removeChild(this._mediaPlayer.getElement());
+            this._mediaPlayer.delete();
+        }
+
     }
 
     play () {
@@ -81,15 +125,9 @@ class NonLinearCreativePlayer {
         //Nothing to do in case of non linear creative
     }
 
-    stop () {
-    }
-
-    reset () {
-    }
-
     _onMainVideoPlaying () {
         this._debug.log("(NonLinearCreativePlayer) Main video is playing");
-        this._adPlayerContainer.style.display = "block";
+        this.adPlayerContainer.style.display = "block";
     }
 }
 
