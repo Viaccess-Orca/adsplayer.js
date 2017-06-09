@@ -10,7 +10,9 @@
     "testLinuxfirefox": "node node_modules/intern/runner.js config=test/functional/testsCommon.js browsers=firefox_linux selenium=local",
     "testWindows7chrome": "node node_modules/intern/runner.js config=test/functional/testsCommon.js browsers=chrome_windows7 selenium=local",
     "testWindows7firefox": "node node_modules/intern/runner.js config=test/functional/testsCommon.js browsers=firefox_windows7 selenium=local",
-    "testWindows7internetExplorer": "node node_modules/intern/runner.js config=test/functional/testsCommon.js browsers=ie11_windows7 selenium=local",
+    "testWindows8chrome": "node node_modules/intern/runner.js config=test/functional/testsCommon.js browsers=chrome_windows8 selenium=local",
+    "testWindows8firefox": "node node_modules/intern/runner.js config=test/functional/testsCommon.js browsers=firefox_windows8 selenium=local",
+    "testWindows8internetExplorer": "node node_modules/intern/runner.js config=test/functional/testsCommon.js browsers=ie11_windows8 selenium=local",
     "testWindows10edge": "node node_modules/intern/runner.js config=test/functional/testsCommon.js browsers=edge_windows10 selenium=local",
     "testWindows10firefox": "node node_modules/intern/runner.js config=test/functional/testsCommon.js browsers=firefox_windows10 selenium=local",
     "testWindows10chrome": "node node_modules/intern/runner.js config=test/functional/testsCommon.js browsers=chrome_windows10 selenium=local"
