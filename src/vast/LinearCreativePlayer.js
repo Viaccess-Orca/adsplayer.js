@@ -202,6 +202,8 @@ class LinearCreativePlayer {
             // then add a listener on playing to pause when it occurs
             this._mainVideo.addEventListener("playing", this._onMainVideoPlayListener);
         }
+
+        this._mainVideo.style.display = "none";
     }
 
     _onMainVideoPlay () {
@@ -217,6 +219,8 @@ class LinearCreativePlayer {
             this._debug.log("(LinearCreativePlayer) Resume main video");
             this._mainVideo.play();
         }
+
+        this._mainVideo.style.display = "block";
     }
 
     _load (creative, baseUrl) {
