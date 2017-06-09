@@ -77,7 +77,7 @@ class NonLinearCreativePlayer {
                                          "uri":  nonLinearAds.nonLinear[0].staticResource.uri}]);
 
 
-        let image : HTMLImageElement = this._mediaPlayer.getElement();
+        let image : HTMLElement = this._mediaPlayer.getElement();
         image.style.height = "100%";
         image.style.width = "auto";
 
@@ -92,7 +92,7 @@ class NonLinearCreativePlayer {
         this.adPlayerContainer.style.height = nonLinearAds.nonLinear[0].height+"px";
         this.adPlayerContainer.style.width = nonLinearAds.nonLinear[0].width+"px";
 
-        // Add a handler on the pay of main video
+        // Add a handler on the play of main video
         this.mainVideo.addEventListener('playing', this._onMainVideoPlayingListener);
 
         return true;
