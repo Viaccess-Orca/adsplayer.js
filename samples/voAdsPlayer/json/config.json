@@ -94,7 +94,7 @@ jsonAdsDescription = '[ { "name": "No ad insertion",                            
                           "url" : "../../samples/ads/xml/vmap/preroll1-preroll2.xml"},                    \
                                                                                                           \
                         { "name": "Vmap Nonlinear",                                                      \
-                          "url" : "../../samples/ads/xml/vmap/preroll-nonLinear.xml"}                      \
+                          "url" : "../../samples/ads/xml/vmap/preroll-nonlinear.xml"}                      \
                         ]';
 
 
