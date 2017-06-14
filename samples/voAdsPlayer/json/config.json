@@ -107,7 +107,7 @@ jsonStreamsDescription = '[{ "name" : "custom",                                 
               "licenser" : { "url" : "", "drm" : "none"} },                                                           \
                                                                                                                       \
             { "name" : "live MSS ",                                                                                   \
-              "url" : "http://harmonic2.e2e.purpledrm.com.edgesuite.net/Content/SS/Live/Channel(Tvaas-MB-Gulli).isml/Manifest",  \
+              "url" : "https://harmonichttps1-e2e-purpledrm-com.akamaized.net/Content/SS/Live/Channel(Tvaas-MB-Gulli).isml/Manifest",  \
               "licenser" : { "url" : "", "drm" : "none"} },                                                           \
                                                                                                                       \
             { "name" : "DASH common init",                                                                            \
