@@ -6,7 +6,7 @@ define(function(require) {
         return {
             // Common tests suite configuration fields
             testPageUrl : "https://swag.viaccess.fr/functionnalTests/CSAdsPlugin-Dev/samples/testsPlayer",
-            streamUrl   : "https://playready.directtaps.net/smoothstreaming/SSWSS720H264/SuperSpeedway_720.ism/Manifest",// url of the main stream
+            streamUrl   : "https://d1stu24dk3kqej.cloudfront.net/Clear/BBB_MSS_Clear/index.ism/Manifest",// url of the main stream
                                                                                                                         // take care using one with video.currentTime = 0 at the beginning
                                                                                                                         // for the pre-roll tests
             tests : {
@@ -147,7 +147,7 @@ define(function(require) {
                                 media: vast01[0]
                             }
                         ],
-                        timeOffset: 120.5
+                        timeOffset: 119.99
                     },
                     prerollRepeat: {
                         mastUrl: "../ads/xml/vmap/preroll-repeat.xml",
@@ -165,7 +165,7 @@ define(function(require) {
                                 media: vast01[0]
                             }
                         ],
-                        timeOffsets: [3.6, 14.1, 24.6]
+                        timeOffsets: [3.6, 14.1, 24.7]
                     }
                 }
             }
