@@ -228,9 +228,16 @@ gulp.task('releases-notes', function() {
         .pipe(gulp.dest(outDir));
 });
 
+// Copy the index.hml in the output directory. Update the version.
+gulp.task('copy-index', function() {
+    return gulp.src('index.html')
+        .pipe(replace(/@@VERSION/g, pkg.version))
+        .pipe(gulp.dest(outDir));
+});
+
 gulp.task('zip', function() {
     return gulp.src(outDir + '/**/*')
-        .pipe(zip(outName + '.zip'))
+        .pipe(zip('csadsplugin.zip'))
         .pipe(gulp.dest(outDir));
 });
 
@@ -246,7 +253,15 @@ gulp.task('version', function() {
 gulp.task('default', function(cb) {
     runSequence('clean','compile-typescript','build', ['build-samples', 'doc'],
         'releases-notes',
-        'zip',
+        "copy-index",
         'version',
         cb);
+});
+
+gulp.task('zip', function () {
+    // zip output directory
+    // exclude file *.map
+    gulp.src([outDir + "/**/*", "!" + outDir + "/**/*.map"])
+        .pipe(zip("csadsplugin.zip"))
+        .pipe(gulp.dest(outDir));
 });

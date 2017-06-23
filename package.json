@@ -1,9 +1,9 @@
 {
-  "name": "adsplayer.js",
+  "name": "CSAdsPlugin.js",
   "version": "1.1.0-dev",
-  "description": "Plugin for hasplayer.js used to handle ad-insertion in MAST/VAST format",
+  "description": "Plugin for CSWebPlayer used to handle ad-insertion in MAST/VMAP/VAST format",
   "scripts": {
-    "build": "gulp",
+    "build": "gulp&&gulp zip",
     "watch": "gulp watch",
     "doc": "gulp doc",
     "testLinuxchrome": "node node_modules/intern/runner.js config=test/functional/testsCommon.js browsers=chrome_linux selenium=local",
@@ -19,9 +19,9 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://www.forge.orange-labs.fr/plugins/git/dash-js/adsplayer.js.git"
+    "url": "https://github.com/Viaccess-Orca/adsplayer.js"
   },
-  "author": "Orange",
+  "author": "Viaccess-Orca",
   "license": "BSD-3-Clause-Clear",
   "devDependencies": {
     "babel-preset-es2015": "^6.16.0",
