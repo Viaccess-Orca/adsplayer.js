@@ -1,5 +1,8 @@
-### Release Notes CSAdsPlugin-??? ( ???? )
-* CSWP-184: VAST-3 Parsing non linear
+### Release Notes CSAdsPlugin-1.1.1 (24/06/2017)
+* CSWP-215: VAST-3.0 Non-linear, minSuggested duration
+* CSWP-187: VAST-3.0 Non-linear ad
+* CSWP-20: VMAP Repeat after
+* CSWP-184: VAST-3.0 Parsing non linear
 
 ### Release Notes CSAdsPlugin-1.1.0 (07/04/2017)
 * CSWP-7: VAST3.0 : Support for Skippable Linear Ads
