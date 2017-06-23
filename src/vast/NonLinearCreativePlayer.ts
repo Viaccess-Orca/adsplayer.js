@@ -31,14 +31,16 @@
 import ImagePlayer from '../media/ImagePlayer';
 import EventBus from '../EventBus';
 import Debug from '../Debug';
-import {setTimeout} from "timers";
 
 class NonLinearCreativePlayer {
 
     private _debug: Debug;
     private _eventBus: EventBus;
     private _mediaPlayer: ImagePlayer;
-    private _onMainVideoPlayingListener:  () => void;
+    private _onMainVideoPlayingListener: () => void;
+    private _timerId: number;
+
+    private _style: HTMLElement;
 
     private _closeDiv: HTMLElement;
     private _closeStyle: HTMLElement;
@@ -83,22 +85,41 @@ class NonLinearCreativePlayer {
         this._mediaPlayer.load(baseURl,[{"type": nonLinear.staticResource.creativeType,
                                          "uri":  nonLinear.staticResource.uri}]);
 
-        let image : HTMLElement = this._mediaPlayer.getElement();
-        image.style.height = "100%";
-        image.style.width = "auto";
-        image.style.margin = "auto";
-        image.style.display = "block";
+        // Position image related to the parent positioned div
+        let wImage: number = parseInt(nonLinear.width);
+
+        // Create the CSS style
+        let css = `
+            #adsplayer-container {
+                position: absolute;
+                bottom: 5% !important;
+                left: calc(50% - ${wImage / 2}px) !important;
+                height: ${nonLinear.height}px !important;
+                width: ${nonLinear.width}px !important;
+            }
+            
+            #videoplayer-container[controls] + #adsplayer-container {
+	            bottom: calc(5% + 32px) !important;
+            }
+            
+            #adsplayer-container #adsplayer-image {
+                height: 100%;
+                width: auto;
+                margin: auto;
+                display: block;
+            }
+        `;
+
+        // Create the embedded style node
+        this._style = document.createElement("style");
+        this._style.appendChild(document.createTextNode(css));
+
+        // Add the CSS to the DOM
+        this.adPlayerContainer.appendChild(this._style);
 
         // Add the image to the DOM element
+        let image : HTMLElement = this._mediaPlayer.getElement();
         this.adPlayerContainer.appendChild(image);
-
-        // Position image related to the parent positioned div
-        let wImage : number = parseInt(nonLinear.width);
-        this.adPlayerContainer.style.position= "absolute";
-        this.adPlayerContainer.style.bottom = "5%";
-        this.adPlayerContainer.style.left = "calc(50% - " + wImage/2 +"px)";
-        this.adPlayerContainer.style.height = nonLinear.height+"px";
-        this.adPlayerContainer.style.width = nonLinear.width+"px";
 
         if(nonLinear.minSuggestedDuration) {
             this._initiateCloseTimer(nonLinear.minSuggestedDuration);
@@ -111,7 +132,7 @@ class NonLinearCreativePlayer {
     }
 
     _initiateCloseTimer(duration: number) {
-        setTimeout(() => {
+        this._timerId = window.setTimeout(() => {
             // Create a close icon
             this._addCloseIcon();
         }, duration * 1000);
@@ -122,7 +143,7 @@ class NonLinearCreativePlayer {
         let iconSize = 20,
             padding = 3;
 
-        // Create the CSS style
+        // Create the icon's specific CSS style
         let css = `
             #close-non-linear-icon {
                 position: absolute;
@@ -145,7 +166,7 @@ class NonLinearCreativePlayer {
             
             #close-non-linear-icon:hover > svg > path {
                 fill: #FFFFFF;
-            }            
+            }
         `;
 
         // Create the embedded style node
@@ -191,21 +212,19 @@ class NonLinearCreativePlayer {
         if (this.mainVideo) {
             this.mainVideo.removeEventListener('playing', this._onMainVideoPlayingListener);
         }
-        if (this.adPlayerContainer) {
-            this.adPlayerContainer.style.bottom = "0%";
-            this.adPlayerContainer.style.left = "0%";
-            this.adPlayerContainer.style.height = "0%";
-            this.adPlayerContainer.style.width = "0%";
-            this.adPlayerContainer.style.display = "none";
 
-            this._removeCloseIcon();
-        }
+        this._removeCloseIcon();
 
         if (this._mediaPlayer) {
             if (this._mediaPlayer.getElement()) {
+                this.adPlayerContainer.removeChild(this._style);
                 this.adPlayerContainer.removeChild(this._mediaPlayer.getElement());
             }
             this._mediaPlayer.delete();
+        }
+
+        if(this._timerId) {
+            window.clearTimeout(this._timerId);
         }
     }
 
