@@ -127,12 +127,16 @@ class NonLinearCreativePlayer {
             #close-non-linear-icon {
                 position: absolute;
                 top: 5px;
-                right: 5px;
+                left: 5px;
                 cursor: pointer;
                 width: ${iconSize - padding * 2}px;
                 height: ${iconSize - padding * 2}px;
                 padding: ${padding}px;
                 border-radius: ${iconSize / 2}px;
+            }
+            
+            #close-non-linear-icon > svg > path {
+                fill: #8D8E92;
             }
             
             #close-non-linear-icon:hover {

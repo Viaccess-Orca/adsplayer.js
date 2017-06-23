@@ -96,6 +96,14 @@ adsPlayer.pause(); // Pause the playback of the current ad media
 adsPlayer.play();  // Play/resume the playback of the current ad media
 ```
 
+The non-linear ads can be used with minSuggestedDuration parameter, in order to display a close icon on the ad. You can override its default styling:
+
+``` css
+#close-non-linear-icon:hover {
+    background-color: #00FF00 !important;
+}
+```
+
 ## License
 
 All code in this repository is covered by the [BSD-3 license](http://opensource.org/licenses/BSD-3-Clause).
