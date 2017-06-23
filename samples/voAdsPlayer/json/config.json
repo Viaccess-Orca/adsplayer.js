@@ -103,19 +103,7 @@ jsonStreamsDescription = '[{ "name" : "custom",                                 
               "licenser" : { "url" : "", "drm" : "none"} },                                                           \
                                                                                                                       \
             { "name" : "vod MSS",                                                                                     \
-              "url" : "http://playready.directtaps.net/smoothstreaming/SSWSS720H264/SuperSpeedway_720.ism/Manifest",  \
-              "licenser" : { "url" : "", "drm" : "none"} },                                                           \
-                                                                                                                      \
-            { "name" : "live MSS ",                                                                                   \
-              "url" : "https://harmonichttps1-e2e-purpledrm-com.akamaized.net/Content/SS/Live/Channel(Tvaas-MB-Gulli).isml/Manifest",  \
-              "licenser" : { "url" : "", "drm" : "none"} },                                                           \
-                                                                                                                      \
-            { "name" : "DASH common init",                                                                            \
-              "url" : "http://rdmedia.bbc.co.uk/dash/ondemand/bbb/2/client_manifest-common_init.mpd",                 \
-              "licenser" : { "url" : "", "drm" : "none"} },                                                           \
-                                                                                                                      \
-            { "name" : "HLS",                                                                                         \
-              "url" : "http://qthttp.apple.com.edgesuite.net/1010qwoeiuryfg/sl.m3u8",                                 \
-              "licenser" : { "url" : "", "drm" : "none"} }                                                            \
-]';
+              "url" : "https://d1stu24dk3kqej.cloudfront.net/Clear/BBB_MSS_Clear/index.ism/Manifest",  \
+              "licenser" : { "url" : "", "drm" : "none"} }                                                          \
+            ]';
 
