@@ -96,6 +96,7 @@ class NonLinearCreativePlayer {
                 left: calc(50% - ${wImage / 2}px) !important;
                 height: ${nonLinear.height}px !important;
                 width: ${nonLinear.width}px !important;
+                z-index: 9999999999;
             }
             
             #videoplayer-container[controls] + #adsplayer-container {
