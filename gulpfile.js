@@ -231,7 +231,7 @@ gulp.task('releases-notes', function() {
 // Copy the index.hml in the output directory. Update the version.
 gulp.task('copy-index', function() {
     return gulp.src('index.html')
-        .pipe(replace(/@@VERSION/g, pkg.version))
+        .pipe(replace(/@@VERSION/g, pkg.gitTag))
         .pipe(gulp.dest(outDir));
 });
 
