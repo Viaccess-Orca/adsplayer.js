@@ -159,7 +159,7 @@ define(function(require) {
                         // the event end has been detected
                     }, function (error) {
                         // the event end has NOT been detected
-                        assert.isFalse(true,"the event end has NOT been detected for test " + test.name);
+                        assert.isFalse(true, "the event end has NOT been detected for test " + test.name);
                     })
                     //stop the player
                     .findById("stop_button").click()
@@ -227,7 +227,9 @@ define(function(require) {
                     // Wait for the second occurrence
                     .then(pollUntil(function () {
                         return document.getElementById('event_start').value === "2" ? true : null;
-                    }, null, startTimeout, 1000))
+                    }, null, startTimeout, 1000), function () {
+                        assert.isFalse(true, "Unable to detect the 2nd occurence");
+                    })
                     .then(function() {
                         return checkAdPlayer(getMediaFileName(vmapConfig.prerollRepeat.ads[0].media));
                     })
@@ -237,7 +239,9 @@ define(function(require) {
                     // Wait for the third occurrence
                     .then(pollUntil(function () {
                         return document.getElementById('event_start').value === "3" ? true : null;
-                    }, null, startTimeout, 1000))
+                    }, null, startTimeout, 1000), function () {
+                        assert.isFalse(true, "Unable to detect the 3rd occurence");
+                    })
                     .then(function() {
                         return checkAdPlayer(getMediaFileName(vmapConfig.prerollRepeat.ads[0].media));
                     })
@@ -260,7 +264,9 @@ define(function(require) {
                     // Wait for the second occurrence
                     .then(pollUntil(function () {
                         return document.getElementById('event_start').value === "2" ? true : null;
-                    }, null, startTimeout, 1000))
+                    }, null, startTimeout, 1000), function () {
+                        assert.isFalse(true, "Unable to detect the 2nd occurence");
+                    })
                     .then(function() {
                         return checkAdPlayer(getMediaFileName(vmapConfig.midrollRepeat.ads[0].media));
                     })
@@ -270,7 +276,9 @@ define(function(require) {
                     // Wait for the third occurrence
                     .then(pollUntil(function () {
                         return document.getElementById('event_start').value === "3" ? true : null;
-                    }, null, startTimeout, 1000))
+                    }, null, startTimeout, 1000), function () {
+                        assert.isFalse(true, "Unable to detect the 3rd occurence");
+                    })
                     .then(function() {
                         return checkAdPlayer(getMediaFileName(vmapConfig.midrollRepeat.ads[0].media));
                     })
