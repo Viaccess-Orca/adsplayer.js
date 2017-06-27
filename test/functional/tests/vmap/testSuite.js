@@ -204,16 +204,6 @@ define(function(require) {
                 );
             },
 
-            // 1 postroll ad break
-            "postroll": function() {
-                // The right ad video should already be playing
-                return checkAdPlayer(getMediaFileName(vmapConfig.postroll.ads[0].media))
-                    .then(function() {
-                            return checkVideoPlayer(vmapConfig.postroll.timeOffset);
-                        }
-                    );
-            },
-
             // 1 preroll ad break + repeat after
             "prerollRepeat": function() {
                 // The right ad video should already be playing
@@ -286,6 +276,16 @@ define(function(require) {
                         return checkVideoPlayer(vmapConfig.midrollRepeat.timeOffsets[2]);
                     })
                 // Don't check the other occurrences, because the test would be very long
+            },
+
+            // 1 postroll ad break
+            "postroll": function() {
+                // The right ad video should already be playing
+                return checkAdPlayer(getMediaFileName(vmapConfig.postroll.ads[0].media))
+                    .then(function() {
+                            return checkVideoPlayer(vmapConfig.postroll.timeOffset);
+                        }
+                    );
             }
         };
     });
