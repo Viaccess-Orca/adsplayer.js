@@ -165,7 +165,7 @@ define(function(require) {
                                 media: vast01[0]
                             }
                         ],
-                        timeOffsets: [3.6, 14.1, 24.7]
+                        timeOffsets: [3.6, 14.1, 24.6]
                     }
                 }
             }
