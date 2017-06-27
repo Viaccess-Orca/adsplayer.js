@@ -4,7 +4,6 @@
         <InLine>
             <AdSystem version="3.0">Ad 1</AdSystem>
             <AdTitle>Double creative</AdTitle>
-            <Impression id="DART"><![CDATA[http://qa.jwplayer.com/~alex/pixel.gif?2]]></Impression>
             <Creatives>
                 <Creative>
                     <Linear>

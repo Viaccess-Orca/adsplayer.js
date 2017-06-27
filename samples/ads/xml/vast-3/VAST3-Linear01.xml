@@ -7,7 +7,6 @@
             <Description><![CDATA[Linear ad event tracking test]]></Description>
             <Survey></Survey>
             <Error/>
-            <Impression id="DART"><![CDATA[http://localhost/log?impression]]></Impression>
             <Creatives>
                  <Creative sequence="1" AdID="">
                     <Linear>

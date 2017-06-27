@@ -4,7 +4,6 @@
         <InLine>
             <AdSystem version="2.0">Ad 1</AdSystem>
             <AdTitle>Skippable ad</AdTitle>
-            <Impression id="DART"><![CDATA[http://qa.jwplayer.com/~alex/pixel.gif?2]]></Impression>
             <Creatives>
                 <Creative>
                     <Linear skipoffset="00:00:02">
@@ -47,7 +46,6 @@
         <InLine>
             <AdSystem version="1.0">Ad 2</AdSystem>
             <AdTitle>Non-skippable ad</AdTitle>
-            <Impression id="DART"><![CDATA[http://localhost/log?impression]]></Impression>
             <Creatives>
                 <Creative>
                     <Linear skipoffset="50%">

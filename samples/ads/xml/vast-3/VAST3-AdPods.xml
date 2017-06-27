@@ -9,7 +9,6 @@
             <Pricing model="CPM" currency="USD">50</Pricing>
             <Survey></Survey>
             <Error><![CDATA[http://qa.jwplayer.com/~alex/pixel.gif?err=[ERRORCODE]]]></Error>
-            <Impression id="DART"><![CDATA[http://localhost/log?impression]]></Impression>
             <Creatives>
                 <Creative id="cswebplayer ads server" sequence="1" AdID="toto" apiFramework="api5.0">
                     <Linear skipoffset="00:00:03">
@@ -73,7 +72,6 @@
             <Description></Description>
             <Survey></Survey>
             <Error><![CDATA[http://qa.jwplayer.com/~alex/pixel.gif?err=[ERRORCODE]]]></Error>
-            <Impression id="DART"><![CDATA[http://qa.jwplayer.com/~alex/pixel.gif?2]]></Impression>
             <Creatives>
                 <Creative sequence="1" AdID="">
                     <Linear skipoffset="00:00:05">

@@ -16,12 +16,6 @@
             http://myErrorURL/error
             ]]>
             </Error>
-            <Impression id="Impression-ID">
-            <![CDATA[
-            http://myTrackingURL/impression
-            ]]>
-            </Impression>
-
             <Creatives>
                 <Creative id="5480" sequence="1">
                     <NonLinearAds>
