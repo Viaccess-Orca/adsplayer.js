@@ -74,7 +74,7 @@
 						</VideoClicks>
 						<MediaFiles>
 							<MediaFile id="video2" delivery="progressive" type="video/mp4">
-								<![CDATA[https://swag.viaccess.fr:4040/adsserver/media/vo_ad_4.mp4]]>
+								<![CDATA[../../media/vo_ad_4.mp4]]>
 							</MediaFile>
 						</MediaFiles>
 					</Linear>
