@@ -13,7 +13,7 @@ define(function(require) {
 	
     var conf = {
         // Browsers to run integration testing against. Note that version numbers must be strings if used with Sauce
-        // OnDemand. Options that will be permutated are browserName, version; any other
+        // OnDemand. Options that will be permuted are browserName, version; any other
         // capabilities options specified for an environment will be copied as-is
         environments: browsersConfig[intern.args.browsers],
 

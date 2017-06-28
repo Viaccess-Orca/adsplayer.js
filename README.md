@@ -15,6 +15,8 @@ The application that uses CSWebPlayer in conjunction with CSAdsPlugin has to tak
 * opening the web page when a click on the playing ad has been detected by the plugin
 * pausing/resuming the plugin (for example when application visibility changes)
 
+CSAdsPlugin is currently supported on Chrome, Edge, Firefox and Safari.
+
 ## Build / Run
 
 ``` bash
