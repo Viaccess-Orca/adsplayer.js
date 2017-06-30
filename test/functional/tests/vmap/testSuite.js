@@ -58,7 +58,7 @@ define(function(require) {
         var checkAdPlayer = function(url) {
             var adSrc = "";
 
-            return new Promise(function(resolve) {
+            return new Promise(function(resolve, reject) {
                 // Get the ad player element
                 command.findByCssSelector("#adsplayer-container video")
                     .getAttribute("src")
@@ -66,6 +66,9 @@ define(function(require) {
                         // Get the ad source URL
                         adSrc = src;
                         resolve();
+                    }, function() {
+                        throw new Error("Unable to get ad player element");
+                        reject();
                     })
                     .end();
             }).then(function() {
@@ -78,14 +81,17 @@ define(function(require) {
         var checkVideoPlayer = function(offset) {
             var currentTime = -1;
 
-            return new Promise(function(resolve) {
-                // Get the ad player element
+            return new Promise(function(resolve, reject) {
+                // Get the video player element
                 command.findByCssSelector("#videoplayer-container")
                     .getProperty("currentTime")
                     .then(function (time) {
                         // Get the ad current time
                         currentTime = time;
                         resolve();
+                    }, function() {
+                        throw new Error("Unable to get video player element");
+                        reject();
                     })
                     .end();
             }).then(function() {
