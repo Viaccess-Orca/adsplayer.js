@@ -21,8 +21,10 @@ var gulp = require('gulp'),
     uglify = require('gulp-uglify'),
     zip = require('gulp-zip'),
     // custom import
-    pkg = require('./package.json');
+    pkg = require('./package.json'),
+    ts = require("gulp-typescript");
 
+var tsProject = ts.createProject("tsconfig.json");
 
 var sources = {
     main: './src/AdsPlayer.js',
@@ -176,7 +178,15 @@ gulp.task('watch', function () {
     bundle_js(bundler, outName, false);
 });
 
-gulp.task('build', ['clean', 'package-info', 'lint'], function() {
+gulp.task("compile-typescript", function () {
+    return tsProject.src()
+        .pipe(tsProject())
+        .js.pipe(gulp.dest(function (file) {  //generate the js file in the same directory
+            return file.base;
+        }));
+});
+
+gulp.task('build', ['package-info', 'lint'], function() {
 
     return bundle_js(browserify(browserifyArgs), outName, true);
 });
@@ -218,9 +228,16 @@ gulp.task('releases-notes', function() {
         .pipe(gulp.dest(outDir));
 });
 
+// Copy the index.hml in the output directory. Update the version.
+gulp.task('copy-index', function() {
+    return gulp.src('index.html')
+        .pipe(replace(/@@VERSION/g, pkg.gitTag))
+        .pipe(gulp.dest(outDir));
+});
+
 gulp.task('zip', function() {
     return gulp.src(outDir + '/**/*')
-        .pipe(zip(outName + '.zip'))
+        .pipe(zip('csadsplugin.zip'))
         .pipe(gulp.dest(outDir));
 });
 
@@ -234,9 +251,17 @@ gulp.task('version', function() {
 });
 
 gulp.task('default', function(cb) {
-    runSequence('build', ['build-samples', 'doc'],
+    runSequence('clean','compile-typescript','build', ['build-samples', 'doc'],
         'releases-notes',
-        'zip',
+        "copy-index",
         'version',
         cb);
+});
+
+gulp.task('zip', function () {
+    // zip output directory
+    // exclude file *.map
+    gulp.src([outDir + "/**/*", "!" + outDir + "/**/*.map"])
+        .pipe(zip("csadsplugin.zip"))
+        .pipe(gulp.dest(outDir));
 });

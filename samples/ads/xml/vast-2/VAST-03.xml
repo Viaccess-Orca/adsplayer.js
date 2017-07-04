@@ -5,7 +5,6 @@
 			<AdSystem>OAS</AdSystem>
 			<AdTitle>BC0</AdTitle>
 			<Description>ad Description</Description>
-		<Impression>http://tv-has.orange-labs.fr/adserver/tracking/impression</Impression>       
 			<Creatives>
 					<Creative>
 						<Linear>

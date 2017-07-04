@@ -135,7 +135,7 @@ class Creative {
         this.apiFramework = '';             // [Optional] A string that identify an API that is needed to execute the creative.
         this.linear = null;                 // [Optional] Linear element
         this.companionAds = [];             // [Optional] Companion elements
-        this.nonLinearAds = [];             // [Optional] NonLinear elements
+        this.nonLinearAds = null;           // [Optional] NonLinearAds elements
     }
 }
 
@@ -186,25 +186,51 @@ class Companion {
 //      Non Linear Ads
 //
 
+
 /**
-* @class Companion
+ * @class NonLinearAds
+ * @ignore
+ */
+class NonLinearAds {
+    constructor () {
+        this.nonLinear = [];                // [Optional] NonLinear elements
+        this.trackingEvents = [];           // [Optional] TrackingEvent elements
+    }
+}
+
+/**
+* @class NonLinear
 * @ignore
 */
 class NonLinear {
     constructor () {
         this.id = '';                       // optional : identifier
-        this.width = 0;                     // width pixel dimension of non linear
-        this.height = 0;                    // height pixel dimension of non linear
+        this.width = 0;                     // Required : width pixel dimension of non linear
+        this.height = 0;                    // Required : height pixel dimension of non linear
         this.expandedWidth = 0;             // optional : pixel dimensions of expanding nonlinear ad when in expanded state
         this.expandedHeight  = 0;           // optional : pixel dimensions of expanding nonlinear ad when in expanded state
         this.scalable = true;               // optional : whether it is acceptable to scale the image
         this.maintainAspectRatio = true;    // optional : whether the ad must have its aspect ratio maintained when scaled
+        this.minSuggestedDuration = 0;      // optional : The minimum suggested duration that the creative should be displayed;
+                                            //            duration is in the format HH:MM:SS.mmm (where .mmm is in milliseconds and is optional)
         this.apiFramework = '';             // optional : defines the method to use for communication with the nonlinear element
         this.staticResource = null;         // optional : pointer to the static resource : AdsPlayer.vast.model.Ad.StaticResource
-        this.hTMLResource = '';             // optional : HTML to display the companion element : shall be CDATA value
-        this.trackingEvents = [];           // optional : TrackingEvent elements
-        this.clickThrough = '';             // optional : URI to open as destination page when user clicks on the non-linear ad unit
-        this.adParameters = '';             // optional : data to be passed into the video ad
+        this.iFrameResource = '';           // optional : Describe a resource that is an HTML page that can be displayed within an iframe on the publisher's HTML page
+        this.hTMLResource = null;           // optional : A 'snippet' of HTML code to be inserted directly within the publisher's HTML page code
+        this.nonLinearClickThrough = '';    // optional : URL to open as destination page when user clicks on the non-linear ad unit
+        this.nonLinearClickTracking = [];   // optional : URLs to ping when user clicks on the the non-linear ad.
+        this.adParameters = '';             // optional : Data to be passed to the  creative unit
+    }
+}
+
+/**
+ * @class HTMLResource
+ * @ignore
+ */
+class HTMLResource {
+    constructor () {
+        this.xmlEncoded = '';               // [Optional] Identifies whether the HTML is XML-encoded
+        this.metadata = '';                 // [Required] Meta data for the HTML.
     }
 }
 
@@ -312,7 +338,7 @@ MediaFile.DELIVERY = {
 */
 class StaticResource {
     constructor () {
-        this.uRI = '';              // optional : URI to a static file, such as an image or SWF file
+        this.uri = '';              // optional : URI to a static file, such as an image or SWF file
         this.creativeType  ='';     // mime type of static resource
     }
 }
@@ -329,6 +355,8 @@ vast.Extensions = Extensions;
 vast.Creative = Creative;
 vast.Linear = Linear;
 vast.Companion = Companion;
+vast.HTMLResource = HTMLResource;
+vast.NonLinearAds = NonLinearAds;
 vast.NonLinear = NonLinear;
 vast.AdParameters = AdParameters;
 vast.TrackingEvent = TrackingEvent;
@@ -339,4 +367,4 @@ vast.StaticResource = StaticResource;
 
 export default vast;
 
-export { Vast, Ad, InLine, AdSystem, Pricing, Impression, Extensions, Creative, Linear, Companion, NonLinear, AdParameters, TrackingEvent, VideoClicks, Click, MediaFile, StaticResource };
+export { Vast, Ad, InLine, AdSystem, Pricing, Impression, Extensions, Creative, Linear, Companion, HTMLResource, NonLinearAds, NonLinear, AdParameters, TrackingEvent, VideoClicks, Click, MediaFile, StaticResource };

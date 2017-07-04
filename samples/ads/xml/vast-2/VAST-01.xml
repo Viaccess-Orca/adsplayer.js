@@ -6,23 +6,22 @@
 			<AdTitle/>
 			<Description/>
 			<Error/>
-			<Impression>http://tv-has.orange-labs.fr/adserver/tracking/impression</Impression>       
 			<Creatives>
 				<Creative id="MY1A11172920|TRAILER" sequence="1">
 					<Linear>
 						<Duration>00:00:5</Duration>
 						<TrackingEvents>
-							<Tracking event="complete">http://cswebplayer.viaccess.fr/adsserver/js?event=complete</Tracking>
-							<Tracking event="creativeView">http://cswebplayer.viaccess.fr/adsserver/js?event=creativeView</Tracking>
-							<Tracking event="start">http://cswebplayer.viaccess.fr/adsserver/js?event=start</Tracking>
-							<Tracking event="midpoint">http://cswebplayer.viaccess.fr/adsserver/js?event=midpoint</Tracking>
-							<Tracking event="firstQuartile">http://cswebplayer.viaccess.fr/adsserver/js?event=firstQuartile</Tracking>
-							<Tracking event="thirdQuartile">http://cswebplayer.viaccess.fr/adsserver/js?event=thirdQuartile</Tracking>
-							<Tracking event="mute">http://cswebplayer.viaccess.fr/adsserver/js?event=mute</Tracking>
-							<Tracking event="unmute">http://cswebplayer.viaccess.fr/adsserver/js?event=unmute</Tracking>
-							<Tracking event="pause">http://cswebplayer.viaccess.fr/adsserver/js?event=pause</Tracking>
-							<Tracking event="resume">http://cswebplayer.viaccess.fr/adsserver/js?event=resume</Tracking>
-							<Tracking event="fullscreen">http://cswebplayer.viaccess.fr/adsserver/js?event=fullscreen</Tracking>
+							<Tracking event="complete">https://swag.viaccess.fr:4040/adsserver?event=complete</Tracking>
+							<Tracking event="creativeView">https://swag.viaccess.fr:4040/adsserver?event=creativeView</Tracking>
+							<Tracking event="start">https://swag.viaccess.fr:4040/adsserver?event=start</Tracking>
+							<Tracking event="midpoint">https://swag.viaccess.fr:4040/adsserver?event=midpoint</Tracking>
+							<Tracking event="firstQuartile">https://swag.viaccess.fr:4040/adsserver?event=firstQuartile</Tracking>
+							<Tracking event="thirdQuartile">https://swag.viaccess.fr:4040/adsserver?event=thirdQuartile</Tracking>
+							<Tracking event="mute">https://swag.viaccess.fr:4040/adsserver?event=mute</Tracking>
+							<Tracking event="unmute">https://swag.viaccess.fr:4040/adsserver?event=unmute</Tracking>
+							<Tracking event="pause">https://swag.viaccess.fr:4040/adsserver?event=pause</Tracking>
+							<Tracking event="resume">https://swag.viaccess.fr:4040/adsserver?event=resume</Tracking>
+							<Tracking event="fullscreen">https://swag.viaccess.fr:4040/adsserver?event=fullscreen</Tracking>
 						</TrackingEvents>
 						<VideoClicks>
 							<ClickThrough>

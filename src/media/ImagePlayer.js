@@ -120,6 +120,15 @@ class ImagePlayer {
         this._debug = Debug.getInstance();
     }
 
+    // destructor
+    delete () {
+        if (!this._image) {
+            return;
+        }
+        this._image = null;
+        this._listeners = {};
+    }
+
     load (baseUrl, mediaFiles) {
 
         var mediaFile = null,
@@ -233,14 +242,6 @@ class ImagePlayer {
             return;
         }
         this._stopTimer();
-    }
-
-    reset () {
-        if (!this._image) {
-            return;
-        }
-        this._image = null;
-        this._listeners = {};
     }
 
     isEnded () {

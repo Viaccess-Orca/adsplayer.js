@@ -53,7 +53,7 @@ class VastParser {
         let trackingEvent = new vast.TrackingEvent();
 
         trackingEvent.event = trackingNode.getAttribute('event');
-        trackingEvent.uri = xmldom.getNodeTextValue(trackingNode);
+        trackingEvent.uri = xmldom.getNodeTextValue(trackingNode).trim();
         if (trackingEvent.event == "progress") {
             var offsetValue = trackingNode.getAttribute('offset');
             if (offsetValue.indexOf("%") == -1) {
@@ -75,29 +75,31 @@ class VastParser {
         if (clickThroughNode) {
             videoClicks.clickThrough = new vast.Click();
             videoClicks.clickThrough.id = clickThroughNode.getAttribute('id');
-            videoClicks.clickThrough.uri = xmldom.getNodeTextValue(clickThroughNode);
+            videoClicks.clickThrough.uri = xmldom.getNodeTextValue(clickThroughNode).trim();
         } else {
             this._debug.warn("(VastParser) VAST/Ad/Inline/Creatives/Linear/VideoClicks/ClickThrough is mandatory but not present.");
         }
 
         let numberOfClickTracking = videoClicksNode.getElementsByTagName('ClickTracking').length;
         let clickTrackingNodes = xmldom.getElements(videoClicksNode, 'ClickTracking');
-        if (clickTrackingNodes) {
+        if (clickTrackingNodes.length !== 0) {
             for (let i = 0; i < numberOfClickTracking; i++){
                 videoClicks.clickTracking[i] = new vast.Click();
                 videoClicks.clickTracking[i].id = clickTrackingNodes[i].getAttribute('id');
-                videoClicks.clickTracking[i].uri = xmldom.getNodeTextValue(clickTrackingNodes[i]);
+                videoClicks.clickTracking[i].uri = xmldom.getNodeTextValue(clickTrackingNodes[i]).trim();
             }
+            this._debug.warn("(VastParser) VAST/Ad/InLine/Creatives/Creative/Linear/VideoClicks/ClickTracking not supported ");
         }
 
         let numberOfCustomClick = videoClicksNode.getElementsByTagName('CustomClick').length;
         let customClickNodes = xmldom.getElements(videoClicksNode, 'CustomClick');
-        if (customClickNodes) {
+        if (customClickNodes.length !== 0) {
             for (let i = 0; i < numberOfCustomClick; i++){
                 videoClicks.customClick[i] = new vast.Click();
                 videoClicks.customClick[i].id = customClickNodes[i].getAttribute('id');
-                videoClicks.customClick[i].uri = xmldom.getNodeTextValue(customClickNodes[i]);
+                videoClicks.customClick[i].uri = xmldom.getNodeTextValue(customClickNodes[i]).trim();
             }
+            this._debug.warn("(VastParser) VAST/Ad/InLine/Creatives/Creative/Linear/VideoClicks/CustomClick not supported ");
         }
 
         return videoClicks;
@@ -118,7 +120,7 @@ class VastParser {
         mediaFile.scalable = mediaFileNode.getAttribute('scalable');
         mediaFile.maintainAspectRatio = mediaFileNode.getAttribute('maintainAspectRatio');
         mediaFile.apiFramework = mediaFileNode.getAttribute('apiFramework');
-        mediaFile.uri = xmldom.getNodeTextValue(mediaFileNode);
+        mediaFile.uri = xmldom.getNodeTextValue(mediaFileNode).trim();
 
         return mediaFile;
     }
@@ -189,11 +191,120 @@ class VastParser {
         return linear;
     }
 
+    _getStaticResource (staticResourceNode){
+        var staticResource = new vast.StaticResource();
+
+        staticResource.uri = xmldom.getNodeTextValue(staticResourceNode).trim();
+        staticResource.creativeType = staticResourceNode.getAttribute('creativeType');
+
+        return staticResource;
+    }
+
+    _getHTMLResource (HTMLResourceNode){
+        var HTMLResource = new vast.HTMLResource();
+
+        HTMLResource.metadata = xmldom.getNodeTextValue(HTMLResourceNode);
+        HTMLResource.xmlEncoded = HTMLResourceNode.getAttribute('xmlEncoded');
+
+        return HTMLResource;
+    }
+
+    _getNonLinear (NonlinearNode) {
+        let nonlinear = new vast.NonLinear();
+
+        nonlinear.id =  NonlinearNode.getAttribute('id');
+        nonlinear.width =  NonlinearNode.getAttribute('width');
+        nonlinear.height =  NonlinearNode.getAttribute('height');
+        nonlinear.expandedWidth =  NonlinearNode.getAttribute('expandedWidth');
+        nonlinear.expandedHeight =  NonlinearNode.getAttribute('expandedHeight');
+        nonlinear.scalable = NonlinearNode.getAttribute('scalable');
+        nonlinear.maintainAspectRatio = NonlinearNode.getAttribute('maintainAspectRatio');
+        nonlinear.apiFramework = NonlinearNode.getAttribute('apiFramework');
+
+        var DurationValue = NonlinearNode.getAttribute('minSuggestedDuration');
+        if (DurationValue) {
+            /* convert HH:MM:SS ( or HH:MM:SS.mmm) in seconds */
+            nonlinear.minSuggestedDuration = new Date('1970-01-01T' + DurationValue + 'Z').getTime() / 1000;
+        }
+
+        let staticResourceNode = xmldom.getElement(NonlinearNode, 'StaticResource');
+        if (staticResourceNode) {
+            nonlinear.staticResource = this._getStaticResource(staticResourceNode);
+        }
+
+        let iFrameResourceNode = xmldom.getElement(NonlinearNode, 'IFrameResource');
+        if (iFrameResourceNode) {
+            nonlinear.iFrameResource = NonlinearNode.getNodeTextValue('iFrameResourceNode');
+        }
+
+        let HTMLResourceNode = xmldom.getElement(NonlinearNode, 'HTMLResource');
+        if (HTMLResourceNode) {
+            nonlinear.hTMLResource = this._getHTMLResource(HTMLResourceNode);
+            this._debug.warn("(VastParser) VAST/Ad/InLine/Creatives/Creative/NonLinearAds/nonLinear/HTMLResource not supported ");
+        }
+
+        let clickThroughNode = xmldom.getElement(NonlinearNode, 'NonLinearClickThrough');
+        if (clickThroughNode) {
+            nonlinear.nonLinearClickThrough = new vast.Click();
+            //nonlinear.clickThrough.id = clickThroughNode.getAttribute('id');
+            nonlinear.nonLinearClickThrough.uri = xmldom.getNodeTextValue(clickThroughNode).trim();
+        }
+
+        let numberOfClickTracking = NonlinearNode.getElementsByTagName('NonLinearClickTracking').length;
+        let clickTrackingNodes = xmldom.getElements(NonlinearNode, 'NonLinearClickTracking');
+        if (clickTrackingNodes.length !== 0) {
+            for (let i = 0; i < numberOfClickTracking; i++){
+                nonlinear.nonLinearClickTracking[i] = new vast.Click();
+                nonlinear.nonLinearClickTracking[i].id = clickTrackingNodes[i].getAttribute('id');
+                nonlinear.nonLinearClickTracking[i].uri = xmldom.getNodeTextValue(clickTrackingNodes[i]).trim();
+            }
+            this._debug.warn("(VastParser) VAST/Ad/InLine/Creatives/Creative/NonLinearAds/nonLinear/ClickTracking not supported ");
+        }
+
+        let adParametersNode = xmldom.getElement(NonlinearNode, 'AdParameters');
+        if (adParametersNode) {
+            nonlinear.adParameters = this._getAdParameters(adParametersNode);
+        }
+
+        return nonlinear;
+    }
+
+    _getNonLinearAds (nonLinearAdsNode) {
+        let nonLinearAds = new vast.NonLinearAds(),
+            trackingEventsNode,
+            trackingNodes;
+
+        let numberOfNonLinear = nonLinearAdsNode.getElementsByTagName('NonLinear').length;
+        let nonLinearNodes = xmldom.getElements(nonLinearAdsNode, 'NonLinear');
+        if (nonLinearNodes.length !== 0) {
+            for (let i = 0; i < numberOfNonLinear; i++){
+                nonLinearAds.nonLinear[i] = this._getNonLinear(nonLinearNodes[i]);
+            }
+        }
+        /*
+        nonLinearNode = xmldom.getElement(nonLinearAdsNode, 'NonLinear');
+        if (nonLinearNode) {
+            nonLinearAds.nonLinear = this._getNonLinear(nonLinearNode);
+        }
+        */
+
+        trackingEventsNode = xmldom.getElement(nonLinearAdsNode, 'TrackingEvents');
+        if (trackingEventsNode) {
+            //this._debug.warn("(VastParser) VAST/Ad/InLine/Creatives/Creative/NonLinearAds/TrackingEvents found ");
+            trackingNodes = xmldom.getSubElements(nonLinearAdsNode, 'TrackingEvents', 'Tracking');
+            for (let i = 0; i < trackingNodes.length; i++) {
+                nonLinearAds.trackingEvents.push(this._getTrackingEvent(trackingNodes[i]));
+            }
+        }
+
+        return nonLinearAds;
+    }
+
     _getCreative (creativeNode) {
         let creative = new vast.Creative(),
             linearNode,
             companionNode,
-            nonLinearNode;
+            nonLinearAdsNode;
 
         creative.id = creativeNode.getAttribute('id');
         creative.adId = creativeNode.getAttribute('AdID');
@@ -204,15 +315,17 @@ class VastParser {
         if (linearNode) {
             creative.linear = this._getLinear(linearNode);
         }
-
-        companionNode = xmldom.getElement(creativeNode, 'CompanionAds');
-        if (companionNode) {
-            this._debug.warn("(VastParser) VAST/Ad/InLine/Creatives/Creative/CompanionAds not supported ");
-        }
-
-        nonLinearNode = xmldom.getElement(creativeNode, 'NonLinearAds');
-        if (nonLinearNode) {
-            this._debug.warn("(VastParser) VAST/Ad/InLine/Creatives/Creative/NonLinearAds not supported ");
+        else {
+            companionNode = xmldom.getElement(creativeNode, 'CompanionAds');
+            if (companionNode) {
+                this._debug.warn("(VastParser) VAST/Ad/InLine/Creatives/Creative/CompanionAds not supported ");
+            }
+            else {
+                nonLinearAdsNode = xmldom.getElement(creativeNode, 'NonLinearAds');
+                if (nonLinearAdsNode) {
+                    creative.nonLinearAds = this._getNonLinearAds(nonLinearAdsNode);
+                }
+            }
         }
 
         return creative;
@@ -243,7 +356,7 @@ class VastParser {
         for (var i = 0; i < impressionNodes.length; i++) {
             var impression = new vast.Impression();
             impression.id = impressionNodes[i].getAttribute('id');
-            impression.uri = xmldom.getNodeTextValue(impressionNodes[i]);
+            impression.uri = xmldom.getNodeTextValue(impressionNodes[i]).trim();
             impressions.push(impression);
         }
 
@@ -279,7 +392,7 @@ class VastParser {
         inLine.error = xmldom.getChildNodeTextValue(inLineNode, 'Error');
 
         impressionNodes = xmldom.getElements(inLineNode, 'Impression');
-        if (impressionNodes !== null) {
+        if (impressionNodes.length !== 0) {
             inLine.impressions = this._getImpressions(impressionNodes);
         }
 
@@ -334,7 +447,7 @@ class VastParser {
         var numberOfAds = vastNode.getElementsByTagName('Ad').length;
         var adNodes = xmldom.getElements(vastNode, 'Ad');
 
-        if (adNodes === null) {
+        if (adNodes.length === 0) {
             return vast_;
         }
 

@@ -62,6 +62,27 @@ class AdBreakManager {
         return res;
     }
 
+    _updateRepeatTime(repeatTimestamp, current) {
+        var timestampRegex = /^(\d{2}):(\d{2}):(\d{2}(?:.\d{3})?)$/,
+            timestamp,
+            result = null;
+
+        // Convert timestamp to number of seconds
+        timestamp = repeatTimestamp.match(timestampRegex);
+        if (timestamp && timestamp.length >= 4) {
+            var hours = parseInt(timestamp[1]),
+            minutes = parseInt(timestamp[2]),
+            seconds = parseFloat(timestamp[3]);
+
+            if (!isNaN(hours) && !isNaN(minutes) && !isNaN(seconds)) {
+                // Add number of seconds to current time
+                result = hours * 3600 + minutes * 60 + seconds + current;
+            }
+        }
+
+        return result;
+    }
+
     _evaluateTimeOffset (timeOffset, video) {
         var res = false,
             percentRegex = /^(\d+(?:.\d*)?)%$/,
@@ -130,10 +151,37 @@ class AdBreakManager {
      * @param {Number} video - the main video element
      */
     checkStartConditions (video) {
-        if (this._adBreak.activated) {
-            return false;
+        if (this._adBreak.repeatAfter) {
+            // If there are several occurrences, check if it was already displayed once
+            var display = false;
+            if (this._adBreak.activated) {
+                // If yes, check if it should be displayed again
+                display = this._adBreak.repeatTime <= video.currentTime;
+            } else {
+                // If not, evaluate if it should be displayed for the first time
+                display = this._evaluateTimeOffset(this._adBreak.timeOffset, video);
+            }
+
+            // If it's time to display, update next repeat timestamp
+            if (display) {
+                this._adBreak.repeatTime = this._updateRepeatTime(this._adBreak.repeatAfter, video.currentTime);
+            }
+
+            return display;
+        } else {
+            // If there is a single occurrence, check if it was already displayed
+            if (this._adBreak.activated) {
+                // If yes, return
+                return false;
+            } else {
+                // If not, evaluate if it should be displayed right now
+                return this._evaluateTimeOffset(this._adBreak.timeOffset, video);
+            }
         }
-        return this._evaluateTimeOffset(this._adBreak.timeOffset, video);
+
+
+
+
     }
 
     /**

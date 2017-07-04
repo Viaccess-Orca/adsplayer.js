@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "target": "es6",                    // Transpile into ES6 JS
+    "noImplicitAny": true,              // Warning on untyped variables
+    "noUnusedLocals": true,             // Warning on unused locals
+    "noUnusedParameters": true,         // Warning on unused parameters
+    "removeComments": true,             // Remove comments in result file
+    "allowJs": true                     // Allow to import js in ts
+  },
+  "include": [
+    "src/**/*.ts"
+  ]
+}

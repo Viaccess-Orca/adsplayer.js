@@ -31,14 +31,12 @@ function initAdsPluginEvtsHdler(adsPlugin){
 
     // hide the video player and update the number of start event
     adsPlugin.addEventListener('start', function() {
-        document.getElementById('videoplayer-container').style.display = 'none' ;
         var element = document.getElementById('event_start');
         element.setAttribute("value", parseInt(element.getAttribute("value")) + 1);
     });
 
     // show the video player and update the number of end event
     adsPlugin.addEventListener('end', function() {
-        document.getElementById('videoplayer-container').style.display = 'block';
         var element = document.getElementById('event_end');
         element.setAttribute("value", parseInt(element.getAttribute("value")) + 1);
     });

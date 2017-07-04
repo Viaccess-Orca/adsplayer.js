@@ -7,35 +7,34 @@
             <Description><![CDATA[Linear ad event tracking test]]></Description>
             <Survey></Survey>
             <Error/>
-            <Impression id="DART"><![CDATA[http://localhost/log?impression]]></Impression>
             <Creatives>
                  <Creative sequence="1" AdID="">
                     <Linear>
                         <Duration>00:00:05</Duration>
                         <TrackingEvents> <!-- ok -->
-                            <Tracking event="complete">http://cswebplayer.viaccess.fr/adsserver/js?event=complete</Tracking>
-                            <Tracking event="creativeView">http://cswebplayer.viaccess.fr/adsserver/js?event=creativeView</Tracking>
-                            <Tracking event="start">http://cswebplayer.viaccess.fr/adsserver/js?event=start</Tracking>
-                            <Tracking event="midpoint">http://cswebplayer.viaccess.fr/adsserver/js?event=midpoint</Tracking>
-                            <Tracking event="firstQuartile">http://cswebplayer.viaccess.fr/adsserver/js?event=firstQuartile</Tracking>
-                            <Tracking event="thirdQuartile">http://cswebplayer.viaccess.fr/adsserver/js?event=thirdQuartile</Tracking>
-                            <Tracking event="mute">http://cswebplayer.viaccess.fr/adsserver/js?event=mute</Tracking>
-                            <Tracking event="unmute">http://cswebplayer.viaccess.fr/adsserver/js?event=unmute</Tracking>
-                            <Tracking event="pause">http://cswebplayer.viaccess.fr/adsserver/js?event=pause</Tracking>
-                            <Tracking event="resume">http://cswebplayer.viaccess.fr/adsserver/js?event=resume</Tracking>
-                            <Tracking event="fullscreen">http://cswebplayer.viaccess.fr/adsserver/js?event=fullscreen</Tracking>
-                            <Tracking event="progress" offset="00:00:10">http://cswebplayer.viaccess.fr/adsserver/js?event=progress</Tracking>     
-                            <Tracking event="progress" offset="30%"><![CDATA[http://cswebplayer.viaccess.fr/adsserver/js?event=progress]]></Tracking>   
-                            <Tracking event="progress" offset="00:00:03">http://cswebplayer.viaccess.fr/adsserver/js?event=progress</Tracking>         
-                            <Tracking event="progress" offset="00:00:06.123">http://cswebplayer.viaccess.fr/adsserver/js?event=progress</Tracking>     
-                            <Tracking event="rewind">http://cswebplayer.viaccess.fr/adsserver/js?event=rewind</Tracking>
-                            <Tracking event="exitFullscreen">http://cswebplayer.viaccess.fr/adsserver/js?event=exitFullscreen</Tracking>     
-                            <Tracking event="closeLinear">http://cswebplayer.viaccess.fr/adsserver/js?event=closeLinear</Tracking>
-                            <Tracking event="acceptInvitationLinear">http://cswebplayer.viaccess.fr/adsserver/js?event=acceptInvitationLinear</Tracking>
+                            <Tracking event="complete">https://swag.viaccess.fr:4040/adsserver?event=complete</Tracking>
+                            <Tracking event="creativeView">https://swag.viaccess.fr:4040/adsserver?event=creativeView</Tracking>
+                            <Tracking event="start">https://swag.viaccess.fr:4040/adsserver?event=start</Tracking>
+                            <Tracking event="midpoint">https://swag.viaccess.fr:4040/adsserver?event=midpoint</Tracking>
+                            <Tracking event="firstQuartile">https://swag.viaccess.fr:4040/adsserver?event=firstQuartile</Tracking>
+                            <Tracking event="thirdQuartile">https://swag.viaccess.fr:4040/adsserver?event=thirdQuartile</Tracking>
+                            <Tracking event="mute">https://swag.viaccess.fr:4040/adsserver?event=mute</Tracking>
+                            <Tracking event="unmute">https://swag.viaccess.fr:4040/adsserver?event=unmute</Tracking>
+                            <Tracking event="pause">https://swag.viaccess.fr:4040/adsserver?event=pause</Tracking>
+                            <Tracking event="resume">https://swag.viaccess.fr:4040/adsserver?event=resume</Tracking>
+                            <Tracking event="fullscreen">https://swag.viaccess.fr:4040/adsserver?event=fullscreen</Tracking>
+                            <Tracking event="progress" offset="00:00:10">https://swag.viaccess.fr:4040/adsserver?event=progress</Tracking>
+                            <Tracking event="progress" offset="30%"><![CDATA[https://swag.viaccess.fr:4040/adsserver?event=progress]]></Tracking>
+                            <Tracking event="progress" offset="00:00:03">https://swag.viaccess.fr:4040/adsserver?event=progress</Tracking>
+                            <Tracking event="progress" offset="00:00:06.123">https://swag.viaccess.fr:4040/adsserver?event=progress</Tracking>
+                            <Tracking event="rewind">https://swag.viaccess.fr:4040/adsserver?event=rewind</Tracking>
+                            <Tracking event="exitFullscreen">https://swag.viaccess.fr:4040/adsserver?event=exitFullscreen</Tracking>
+                            <Tracking event="closeLinear">https://swag.viaccess.fr:4040/adsserver?event=closeLinear</Tracking>
+                            <Tracking event="acceptInvitationLinear">https://swag.viaccess.fr:4040/adsserver?event=acceptInvitationLinear</Tracking>
                             <!-- Nok -->
-                            <Tracking event="expand">http://cswebplayer.viaccess.fr/adsserver/js?event=expand</Tracking>
-                            <Tracking event="collapse">http://cswebplayer.viaccess.fr/adsserver/js?event=collapse</Tracking>
-                            <Tracking event="skip">http://cswebplayer.viaccess.fr/adsserver/js?event=skip</Tracking>                           
+                            <Tracking event="expand">https://swag.viaccess.fr:4040/adsserver?event=expand</Tracking>
+                            <Tracking event="collapse">https://swag.viaccess.fr:4040/adsserver?event=collapse</Tracking>
+                            <Tracking event="skip">https://swag.viaccess.fr:4040/adsserver?event=skip</Tracking>
                         </TrackingEvents>
                         <VideoClicks>
                             <ClickThrough>

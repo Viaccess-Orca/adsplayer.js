@@ -48,13 +48,6 @@ class StreamSelector {
     onSelect(element) {
         // update the document
         document.getElementById("stream").value = this.streams[this.select.selectedIndex].url;
-        
-		if(this.select.selectedIndex === 0){
-			document.getElementById("licencer").style.display = "table-row";
-		}
-		else{
-			document.getElementById("licencer").style.display = "none";
-		}
     }
 
     getSelected() {

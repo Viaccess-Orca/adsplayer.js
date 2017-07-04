@@ -41,7 +41,7 @@ import ImagePlayer from '../media/ImagePlayer';
 import Debug from '../Debug';
 import EventBus from '../EventBus';
 
-class CreativePlayer {
+class LinearCreativePlayer {
 
     ///////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////// PRIVATE ////////////////////////////////////////////
@@ -104,6 +104,9 @@ class CreativePlayer {
 
         this._debug.log("creative media ended");
 
+        // Resume main video
+        this._resumeMainVideo();
+
         // Notify the creative has ended
         this._eventBus.dispatchEvent({
             type: 'creativeEnd',
@@ -113,8 +116,6 @@ class CreativePlayer {
 
     _onMediaTimeupdate () {
         this._evaluateTimeOffset();
-
-        //this._debug.log("Media timeupdate: " + this._mediaPlayer.getCurrentTime());
     }
 
     _initTimeOffset() {
@@ -192,6 +193,36 @@ class CreativePlayer {
         // }
     }
 
+    _pauseMainVideo () {
+        // in case of pre-roll ad, the main video may not be started yet
+        if (!this._mainVideo.paused) {
+            this._debug.log("(LinearCreativePlayer) Pause main video");
+            this._mainVideo.pause();
+        } else {
+            // then add a listener on playing to pause when it occurs
+            this._mainVideo.addEventListener("playing", this._onMainVideoPlayListener);
+        }
+
+        this._mainVideo.style.display = "none";
+    }
+
+    _onMainVideoPlay () {
+        this._debug.log("(LinearCreativePlayer) Pause main video");
+        this._mainVideo.pause();
+    }
+
+    _resumeMainVideo () {
+
+        this._mainVideo.removeEventListener("playing", this._onMainVideoPlayListener);
+
+        if ((this._mainVideo.paused) && (!this._mainVideo.ended)) {
+            this._debug.log("(LinearCreativePlayer) Resume main video");
+            this._mainVideo.play();
+        }
+
+        this._mainVideo.style.display = "block";
+    }
+
     _load (creative, baseUrl) {
         var mediaFile,
             isVideo,
@@ -240,8 +271,7 @@ class CreativePlayer {
 
         // Add tracking events
         if (creative.trackingEvents) {
-            this._trackingEventsManager = new TrackingEventsManager();
-            this._trackingEventsManager.init(creative.trackingEvents, this._mediaPlayer);
+            this._trackingEventsManager = new TrackingEventsManager(creative.trackingEvents, this._mediaPlayer);
             this._trackingEventsManager.start();
         }
 
@@ -260,8 +290,16 @@ class CreativePlayer {
             }
         });
 
-        // Add the media player DOM element
+        // Add the ad DOM container
         this._adPlayerContainer.appendChild(this._mediaPlayer.getElement());
+
+        // Size and position the ad DOM container
+        this._adPlayerContainer.style.position = "absolute";
+        this._adPlayerContainer.style.bottom = "0%";
+        this._adPlayerContainer.style.left = "0%";
+        this._adPlayerContainer.style.height = "100%";
+        this._adPlayerContainer.style.width = "100%";
+        this._adPlayerContainer.style.display = "block";
 
         // Listener for click
         if (creative.videoClicks) {
@@ -273,6 +311,9 @@ class CreativePlayer {
 
         // Align media volume to main video volume
         this._onMainVideoVolumeChange();
+
+        // Pause main video
+        this._pauseMainVideo();
 
         // Start playing the media
         this._play();
@@ -338,12 +379,15 @@ class CreativePlayer {
             }
         });
 
+        this._adPlayerContainer.style.height = "0%";
+        this._adPlayerContainer.style.width = "0%";
+        this._adPlayerContainer.style.display = "none";
         this._adPlayerContainer.removeChild(this._mediaPlayer.getElement());
 
         this.currentCreative = null;
 
-        // Reset the media player
-        this._mediaPlayer.reset();
+        // Delete the media player
+        this._mediaPlayer.delete();
         this._mediaPlayer = null;
 
         // Stop the TrackingEvents manager
@@ -363,33 +407,41 @@ class CreativePlayer {
     ///////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////// PUBLIC /////////////////////////////////////////////
 
-    constructor() {
-        this._adPlayerContainer = null;
+    /**
+     * Initializes the creative player.
+     * @method constructor
+     * @access public
+     * @memberof LinearCreativePlayer#
+     * @param {Object} adPlayerContainer
+     * @param {HTMLVideoElement} mainVideo
+     */
+    constructor(adPlayerContainer, mainVideo) {
         this._mediaPlayer = null;
         this._trackingEventsManager = null;
-        this._mainVideo = null;
         this._debug = Debug.getInstance();
         this._eventBus = EventBus.getInstance();
+        this._adPlayerContainer = adPlayerContainer;
+        this._mainVideo = mainVideo;
 
         this._onMediaPlayListener = this._onMediaPlay.bind(this);
         this._onMediaPauseListener = this._onMediaPause.bind(this);
         this._onMediaErrorListener = this._onMediaError.bind(this);
         this._onMediaTimeupdateListener = this._onMediaTimeupdate.bind(this);
         this._onMediaEndedListener = this._onMediaEnded.bind(this);
+        this._onMainVideoPlayListener = this._onMainVideoPlay.bind(this);
+        this._mainVideo.addEventListener('volumechange', this._onMainVideoVolumeChange.bind(this));
+
     }
 
     /**
-     * Initializes the creative player.
-     * @method init
+     * Delete the creative player.
+     * @method delete
      * @access public
-     * @memberof CreativePlayer#
-     * @param {Object} creative - the creative element to play
-     * @param {String} baseUrl - the base URL for media files
+     * @memberof LinearCreativePlayer#
      */
-    init (adPlayerContainer, mainVideo) {
-        this._adPlayerContainer = adPlayerContainer;
-        this._mainVideo = mainVideo;
-        this._mainVideo.addEventListener('volumechange', this._onMainVideoVolumeChange.bind(this));
+    delete () {
+        this._stop();
+        this._reset();
     }
 
     load (creative, baseUrl) {
@@ -408,9 +460,6 @@ class CreativePlayer {
         this._stop();
     }
 
-    reset () {
-        this._reset();
-    }
 }
 
-export default CreativePlayer;
+export default LinearCreativePlayer;

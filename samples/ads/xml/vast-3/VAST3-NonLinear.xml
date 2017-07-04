@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<VAST version="3.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="vast3_draft.xsd">
+    <Ad id="preroll-1 vo_ad_2">
+        <InLine>
+            <AdSystem version="3.0">Viaccess-Orca ad VAST 3.0</AdSystem>
+            <AdTitle>Non Linear</AdTitle>
+            <Creatives>
+                <Creative sequence="1" AdID="">
+                    <NonLinearAds>
+                        <NonLinear width="126" height="75" minSuggestedDuration="00:00:05">
+                            <StaticResource creativeType="image/png">
+                                <![CDATA[../../media/vo_logo.png]]>
+                            </StaticResource>
+                        </NonLinear>
+                    </NonLinearAds>
+                </Creative>
+            </Creatives>
+        </InLine>
+    </Ad>
+</VAST>

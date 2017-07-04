@@ -52,7 +52,7 @@ function trackingEvtsHdler() {
         // this.method: the ajax method used
         // this.url   : the url of the requested script (including query string, if any) (urlencoded)
         // this.data  : the data sent, if any ex: foo=bar&a=b (urlencoded)
-        if (this.url.indexOf("http://cswebplayer.viaccess.fr/adsserver/js?event=")!=-1) {
+        if (this.url.indexOf("https://swag.viaccess.fr:4040/adsserver?event=")!=-1) {
             // Get event name from URL
             var newEvent = this.data.split("=");
             if (newEvent &&
