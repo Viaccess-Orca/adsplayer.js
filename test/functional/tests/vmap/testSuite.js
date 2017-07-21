@@ -54,54 +54,6 @@ define(function(require) {
             return array[array.length-1];
         };
 
-        // Check that the ad player is playing the expected URL
-        var checkAdPlayer = function(url) {
-            var adSrc = "";
-
-            return new Promise(function(resolve, reject) {
-                // Get the ad player element
-                command.findByCssSelector("#adsplayer-container video")
-                    .getAttribute("src")
-                    .then(function (src) {
-                        // Get the ad source URL
-                        adSrc = src;
-                        resolve();
-                    }, function() {
-                        throw new Error("Unable to get ad player element");
-                        reject();
-                    })
-                    .end();
-            }).then(function() {
-                // Once the source URL is fetched, compare it to the expected URL
-                assert.strictEqual(getMediaFileName(adSrc), url, "Ad player URL should be as expected");
-            });
-        };
-
-        // Check that the video played has paused on the expected timeout
-        var checkVideoPlayer = function(offset) {
-            var currentTime = -1;
-
-            return new Promise(function(resolve, reject) {
-                // Get the video player element
-                command.findByCssSelector("#videoplayer-container")
-                    .getProperty("currentTime")
-                    .then(function (time) {
-                        // Get the ad current time
-                        currentTime = time;
-                        resolve();
-                    }, function() {
-                        throw new Error("Unable to get video player element");
-                        reject();
-                    })
-                    .end();
-            }).then(function() {
-                 // Current time has to be between expected value and (expected value + margin of error)
-                assert.isAtLeast(currentTime, offset, "Ad video current time should be greater than or equal to " + offset);
-                assert.isBelow(currentTime, offset + vmapConfig.marginOfError,
-                    "Ad video current time should be less than " + (offset + vmapConfig.marginOfError) + " (" + offset + " + " + vmapConfig.marginOfError + ")");
-            });
-        }
-
         return {
             name: "VMAP",
 
@@ -182,116 +134,275 @@ define(function(require) {
 
             // 1 preroll ad break
             "preroll": function() {
-                // The right ad video should already be playing
-                return checkAdPlayer(getMediaFileName(vmapConfig.preroll.ads[0].media))
-                    .then(function() {
-                        return checkVideoPlayer(vmapConfig.preroll.timeOffset);
-                    }
-                );
+                // wait for the play event
+                command
+                    .then(pollUntil(function (value) {
+                        return document.getElementById('event_play').value === "1" ? true : null;
+                    }, null, 10000, 100))
+                    .then(function () {
+                        // the event has been detected
+                    },function (error) {
+                        // the event play has NOT been detected
+                        assert.isFalse(true,"the event play has NOT been detected for test " + test.name);
+                    });
+
+                // Check the expected ad is played
+                command
+                    .findById("adsplayer-container")
+                    .findByTagName("video")
+                    .getAttribute("src")
+                    .then(function (src) {
+                        assert.strictEqual(getMediaFileName(src), getMediaFileName(vmapConfig.preroll.ads[0].media));
+                    })
+                    .end()
+                    .end()
+                    .end();
+
+                // wait for the pause event
+                command
+                    .then(pollUntil(function (value) {
+                        return document.getElementById('event_pause').value === "1" ? true : null;
+                    }, null, 40000, 100))
+                    .then(function () {
+                        // the event has been detected
+                    },function (error) {
+                        // the event pause has NOT been detected
+                        assert.isFalse(true,"the event pause has NOT been detected for test " + test.name);
+                    });
             },
 
              // 1 midroll ad break trigged by timestamp
              "midrollTimestamp": function() {
-                // The right ad video should already be playing
-                return checkAdPlayer(getMediaFileName(vmapConfig.midrollTimestamp.ads[0].media))
-                    .then(function() {
-                        return checkVideoPlayer(vmapConfig.midrollTimestamp.timeOffset);
-                    }
-                );
+
+                 // wait for the play event
+                 command
+                     .then(pollUntil(function (value) {
+                         return document.getElementById('event_play').value === "1" ? true : null;
+                     }, null, 60000, 100))
+                     .then(function () {
+                         // the event has been detected
+                     },function (error) {
+                         // the event play has NOT been detected
+                         assert.isFalse(true,"the event play has NOT been detected for test " + test.name);
+                     });
+
+                 // Check the expected ad is played
+                 command
+                     .findById("adsplayer-container")
+                     .findByTagName("video")
+                     .getAttribute("src")
+                     .then(function (src) {
+                         assert.strictEqual(getMediaFileName(src), getMediaFileName(vmapConfig.midrollTimestamp.ads[0].media));
+                     })
+                     .end()
+                     .end()
+                     .end();
+
+                 // wait for the pause event
+                 command
+                     .then(pollUntil(function (value) {
+                         return document.getElementById('event_pause').value === "1" ? true : null;
+                     }, null, 40000, 100))
+                     .then(function () {
+                         // the event has been detected
+                     },function (error) {
+                         // the event pause has NOT been detected
+                         assert.isFalse(true,"the event pause has NOT been detected for test " + test.name);
+                     });
              },
 
             // 1 midroll ad break trigged by percentage
             "midrollPercent": function() {
-                // The right ad video should already be playing
-                return checkAdPlayer(getMediaFileName(vmapConfig.midrollPercent.ads[0].media))
-                    .then(function() {
-                        return checkVideoPlayer(vmapConfig.midrollPercent.timeOffset);
+                // wait for the play event
+                command
+                    .then(pollUntil(function (value) {
+                        return document.getElementById('event_play').value === "1" ? true : null;
+                    }, null, 60000, 100))
+                    .then(function () {
+                        // the event has been detected
+                    },function (error) {
+                        // the event play has NOT been detected
+                        assert.isFalse(true,"the event play has NOT been detected for test " + test.name);
+                    });
+
+                // Check the expected ad is played
+                command
+                    .findById("adsplayer-container")
+                    .findByTagName("video")
+                    .getAttribute("src")
+                    .then(function (src) {
+                        assert.strictEqual(getMediaFileName(src), getMediaFileName(vmapConfig.midrollPercent.ads[0].media));
+                    })
+                    .end()
+                    .end()
+                    .end();
+
+                // wait for the pause event
+                command
+                    .then(pollUntil(function (value) {
+                        return document.getElementById('event_pause').value === "1" ? true : null;
+                    }, null, 40000, 100))
+                    .then(function () {
+                        // the event has been detected
+                    },function (error) {
+                        // the event pause has NOT been detected
+                        assert.isFalse(true,"the event pause has NOT been detected for test " + test.name);
                     }
                 );
             },
 
             // 1 preroll ad break + repeat after
             "prerollRepeat": function() {
-                // The right ad video should already be playing
-                return command
-                    .then(function() {
-                        return checkAdPlayer(getMediaFileName(vmapConfig.prerollRepeat.ads[0].media));
-                    })
-                    .then(function() {
-                        return checkVideoPlayer(vmapConfig.prerollRepeat.timeOffsets[0]);
-                    })
-                    // Wait for the second occurrence
-                    .then(pollUntil(function () {
-                        return document.getElementById('event_start').value === "2" ? true : null;
-                    }, null, startTimeout, 1000), function () {
-                        assert.isFalse(true, "Unable to detect the 2nd occurence");
-                    })
-                    .then(function() {
-                        return checkAdPlayer(getMediaFileName(vmapConfig.prerollRepeat.ads[0].media));
-                    })
-                    .then(function() {
-                        return checkVideoPlayer(vmapConfig.prerollRepeat.timeOffsets[1]);
-                    })
-                    // Wait for the third occurrence
-                    .then(pollUntil(function () {
-                        return document.getElementById('event_start').value === "3" ? true : null;
-                    }, null, startTimeout, 1000), function () {
-                        assert.isFalse(true, "Unable to detect the 3rd occurence");
-                    })
-                    .then(function() {
-                        return checkAdPlayer(getMediaFileName(vmapConfig.prerollRepeat.ads[0].media));
-                    })
-                    .then(function() {
-                        return checkVideoPlayer(vmapConfig.prerollRepeat.timeOffsets[2]);
-                    })
-                    // Don't check the other occurrences, because the test would be very long
-            },
+                // wait for the play event
+                command
+                    .then(pollUntil(function (value) {
+                        return document.getElementById('event_play').value === "1" ? true : null;
+                    }, null, 10000, 100))
+                    .then(function () {
+                        // the event has been detected
+                    },function (error) {
+                        // the event play has NOT been detected
+                        assert.isFalse(true,"the event play has NOT been detected for test " + test.name);
+                    });
 
-            // 1 midroll ad break + repeat after
-            "midrollRepeat": function() {
-                // The right ad video should already be playing
-                return command
-                    .then(function() {
-                        return checkAdPlayer(getMediaFileName(vmapConfig.midrollRepeat.ads[0].media));
+                // Check the expected ad is played
+                command
+                    .findById("adsplayer-container")
+                    .findByTagName("video")
+                    .getAttribute("src")
+                    .then(function (src) {
+                        assert.strictEqual(getMediaFileName(src), getMediaFileName(vmapConfig.prerollRepeat.ads[0].media));
                     })
-                    .then(function() {
-                        return checkVideoPlayer(vmapConfig.midrollRepeat.timeOffsets[0]);
+                    .end()
+                    .end()
+                    .end();
+
+                // wait for the pause event
+                command
+                    .then(pollUntil(function (value) {
+                        return document.getElementById('event_pause').value === "1" ? true : null;
+                    }, null, 10000, 100))
+                    .then(function () {
+                        // the event has been detected
+                    },function (error) {
+                        // the event pause has NOT been detected
+                        assert.isFalse(true,"the event pause has NOT been detected for test " + test.name);
+                    });
+
+                // wait for the play event
+                command
+                    .then(pollUntil(function (value) {
+                        return document.getElementById('event_play').value === "2" ? true : null;
+                    }, null, 10000, 100))
+                    .then(function () {
+                        // the event has been detected
+                    },function (error) {
+                        // the event play has NOT been detected
+                        assert.isFalse(true,"the event play has NOT been detected for test " + test.name);
+                    });
+
+                // Check the expected ad is played
+                command
+                    .findById("adsplayer-container")
+                    .findByTagName("video")
+                    .getAttribute("src")
+                    .then(function (src) {
+                        assert.strictEqual(getMediaFileName(src), getMediaFileName(vmapConfig.prerollRepeat.ads[0].media));
                     })
-                    // Wait for the second occurrence
-                    .then(pollUntil(function () {
-                        return document.getElementById('event_start').value === "2" ? true : null;
-                    }, null, startTimeout, 1000), function () {
-                        assert.isFalse(true, "Unable to detect the 2nd occurence");
+                    .end()
+                    .end()
+                    .end();
+
+                // wait for the pause event
+                command
+                    .then(pollUntil(function (value) {
+                        return document.getElementById('event_pause').value === "2" ? true : null;
+                    }, null, 10000, 100))
+                    .then(function () {
+                        // the event has been detected
+                    },function (error) {
+                        // the event pause has NOT been detected
+                        assert.isFalse(true,"the event pause has NOT been detected for test " + test.name);
+                    });
+
+                // wait for the play event
+                command
+                    .then(pollUntil(function (value) {
+                        return document.getElementById('event_play').value === "3" ? true : null;
+                    }, null, 10000, 100))
+                    .then(function () {
+                        // the event has been detected
+                    },function (error) {
+                        // the event play has NOT been detected
+                        assert.isFalse(true,"the event play has NOT been detected for test " + test.name);
+                    });
+
+                // Check the expected ad is played
+                command
+                    .findById("adsplayer-container")
+                    .findByTagName("video")
+                    .getAttribute("src")
+                    .then(function (src) {
+                        assert.strictEqual(getMediaFileName(src), getMediaFileName(vmapConfig.prerollRepeat.ads[0].media));
                     })
-                    .then(function() {
-                        return checkAdPlayer(getMediaFileName(vmapConfig.midrollRepeat.ads[0].media));
-                    })
-                    .then(function() {
-                        return checkVideoPlayer(vmapConfig.midrollRepeat.timeOffsets[1]);
-                    })
-                    // Wait for the third occurrence
-                    .then(pollUntil(function () {
-                        return document.getElementById('event_start').value === "3" ? true : null;
-                    }, null, startTimeout, 1000), function () {
-                        assert.isFalse(true, "Unable to detect the 3rd occurence");
-                    })
-                    .then(function() {
-                        return checkAdPlayer(getMediaFileName(vmapConfig.midrollRepeat.ads[0].media));
-                    })
-                    .then(function() {
-                        return checkVideoPlayer(vmapConfig.midrollRepeat.timeOffsets[2]);
-                    })
-                // Don't check the other occurrences, because the test would be very long
+                    .end()
+                    .end()
+                    .end();
+
+                // wait for the pause event
+                command
+                    .then(pollUntil(function (value) {
+                        return document.getElementById('event_pause').value === "3" ? true : null;
+                    }, null, 10000, 100))
+                    .then(function () {
+                        // the event has been detected
+                    },function (error) {
+                        // the event pause has NOT been detected
+                        assert.isFalse(true,"the event pause has NOT been detected for test " + test.name);
+                    });
             },
 
             // 1 postroll ad break
             "postroll": function() {
-                // The right ad video should already be playing
-                return checkAdPlayer(getMediaFileName(vmapConfig.postroll.ads[0].media))
-                    .then(function() {
-                            return checkVideoPlayer(vmapConfig.postroll.timeOffset);
+
+                // wait for the play event
+                command
+                    .then(pollUntil(function (value) {
+                        return document.getElementById('event_play').value === "1" ? true : null;
+                    }, null, 130000, 100))
+                    .then(function () {
+                        // the event has been detected
+                    },function (error) {
+                        // the event play has NOT been detected
+                        assert.isFalse(true,"the event play has NOT been detected for test " + test.name);
+                    });
+
+                // Check the expected ad is played
+                command
+                    .findById("adsplayer-container")
+                    .findByTagName("video")
+                    .getAttribute("src")
+                    .then(function (src) {
+                        assert.strictEqual(getMediaFileName(src), getMediaFileName(vmapConfig.postroll.ads[0].media));
+                    })
+                    .end()
+                    .end()
+                    .end();
+
+                // wait for the pause event
+                command
+                    .then(pollUntil(function (value) {
+                        return document.getElementById('event_pause').value === "1" ? true : null;
+                    }, null, 40000, 100))
+                    .then(function () {
+                            // the event has been detected
+                        },function (error) {
+                            // the event pause has NOT been detected
+                            assert.isFalse(true,"the event pause has NOT been detected for test " + test.name);
                         }
                     );
+
+
             }
         };
     });
