@@ -85,9 +85,22 @@ adsPlayer.addEventListener("play", function (e) {
 adsPlayer.addEventListener("pause", function (e) {
     // An ad's media playback is paused => update play/pause button
 });
+adsPlayer.addEventListener("skippable", function (e) {
+    // A skippable ad is playing. The remaining time parameter is added to tell when the 'skip' action will be allowed.
+    // In case of a non linear ad, the CSAdsPlugin automatically adds a skip button. The design of this button can be redefined, see below.
+});
+adsPlayer.addEventListener("skip", function (e) {
+    // An ad has been skipped.
+});
 adsPlayer.addEventListener("click", function (e) {
     // A click has beed detected on the media component
     // e.data.uri contains the URI of the webpage to open
+});
+adsPlayer.addEventListener("error", function (e) {
+    // An error has ocurred, the application shall stop the player.
+});
+adsPlayer.addEventListener("warning", function (e) {
+    // An warning has ocurred.
 });
 ```
 

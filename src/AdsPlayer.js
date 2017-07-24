@@ -305,9 +305,6 @@ class AdsPlayer {
 
 /**
 * The 'start' event is fired when the playback of ad(s) is starting.
-* When the 'start' event is fired, the application shall hide the main player component and
-* display the ads player container in which the ad media player component(s) will be created
-* and displayed.
 *
 * @event AdsPlayer#start
 * @param {object} event - the event
@@ -316,8 +313,6 @@ class AdsPlayer {
 
 /**
 * The 'end' event is fired when the playback of ad(s) has ended.
-* When the 'end' event is fired, the application shall display the main player component and
-* hide the ads player container.
 *
 * @event AdsPlayer#end
 * @param {object} event - the event
