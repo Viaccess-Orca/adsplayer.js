@@ -33,6 +33,10 @@ import EventBus from '../EventBus';
 import Debug from '../Debug';
 import AddElementEvent from "../events/AddElementEvent";
 import RemoveElementEvent from "../events/RemoveElementEvent";
+import SkippableEvent from "../events/SkippableEvent";
+import SkipEvent from "../events/SkipEvent";
+import CreativeEndEvent from "../events/CreativeEndEvent";
+import CreativeStartEvent from "../events/CreativeStartEvent";
 
 class NonLinearCreativePlayer {
 
@@ -92,9 +96,13 @@ class NonLinearCreativePlayer {
         image.style.margin = "auto";
         image.style.display = "block";
 
+        // Notify a creative is starting to play
+        let creativeStartEvent:any = new CreativeStartEvent();
+        this._eventBus.dispatchEvent(creativeStartEvent);
+
         // Notify a media element has been created and appended into document
-        let event:any = new AddElementEvent(this._mediaPlayer.getElement(),this._mediaPlayer.getType());
-        this._eventBus.dispatchEvent(event);
+        let addElementEvent:any = new AddElementEvent(this._mediaPlayer.getElement(),this._mediaPlayer.getType());
+        this._eventBus.dispatchEvent(addElementEvent);
 
         this.adPlayerContainer.appendChild(image);
 
@@ -117,7 +125,48 @@ class NonLinearCreativePlayer {
         return true;
     }
 
+    stop() {
+        if (this.mainVideo) {
+            this.mainVideo.removeEventListener('playing', this._onMainVideoPlayingListener);
+        }
+
+        this._removeCloseIcon();
+
+        if (this._mediaPlayer) {
+
+            // Notify a media element has been created and appended into document
+            let event:any = new RemoveElementEvent(this._mediaPlayer.getElement(),this._mediaPlayer.getType());
+            this._eventBus.dispatchEvent(event);
+
+            if (this._mediaPlayer.getElement()) {
+                this.adPlayerContainer.removeChild(this._mediaPlayer.getElement());
+            }
+            this._mediaPlayer.delete();
+            this._mediaPlayer = null;
+        }
+
+        if(this._timerId) {
+            window.clearTimeout(this._timerId);
+            this._timerId = null;
+        }
+    }
+
+    play() {
+        //Nothing to do in case of non linear creative
+    }
+
+    pause() {
+        //Nothing to do in case of non linear creative
+    }
+
+    // private functions
+
     _initiateCloseTimer(duration: number) {
+
+        // Notify skippable in duration seconds
+        let event:any = new SkippableEvent(duration);
+        this._eventBus.dispatchEvent(event);
+
         this._timerId = window.setTimeout(() => {
             // Create a close icon
             this._addCloseIcon();
@@ -177,8 +226,13 @@ class NonLinearCreativePlayer {
 
         // Handle the click event
         this._closeDiv.onclick = () => {
-            this.stop();
+            this._skip();
         };
+
+        // Notify skippable now
+        let event:any = new SkippableEvent(0);
+        this._eventBus.dispatchEvent(event);
+
     }
 
     _removeCloseIcon() {
@@ -194,36 +248,14 @@ class NonLinearCreativePlayer {
         }
     }
 
-    stop() {
-        if (this.mainVideo) {
-            this.mainVideo.removeEventListener('playing', this._onMainVideoPlayingListener);
-        }
-
-        this._removeCloseIcon();
-
-        // Notify a media element has been created and appended into document
-        let event:any = new RemoveElementEvent(this._mediaPlayer.getElement(),this._mediaPlayer.getType());
+    _skip() {
+        // Notify skip
+        let event:any = new SkipEvent();
         this._eventBus.dispatchEvent(event);
 
-
-        if (this._mediaPlayer) {
-            if (this._mediaPlayer.getElement()) {
-                this.adPlayerContainer.removeChild(this._mediaPlayer.getElement());
-            }
-            this._mediaPlayer.delete();
-        }
-
-        if(this._timerId) {
-            window.clearTimeout(this._timerId);
-        }
-    }
-
-    play() {
-        //Nothing to do in case of non linear creative
-    }
-
-    pause() {
-        //Nothing to do in case of non linear creative
+        // Notify the creative has ended
+        let creativeEndEvent:any = new CreativeEndEvent();
+        this._eventBus.dispatchEvent(creativeEndEvent);
     }
 
     _onMainVideoPlaying () {
