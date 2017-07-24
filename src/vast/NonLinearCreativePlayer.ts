@@ -31,6 +31,8 @@
 import ImagePlayer from '../media/ImagePlayer';
 import EventBus from '../EventBus';
 import Debug from '../Debug';
+import AddElementEvent from "../events/AddElementEvent";
+import RemoveElementEvent from "../events/RemoveElementEvent";
 
 class NonLinearCreativePlayer {
 
@@ -89,6 +91,10 @@ class NonLinearCreativePlayer {
         image.style.width = "auto";
         image.style.margin = "auto";
         image.style.display = "block";
+
+        // Notify a media element has been created and appended into document
+        let event:any = new AddElementEvent(this._mediaPlayer.getElement(),this._mediaPlayer.getType());
+        this._eventBus.dispatchEvent(event);
 
         this.adPlayerContainer.appendChild(image);
 
@@ -194,6 +200,11 @@ class NonLinearCreativePlayer {
         }
 
         this._removeCloseIcon();
+
+        // Notify a media element has been created and appended into document
+        let event:any = new RemoveElementEvent(this._mediaPlayer.getElement(),this._mediaPlayer.getType());
+        this._eventBus.dispatchEvent(event);
+
 
         if (this._mediaPlayer) {
             if (this._mediaPlayer.getElement()) {
