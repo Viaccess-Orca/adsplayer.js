@@ -167,6 +167,11 @@ define(function(require) {
                         ],
                         timeOffsets: [3.6, 14.1, 24.6]
                     }
+                },
+
+                nonLinearAds: {
+                    adUrl: "../ads/xml/vmap/preroll-nonlinear.xml",
+                    media: "vo_logo.png"
                 }
             }
         };

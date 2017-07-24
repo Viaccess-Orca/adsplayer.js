@@ -63,7 +63,9 @@ function initAdsPluginEvtsHdler(adsPlugin){
         document.querySelector('#mute_button').addEventListener("click", onAdMute);
 
         // Change the listener for the HTML5 video events
-        updateHtml5VideoEvtsHdler(adPlayer);
+        if (e.data.type === "video") {
+            updateHtml5VideoEvtsHdler(adPlayer);
+        }
 
         // Disable the "skip" button
         allowSkip(false);

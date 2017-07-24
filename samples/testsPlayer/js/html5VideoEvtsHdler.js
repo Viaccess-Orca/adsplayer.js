@@ -61,7 +61,6 @@ function initHtml5VideoEvtsHdler() {
 
     html5Evts.forEach (function(event) {
            document.querySelector("#videoplayer-container").addEventListener(event, onHtml5Evts, false);
-        //document.querySelector("#adsplayer-video").addEventListener(event, onHtml5Evts, false);
     });
 
     // clear events button
