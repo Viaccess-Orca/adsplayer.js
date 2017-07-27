@@ -37,15 +37,15 @@ import SkippableEvent from "../events/SkippableEvent";
 import SkipEvent from "../events/SkipEvent";
 import CreativeEndEvent from "../events/CreativeEndEvent";
 import CreativeStartEvent from "../events/CreativeStartEvent";
+import AdPlayer from "../media/AdPlayer";
 
 class NonLinearCreativePlayer {
 
-    private _debug: Debug;
-    private _eventBus: EventBus;
-    private _mediaPlayer: ImagePlayer;
+    private _debug: Debug = null;
+    private _eventBus: EventBus = null;
+    private adPlayer: AdPlayer = null;
     private _onMainVideoPlayingListener: () => void;
-    private _timerId: number;
-
+    private _timerId: number = 0;
     private _closeDiv: HTMLElement;
     private _closeStyle: HTMLElement;
 
@@ -74,7 +74,7 @@ class NonLinearCreativePlayer {
         this.stop();
         this._debug = null;
         this._eventBus = null;
-        this._mediaPlayer = null;
+        this.adPlayer = null;
         this._onMainVideoPlayingListener = null;
         this.adPlayerContainer = null;
         this.mainVideo = null;
@@ -85,12 +85,12 @@ class NonLinearCreativePlayer {
 
         let nonLinear = nonLinearAds.nonLinear[0];
 
-        this._mediaPlayer = new ImagePlayer();
-        this._mediaPlayer.load(baseURl,[{"type": nonLinear.staticResource.creativeType,
+        this.adPlayer = new ImagePlayer();
+        this.adPlayer.load(baseURl,[{"type": nonLinear.staticResource.creativeType,
                                          "uri":  nonLinear.staticResource.uri}]);
 
         // Add the image to the DOM element
-        let image : HTMLElement = this._mediaPlayer.getElement();
+        let image : HTMLElement = this.adPlayer.getElement();
         image.style.height = "100%";
         image.style.width = "auto";
         image.style.margin = "auto";
@@ -101,7 +101,7 @@ class NonLinearCreativePlayer {
         this._eventBus.dispatchEvent(creativeStartEvent);
 
         // Notify a media element has been created and appended into document
-        let addElementEvent:any = new AddElementEvent(this._mediaPlayer.getElement(),this._mediaPlayer.getType());
+        let addElementEvent:any = new AddElementEvent(this.adPlayer.getElement(),this.adPlayer.getType());
         this._eventBus.dispatchEvent(addElementEvent);
 
         this.adPlayerContainer.appendChild(image);
@@ -132,17 +132,17 @@ class NonLinearCreativePlayer {
 
         this._removeCloseIcon();
 
-        if (this._mediaPlayer) {
+        if (this.adPlayer) {
 
             // Notify a media element has been created and appended into document
-            let event:any = new RemoveElementEvent(this._mediaPlayer.getElement(),this._mediaPlayer.getType());
+            let event:any = new RemoveElementEvent(this.adPlayer.getElement(),this.adPlayer.getType());
             this._eventBus.dispatchEvent(event);
 
-            if (this._mediaPlayer.getElement()) {
-                this.adPlayerContainer.removeChild(this._mediaPlayer.getElement());
+            if (this.adPlayer.getElement()) {
+                this.adPlayerContainer.removeChild(this.adPlayer.getElement());
             }
-            this._mediaPlayer.delete();
-            this._mediaPlayer = null;
+            this.adPlayer.delete();
+            this.adPlayer = null;
         }
 
         if(this._timerId) {
@@ -159,7 +159,9 @@ class NonLinearCreativePlayer {
         //Nothing to do in case of non linear creative
     }
 
-    // private functions
+    ///////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////// PRIVATE ////////////////////////////////////////////
+
 
     _initiateCloseTimer(duration: number) {
 
