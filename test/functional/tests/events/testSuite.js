@@ -216,7 +216,7 @@ define(function(require) {
 
             // check the skippable event
             "skippableEvent": function() {
-                this.skip('Not implemented yet');
+                //'Implemented in suite NON_LINEAR_ADS'
                 return command;
             },
 

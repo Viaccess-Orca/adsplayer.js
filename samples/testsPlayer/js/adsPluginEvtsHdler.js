@@ -115,13 +115,13 @@ function initAdsPluginEvtsHdler(adsPlugin){
         element.setAttribute("value", parseInt(element.getAttribute("value")) + 1);
 
         // Get the remaining time until ad is skippable
-        var remainingTime = 0;
-        if(event.data) {
-            remainingTime = event.data.remainingTime;
-        }
+        var remainingTime = event.data.remainingTime;
 
-        if(isNaN(remainingTime) ||
-                remainingTime === 0) {
+        // Update #ad_dom_type DOM element with the type of the DOM element created by the CSAdsPlugin to play the ad
+        document.querySelector('#ad_dom_remainingtime').innerHTML = remainingTime;
+
+
+        if( remainingTime === 0) {
             // Let's skip
             allowSkip(true);
         } else {

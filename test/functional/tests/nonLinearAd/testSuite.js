@@ -158,7 +158,7 @@ define(function(require) {
                     .end()
                     .end();
 
-                // wait for the skippable element
+                // wait for the skippable event
                 command
                     .then(pollUntil(function (value) {
                         return document.getElementById('event_skippable').value === "1" ? true : null;
@@ -170,17 +170,37 @@ define(function(require) {
                         assert.isFalse(true,"the event skippable has NOT been detected for test " + test.name);
                     });
 
-                // wait for 10 seconds
+                // check the first remaining time
+                command
+                .findById("ad_dom_remainingtime")
+                    .getVisibleText()
+                    .then(function(remainingtime) {assert.strictEqual(remainingtime,suiteConfig["play"].remainingtime,"unexpected remaining time");},
+                        function() {assert.isFalse(true,"Can't get the remaining time");})
+                .end();
+
+                // wait for the skippable event
                 command
                     .then(pollUntil(function (value) {
-                        return null;
-                    }, null, 10000, 1000))
+                        return document.getElementById('event_skippable').value === "2" ? true : null;
+                    }, null, 10000, 100))
                     .then(function () {
-
+                        // the event has been detected
                     },function (error) {
-
+                        // the event skippable has NOT been detected
+                        assert.isFalse(true,"the event skippable has NOT been detected for test " + test.name);
                     });
 
+                // check the second remaining time
+                command
+                    .findById("ad_dom_remainingtime")
+                    .getVisibleText()
+                    .then(function(remainingtime) {assert.strictEqual(remainingtime,0,"unexpected remaining time");},
+                        function() {assert.isFalse(true,"Can't get the remaining time");})
+                    .end();
+            },
+
+            "skip": function() {
+                this.skip("Not yet implemented");
             }
         };
     });
