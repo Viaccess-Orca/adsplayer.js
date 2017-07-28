@@ -29,14 +29,13 @@
  */
 
 import Event from "./Event";
-import ClickData from "./ClickData";
 
 class ClickEvent extends Event{
-    public data: ClickData;
+    public data: any;
 
     constructor(uri: string) {
         super("click");
-        this.data = new ClickData(uri);
+        this.data = {uri:uri};
     }
 }
 

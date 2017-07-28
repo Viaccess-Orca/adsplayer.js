@@ -65,7 +65,7 @@ class LinearCreativePlayer {
     private _onMediaTimeupdateListener: () => void;
     private _onMediaEndedListener: () => void;
     private _onMainVideoPlayListener: () => void;
-    private timeOffset: number = 0;
+    private timeOffset: number = -1;
     private currentCreative: any = null;
     private skipOffsetSent: boolean = false;
 
@@ -210,7 +210,7 @@ class LinearCreativePlayer {
     }
 
     _evaluateTimeOffset(): void {
-        if (this.timeOffset === null) {
+        if (this.timeOffset === -1) {
             this._initTimeOffset();
         }
 
@@ -292,7 +292,6 @@ class LinearCreativePlayer {
             return false;
         }
 
-        this.timeOffset = null;
         this.skipOffsetSent = false;
         this.currentCreative = creative;
         mediaFile = creative.mediaFiles[0];

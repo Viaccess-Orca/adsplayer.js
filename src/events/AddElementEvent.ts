@@ -29,14 +29,13 @@
  */
 
 import Event from "./Event";
-import AddElementData from "./AddElementData";
 
 class AddElementEvent extends Event{
-    public data: AddElementData;
+    public data: any;
 
     constructor(element:HTMLElement, typeofElement:string) {
         super("addElement");
-        this.data = new AddElementData(element,typeofElement);
+        this.data = {element:element,type:typeofElement};
     }
 }
 

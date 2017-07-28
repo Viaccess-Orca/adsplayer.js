@@ -29,14 +29,13 @@
  */
 
 import Event from "./Event";
-import SkippableData from "./SkippableData";
 
 class SkippableEvent extends Event{
-    public data: SkippableData;
+    public data: any;
 
     constructor(duration:number) {
         super("skippable");
-        this.data = new SkippableData(duration);
+        this.data = {remainingTime:duration};
     }
 }
 
