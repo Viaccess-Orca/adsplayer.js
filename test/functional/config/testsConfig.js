@@ -170,8 +170,10 @@ define(function(require) {
                 },
 
                 nonLinearAds: {
-                    adUrl: "../ads/xml/vmap/preroll-nonlinear.xml",
-                    media: "vo_logo.png"
+                    media: "vo_logo.png",
+                    play: {
+                        adUrl: "../ads/xml/vmap/preroll-nonlinear.xml"
+                    }
                 }
             }
         };

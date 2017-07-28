@@ -89,7 +89,7 @@ define(function(require) {
                     .findById("ad_toplay").clearValue()
                     .end()
                     // type the ad url
-                    .findById("ad_toplay").type(suiteConfig.adUrl)
+                    .findById("ad_toplay").type(suiteConfig[test.name].adUrl)
                     .end()
                     // start the player
                     .findById("play_button").click()
@@ -142,8 +142,8 @@ define(function(require) {
                     .then(function () {
                         // the event has been detected
                     },function (error) {
-                        // the event play has NOT been detected
-                        assert.isFalse(true,"the event remove has NOT been detected for test " + test.name);
+                        // the event add has NOT been detected
+                        assert.isFalse(true,"the event add has NOT been detected for test " + test.name);
                     });
 
                 // Check the expected ad is played
@@ -157,6 +157,18 @@ define(function(require) {
                     .end()
                     .end()
                     .end();
+
+                // wait for the skippable element
+                command
+                    .then(pollUntil(function (value) {
+                        return document.getElementById('event_skippable').value === "1" ? true : null;
+                    }, null, 10000, 100))
+                    .then(function () {
+                        // the event has been detected
+                    },function (error) {
+                        // the event skippable has NOT been detected
+                        assert.isFalse(true,"the event skippable has NOT been detected for test " + test.name);
+                    });
 
                 // wait for 10 seconds
                 command
