@@ -110,6 +110,10 @@ function initAdsPluginEvtsHdler(adsPlugin){
     });
 
     adsPlugin.addEventListener('skippable', function(event) {
+        // Increment the "skippable" event counter
+        var element = document.getElementById('event_skippable');
+        element.setAttribute("value", parseInt(element.getAttribute("value")) + 1);
+
         // Get the remaining time until ad is skippable
         var remainingTime = 0;
         if(event.data) {
@@ -198,9 +202,6 @@ function allowSkip(allow) {
     skipButton.innerText = "Skip";
 
     if (allow) {
-        // Increment the "skippable" event counter
-        var element = document.getElementById('event_skippable');
-        element.setAttribute("value", parseInt(element.getAttribute("value")) + 1);
 
         // Enable the button
         skipButton.disabled = false;

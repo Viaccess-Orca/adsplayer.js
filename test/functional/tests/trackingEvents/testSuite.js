@@ -496,7 +496,7 @@ define(function(require) {
                 return (command
                     .then(pollUntil(function (value) {
                         // Wait until "skippable" event is fired
-                        return parseInt(document.getElementById('event_skippable').value) == 1 ? true : null;
+                        return parseInt(document.getElementById('event_skippable').value) == 2 ? true : null;
                     }, null, 10000, 1000))
                     // Skip the add
                     .findByCssSelector("#skip_button")
