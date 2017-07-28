@@ -7,15 +7,48 @@ define(function(require) {
             // Common tests suite configuration fields
             testPageUrl : "https://swag.viaccess.fr/functionnalTests/CSAdsPlugin-Dev/samples/testsPlayer",
             streamUrl   : "https://d1stu24dk3kqej.cloudfront.net/Clear/BBB_MSS_Clear/index.ism/Manifest",// url of the main stream
-                                                                                                                        // take care using one with video.currentTime = 0 at the beginning
-                                                                                                                        // for the pre-roll tests
+                                                                                                         // take care using one with video.currentTime = 0 at the beginning
+                                                                                                         // for the pre-roll tests
             tests : {
                 //Events test suite specific configuration fields
                 events: {
-                    "adUrl": "../ads/xml/mast/preroll.xml",
-                    "startExpectedEvents":{"start":1,"end":0,"add":1,"remove":0,"play":1,"pause":0},
-                    "endExpectedEvents":{"start":1,"end":1,"add":1,"remove":1,"play":1,"pause":1}
-
+                    add: {
+                        "adUrl": "../ads/xml/mast/preroll.xml",
+                        "clickurl": "http://www.viaccess-orca.com",
+                        "startExpectedEvents": {
+                            "start": 1,
+                            "end": 0,
+                            "add": 1,
+                            "remove": 0,
+                            "play": 1,
+                            "pause": 0,
+                            "skippable": 0,
+                            "skip": 0,
+                            "click": 0
+                        },
+                        "clickExpectedEvents": {
+                            "start": 1,
+                            "end": 0,
+                            "add": 1,
+                            "remove": 0,
+                            "play": 1,
+                            "pause": 0,
+                            "skippable": 0,
+                            "skip": 0,
+                            "click": 1
+                        },
+                        "endExpectedEvents": {
+                            "start": 1,
+                            "end": 1,
+                            "add": 1,
+                            "remove": 1,
+                            "play": 1,
+                            "pause": 1,
+                            "skippable": 0,
+                            "skip": 0,
+                            "click": 1
+                        }
+                    }
                 },
 
                 // Test suite multipleAds specific configuration fields

@@ -70,7 +70,7 @@ define(function(require) {
                         //clear the ad url
                         .findById("ad_toplay").clearValue().end()
                         // type the ad url
-                        .findById("ad_toplay").type(config.tests.events.adUrl).end()
+                        .findById("ad_toplay").type(suiteConfig.add.adUrl).end()
                         // start the player
                         .findById("play_button").click().end()
                 );
@@ -103,7 +103,7 @@ define(function(require) {
             },
 
             // Check the events at the start of an ad
-            "start": function () {
+            "startEvent": function () {
 
                 return(command
 
@@ -123,17 +123,17 @@ define(function(require) {
                         )
                         .then(function(counters) {
                             // Check configuration
-                            assert.isDefined(suiteConfig, "Configuration is not defined for start test");
-                            assert.isDefined(suiteConfig.startExpectedEvents, "Configuration is not defined for start test");
+                            assert.isDefined(suiteConfig.add, "Configuration is not defined for start test");
+                            assert.isDefined(suiteConfig.add.startExpectedEvents, "Configuration is not defined for start test");
 
                             // Finally, check the counter values
-                            utils.compareCounters(counters, suiteConfig.startExpectedEvents);
+                            utils.compareCounters(counters, suiteConfig.add.startExpectedEvents);
                         })
                 );
             },
 
             // check the DOM <video> element and the parameters associated with the add event
-            "checkDom": function () {
+            "addVideoEvent": function () {
 
                 // Check the DOM <video> element has been added in the ads player container
                 command
@@ -177,8 +177,57 @@ define(function(require) {
                 );
             },
 
+            "addImageEvent": function() {
+                this.skip('Not implemented yet');
+                return command;
+            },
+
+            // Check the click event
+            "clickEvent": function() {
+                return (command
+                    .findById("adsplayer-container")
+                        .findByTagName("video")
+                            .click()
+                        .end()
+                    .end())
+                    .then(function() {
+                            // The event suspend has been detected, now get the tracking events
+                            return utils.getCounterValues(command, "#csadsplugin_events .event input");
+                        },
+                        function (error) {
+                            // the event suspend has NOT been detected
+                            assert.isFalse(true,"the event suspend has NOT been detected for test start");
+                        }
+                    )
+                    .then(function(counters) {
+                        // Check configuration
+                        assert.isDefined(suiteConfig.add, "Configuration is not defined for click test");
+                        assert.isDefined(suiteConfig.add.clickExpectedEvents, "Configuration is not defined for start test");
+
+                        // Finally, check the counter values
+                        utils.compareCounters(counters, suiteConfig.add.clickExpectedEvents);
+                    })
+                    .findById("ad_dom_clickuri")
+                        .getVisibleText()
+                        .then(function(url) {assert.equal(url,suiteConfig.add.clickurl,"unexpected url")})
+                    .end();
+
+            },
+
+            // check the skippable event
+            "skippableEvent": function() {
+                this.skip('Not implemented yet');
+                return command;
+            },
+
+            // check the skip event
+            "skipEvent": function() {
+                this.skip('Not implemented yet');
+                return command;
+            },
+
             // Check the events at the end of an ad
-            "end": function () {
+            "endEvent": function () {
 
                 return(command
 
@@ -197,11 +246,11 @@ define(function(require) {
                         )
                         .then(function(counters) {
                             // Check configuration
-                            assert.isDefined(suiteConfig, "Configuration is not defined for end test");
-                            assert.isDefined(suiteConfig.endExpectedEvents, "Configuration is not defined for end test");
+                            assert.isDefined(suiteConfig.add, "Configuration is not defined for end test");
+                            assert.isDefined(suiteConfig.add.endExpectedEvents, "Configuration is not defined for end test");
 
                             // Finally, check the counter values
-                            utils.compareCounters(counters, suiteConfig.endExpectedEvents);
+                            utils.compareCounters(counters, suiteConfig.add.endExpectedEvents);
                         })
                 );
             },

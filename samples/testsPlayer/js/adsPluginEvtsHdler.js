@@ -156,6 +156,14 @@ function initAdsPluginEvtsHdler(adsPlugin){
         element.setAttribute("value", parseInt(element.getAttribute("value")) + 1);
     });
 
+    adsPlugin.addEventListener('click', function(e) {
+        var element = document.getElementById('event_click');
+        element.setAttribute("value", parseInt(element.getAttribute("value")) + 1);
+
+        // Update #ad_dom_type DOM element with the type of the DOM element created by the CSAdsPlugin to play the ad
+        document.querySelector('#ad_dom_clickuri').innerHTML = e.data.uri;
+    });
+
     // clear events button
     document.querySelector('#clearEvents_button').addEventListener("click",function(e) {
         document.getElementById('event_start').setAttribute("value", 0);
@@ -166,6 +174,7 @@ function initAdsPluginEvtsHdler(adsPlugin){
         document.getElementById('event_pause').setAttribute("value", 0);
         document.getElementById('event_skippable').setAttribute("value", 0);
         document.getElementById('event_skip').setAttribute("value", 0);
+        document.getElementById('event_click').setAttribute("value", 0);
     });
 }
 
