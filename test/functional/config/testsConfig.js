@@ -206,6 +206,9 @@ define(function(require) {
                     media: "vo_logo.png",
                     play: {
                         adUrl: "../ads/xml/vmap/preroll-nonlinear.xml"
+                    },
+                    skip: {
+                        adUrl: "../ads/xml/vmap/preroll-nonlinear.xml"
                     }
                 }
             }
