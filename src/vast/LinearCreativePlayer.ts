@@ -49,25 +49,12 @@ import AddElementEvent from "../events/AddElementEvent";
 import RemoveElementEvent from "../events/RemoveElementEvent";
 import ClickEvent from "../events/ClickEvent";
 import AdPlayer from "../media/AdPlayer";
+import ICreativePlayer from "./ICreativePlayer";
 
-class LinearCreativePlayer {
+class LinearCreativePlayer implements ICreativePlayer{
 
     ///////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////// PUBLIC /////////////////////////////////////////////
-
-    private debug: Debug = null;
-    private eventBus: EventBus = null;
-    private adPlayer: AdPlayer = null;
-    private trackingEventsManager: any = null;
-    private _onMediaPlayListener: () => void;
-    private _onMediaPauseListener: () => void;
-    private _onMediaErrorListener: () => void;
-    private _onMediaTimeupdateListener: () => void;
-    private _onMediaEndedListener: () => void;
-    private _onMainVideoPlayListener: () => void;
-    private timeOffset: number = -1;
-    private currentCreative: any = null;
-    private skipOffsetSent: boolean = false;
 
     /**
      * Initializes the creative player.
@@ -87,6 +74,7 @@ class LinearCreativePlayer {
         this._onMediaTimeupdateListener = this._onMediaTimeupdate.bind(this);
         this._onMediaEndedListener = this._onMediaEnded.bind(this);
         this._onMainVideoPlayListener = this._onMainVideoPlay.bind(this);
+        this.mainVideo.addEventListener('volumechange', this._onMainVideoVolumeChange.bind(this));
         this.mainVideo.addEventListener('volumechange', this._onMainVideoVolumeChange.bind(this));
 
     }
@@ -121,7 +109,21 @@ class LinearCreativePlayer {
     ///////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////// PRIVATE ////////////////////////////////////////////
 
-    _parseTime (str:string) : number {
+    private debug: Debug = null;
+    private eventBus: EventBus = null;
+    private adPlayer: AdPlayer = null;
+    private trackingEventsManager: any = null;
+    private _onMediaPlayListener: () => void;
+    private _onMediaPauseListener: () => void;
+    private _onMediaErrorListener: () => void;
+    private _onMediaTimeupdateListener: () => void;
+    private _onMediaEndedListener: () => void;
+    private _onMainVideoPlayListener: () => void;
+    private timeOffset: number = -1;
+    private currentCreative: any = null;
+    private skipOffsetSent: boolean = false;
+
+    private _parseTime (str:string) : number {
         var timeParts,
             SECONDS_IN_HOUR = 60 * 60,
             SECONDS_IN_MIN = 60;
@@ -142,7 +144,7 @@ class LinearCreativePlayer {
             (parseFloat(timeParts[2]));
     }
 
-    _onMediaPlay () : void {
+    private _onMediaPlay () : void {
 
         this.debug.log("Creative media play");
 
@@ -151,7 +153,7 @@ class LinearCreativePlayer {
         this.eventBus.dispatchEvent(playEvent);
     }
 
-    _onMediaPause () : void {
+    private _onMediaPause () : void {
 
         this.debug.log("Creative media pause");
 
@@ -160,7 +162,7 @@ class LinearCreativePlayer {
         this.eventBus.dispatchEvent(pauseEvent);
     }
 
-    _onMediaError () : void {
+    private _onMediaError () : void {
 
         this.debug.log("Creative media error");
 
@@ -169,7 +171,7 @@ class LinearCreativePlayer {
         this.eventBus.dispatchEvent(creativeEndEvent);
     }
 
-    _onMediaEnded () : void {
+    private _onMediaEnded () : void {
 
         this.debug.log("creative media ended");
 
@@ -181,11 +183,11 @@ class LinearCreativePlayer {
         this.eventBus.dispatchEvent(creativeEndEvent);
     }
 
-    _onMediaTimeupdate () : void {
+    private _onMediaTimeupdate () : void {
         this._evaluateTimeOffset();
     }
 
-    _initTimeOffset() : void {
+    private _initTimeOffset() : void {
         if (!this.currentCreative) {
             return;
         }
@@ -209,7 +211,7 @@ class LinearCreativePlayer {
         }
     }
 
-    _evaluateTimeOffset(): void {
+    private _evaluateTimeOffset(): void {
         if (this.timeOffset === -1) {
             this._initTimeOffset();
         }
@@ -231,7 +233,7 @@ class LinearCreativePlayer {
         }
     }
 
-    _onAdClick (creative : any) : void {
+    private _onAdClick (creative : any) : void {
         if (!creative.videoClicks) {
             return;
         }
@@ -249,7 +251,7 @@ class LinearCreativePlayer {
         // }
     }
 
-    _pauseMainVideo () {
+    private _pauseMainVideo () {
         // in case of pre-roll ad, the main video may not be started yet
         if (!this.mainVideo.paused) {
             this.debug.log("(LinearCreativePlayer) Pause main video");
@@ -262,12 +264,12 @@ class LinearCreativePlayer {
         this.mainVideo.style.display = "none";
     }
 
-    _onMainVideoPlay () {
+    private _onMainVideoPlay () {
         this.debug.log("(LinearCreativePlayer) Pause main video");
         this.mainVideo.pause();
     }
 
-    _resumeMainVideo () {
+    private _resumeMainVideo () {
 
         this.mainVideo.removeEventListener("playing", this._onMainVideoPlayListener);
 
@@ -279,7 +281,7 @@ class LinearCreativePlayer {
         this.mainVideo.style.display = "block";
     }
 
-    _load (creative: any, baseUrl: string) {
+    private _load (creative: any, baseUrl: string): boolean {
         var mediaFile,
             isVideo,
             isImage;
@@ -369,7 +371,7 @@ class LinearCreativePlayer {
         return true;
     }
 
-    _play () {
+    private _play () {
 
         if (!this.adPlayer) {
             return;
@@ -381,7 +383,7 @@ class LinearCreativePlayer {
         this.adPlayer.play();
     }
 
-    _pause () {
+    private _pause () {
 
         if (!this.adPlayer) {
             return;
@@ -393,7 +395,7 @@ class LinearCreativePlayer {
         this.adPlayer.pause();
     }
 
-    _reset () {
+    private _reset () {
         if (!this.adPlayer) {
             return;
         }
@@ -402,7 +404,7 @@ class LinearCreativePlayer {
         this.mainVideo = null;
     }
 
-    _stop () {
+    private _stop () {
 
         if (!this.adPlayer) {
             return;
@@ -440,7 +442,7 @@ class LinearCreativePlayer {
         }
     }
 
-    _onMainVideoVolumeChange () {
+    private _onMainVideoVolumeChange () {
         if (!this.adPlayer) {
             return;
         }

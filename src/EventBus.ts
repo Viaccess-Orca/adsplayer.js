@@ -30,29 +30,9 @@
 /**
 * Event bus utility class for events listening and notifying.
 */
-
-import Debug from './Debug';
-
-let _instance = null;
+let _instance: any = null;
 
 class EventBus {
-
-    ///////////////////////////////////////////////////////////////////////////////////////////////
-    ////////////////////////////////////////// PRIVATE ////////////////////////////////////////////
-
-
-    _getListeners (type, useCapture) {
-        if (useCapture === undefined) { // to provide a default parameter that works !!
-            useCapture = false;
-        }
-        var captype = (useCapture ? '1' : '0') + type;
-
-        if (!(captype in this._registrations)) {
-            this._registrations[captype] = [];
-        }
-
-        return this._registrations[captype];
-    }
 
     ///////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////// PUBLIC /////////////////////////////////////////////
@@ -71,9 +51,6 @@ class EventBus {
             return _instance;
         }
 
-        this._registrations = {};
-        this._debug = Debug.getInstance();
-
         _instance = this;
         return _instance;
     }
@@ -84,7 +61,7 @@ class EventBus {
      * @param {[type]} listener   [description]
      * @param {[type]} useCapture [description]
      */
-    addEventListener (type, listener, useCapture) {
+    addEventListener (type: string, listener: () => void, useCapture: boolean) {
         var listeners = this._getListeners(type, useCapture),
             idx = listeners.indexOf(listener);
 
@@ -100,7 +77,7 @@ class EventBus {
      * @param  {[type]} useCapture [description]
      * @return {[type]}            [description]
      */
-    removeEventListener (type, listener, useCapture) {
+    removeEventListener (type: string, listener: () => void, useCapture: boolean) {
         var listeners = this._getListeners(type, useCapture),
             idx = listeners.indexOf(listener);
 
@@ -114,7 +91,7 @@ class EventBus {
      * @param  {[type]} evt [description]
      * @return {[type]}     [description]
      */
-    dispatchEvent (evt) {
+    dispatchEvent (evt: Event) {
         var listeners = this._getListeners(evt.type, false).slice(),
             i = 0;
 
@@ -123,6 +100,25 @@ class EventBus {
         }
         return !evt.defaultPrevented;
     }
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////// PRIVATE ////////////////////////////////////////////
+
+    private _registrations: any = {};
+
+    _getListeners (type: string, useCapture: boolean) {
+        if (useCapture === undefined) { // to provide a default parameter that works !!
+            useCapture = false;
+        }
+        let captype: string = (useCapture ? "1" : "0") + type;
+
+        if (!(captype in this._registrations)) {
+            this._registrations[captype] = [];
+        }
+
+        return this._registrations[captype];
+    }
+
 }
 
 export default EventBus;

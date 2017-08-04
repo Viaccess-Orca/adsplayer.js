@@ -38,8 +38,9 @@ import SkipEvent from "../events/SkipEvent";
 import CreativeEndEvent from "../events/CreativeEndEvent";
 import CreativeStartEvent from "../events/CreativeStartEvent";
 import AdPlayer from "../media/AdPlayer";
+import ICreativePlayer from "./ICreativePlayer";
 
-class NonLinearCreativePlayer {
+class NonLinearCreativePlayer implements ICreativePlayer{
 
     private _debug: Debug = null;
     private _eventBus: EventBus = null;
